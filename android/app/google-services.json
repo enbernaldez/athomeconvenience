@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "948813304022",
+    "project_id": "at-home-convenience",
+    "storage_bucket": "at-home-convenience.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948813304022:android:24613a4172f1a05762b977",
+        "android_client_info": {
+          "package_name": "com.example.athomeconvenience"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGyCCJafU7-rzkH4rrc_bUCUagXZhWP78"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948813304022:android:2046ab126f626ee062b977",
+        "android_client_info": {
+          "package_name": "com.mycompany.athomeconvenience"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGyCCJafU7-rzkH4rrc_bUCUagXZhWP78"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
