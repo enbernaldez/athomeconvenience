@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gcm_defaultSenderId" translatable="false">948813304022</string>
+    <string name="google_api_key" translatable="false">AIzaSyAGyCCJafU7-rzkH4rrc_bUCUagXZhWP78</string>
+    <string name="google_app_id" translatable="false">1:948813304022:android:24613a4172f1a05762b977</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAGyCCJafU7-rzkH4rrc_bUCUagXZhWP78</string>
+    <string name="google_storage_bucket" translatable="false">at-home-convenience.appspot.com</string>
+    <string name="project_id" translatable="false">at-home-convenience</string>
+</resources>
