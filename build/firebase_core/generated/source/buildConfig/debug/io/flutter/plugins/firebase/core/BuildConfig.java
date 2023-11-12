@@ -10,5 +10,5 @@ public final class BuildConfig {
   // Field from default config.
   public static final String LIBRARY_NAME = "flutter-fire-core";
   // Field from default config.
-  public static final String LIBRARY_VERSION = "2.21.0";
+  public static final String LIBRARY_VERSION = "2.22.0";
 }
