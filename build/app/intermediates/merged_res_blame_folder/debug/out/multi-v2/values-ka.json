@@ -4,24 +4,7 @@
             "outputFile": "com.example.athomeconvenience.app-mergeDebugResources-26:/values-ka/values-ka.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Tantan\\.gradle\\caches\\transforms-3\\6a1e08ae007a9c319ce8a4a6ae2d42e4\\transformed\\core-1.10.1\\res\\values-ka\\values-ka.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,151,253,352,451,557,661,779",
-                        "endColumns": "95,101,98,98,105,103,117,100",
-                        "endOffsets": "146,248,347,446,552,656,774,875"
-                    },
-                    "to": {
-                        "startLines": "2,3,4,5,6,7,8,31",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,151,253,352,451,557,661,3423",
-                        "endColumns": "95,101,98,98,105,103,117,100",
-                        "endOffsets": "146,248,347,446,552,656,774,3519"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Tantan\\.gradle\\caches\\transforms-3\\9cda2c31e5c87dcfcb05d8a0db910cfc\\transformed\\jetified-play-services-base-18.1.0\\res\\values-ka\\values.xml",
+                    "source": "C:\\Users\\Acer\\.gradle\\caches\\transforms-3\\9cda2c31e5c87dcfcb05d8a0db910cfc\\transformed\\jetified-play-services-base-18.1.0\\res\\values-ka\\values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
                         "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
@@ -38,24 +21,24 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Tantan\\.gradle\\caches\\transforms-3\\6a12349dd5cc757cc765f44abef433c5\\transformed\\jetified-play-services-basement-18.1.0\\res\\values-ka\\values.xml",
+                    "source": "C:\\Users\\Acer\\.gradle\\caches\\transforms-3\\6a1e08ae007a9c319ce8a4a6ae2d42e4\\transformed\\core-1.10.1\\res\\values-ka\\values-ka.xml",
                     "from": {
-                        "startLines": "4",
-                        "startColumns": "0",
-                        "startOffsets": "195",
-                        "endColumns": "138",
-                        "endOffsets": "333"
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,151,253,352,451,557,661,779",
+                        "endColumns": "95,101,98,98,105,103,117,100",
+                        "endOffsets": "146,248,347,446,552,656,774,875"
                     },
                     "to": {
-                        "startLines": "17",
-                        "startColumns": "4",
-                        "startOffsets": "1789",
-                        "endColumns": "142",
-                        "endOffsets": "1927"
+                        "startLines": "2,3,4,5,6,7,8,31",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,151,253,352,451,557,661,3423",
+                        "endColumns": "95,101,98,98,105,103,117,100",
+                        "endOffsets": "146,248,347,446,552,656,774,3519"
                     }
                 },
                 {
-                    "source": "C:\\Users\\Tantan\\.gradle\\caches\\transforms-3\\de113a7e1c3b15bb1dc934cc94df3b28\\transformed\\browser-1.4.0\\res\\values-ka\\values-ka.xml",
+                    "source": "C:\\Users\\Acer\\.gradle\\caches\\transforms-3\\de113a7e1c3b15bb1dc934cc94df3b28\\transformed\\browser-1.4.0\\res\\values-ka\\values-ka.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",
@@ -69,6 +52,23 @@
                         "startOffsets": "2999,3105,3208,3318",
                         "endColumns": "105,102,109,104",
                         "endOffsets": "3100,3203,3313,3418"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Acer\\.gradle\\caches\\transforms-3\\6a12349dd5cc757cc765f44abef433c5\\transformed\\jetified-play-services-basement-18.1.0\\res\\values-ka\\values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "195",
+                        "endColumns": "138",
+                        "endOffsets": "333"
+                    },
+                    "to": {
+                        "startLines": "17",
+                        "startColumns": "4",
+                        "startOffsets": "1789",
+                        "endColumns": "142",
+                        "endOffsets": "1927"
                     }
                 }
             ]

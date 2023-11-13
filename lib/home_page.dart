@@ -1,3 +1,4 @@
+import 'package:athomeconvenience/registration_page.dart';
 import 'package:athomeconvenience/shop_list_page.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var serviceCategories = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,110 +108,20 @@ class _HomePageState extends State<HomePage> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                button(
-                  padding: 8.0,
-                  onPress: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            ShopListPage(category: "Electrical")));
-                  },
-                  buttonColor: Colors.lightBlue[100],
-                  haveAdditional: true,
-                  textType: Theme.of(context).textTheme.titleSmall,
-                  image: 'images/icon_electrical.png',
-                  buttonText: 'Electrical',
-                ),
-                button(
-                  padding: 8.0,
-                  onPress: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            ShopListPage(category: "Handyman")));
-                  },
-                  buttonColor: Colors.lightBlue[100],
-                  haveAdditional: true,
-                  textType: Theme.of(context).textTheme.titleSmall,
-                  image: 'images/icon_handyman.png',
-                  buttonText: 'Handyman',
-                ),
-                button(
-                  padding: 8.0,
-                  onPress: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            ShopListPage(category: "Body Groomer")));
-                  },
-                  buttonColor: Colors.lightBlue[100],
-                  image: 'images/icon_bodygroomer.png',
-                  haveAdditional: true,
-                  textType: Theme.of(context).textTheme.titleSmall,
-                  buttonText: 'Body Groomer',
-                ),
-                button(
-                  padding: 8.0,
-                  onPress: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            ShopListPage(category: "Plumber")));
-                  },
-                  buttonColor: Colors.lightBlue[100],
-                  haveAdditional: true,
-                  textType: Theme.of(context).textTheme.titleSmall,
-                  image: 'images/icon_plumber.png',
-                  buttonText: 'Plumber',
-                ),
-                button(
-                  padding: 8.0,
-                  onPress: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            ShopListPage(category: "Cleaning")));
-                  },
-                  buttonColor: Colors.lightBlue[100],
-                  haveAdditional: true,
-                  textType: Theme.of(context).textTheme.titleSmall,
-                  image: 'images/icon_cleaning.png',
-                  buttonText: 'Cleaning',
-                ),
-                button(
-                  padding: 8.0,
-                  onPress: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            ShopListPage(category: "Technician")));
-                  },
-                  buttonColor: Colors.lightBlue[100],
-                  haveAdditional: true,
-                  textType: Theme.of(context).textTheme.titleSmall,
-                  image: 'images/icon_technician.png',
-                  buttonText: 'Technician',
-                ),
-                button(
-                  padding: 8.0,
-                  onPress: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            ShopListPage(category: "Greenscaping")));
-                  },
-                  buttonColor: Colors.lightBlue[100],
-                  haveAdditional: true,
-                  textType: Theme.of(context).textTheme.titleSmall,
-                  image: 'images/icon_greenscaping.png',
-                  buttonText: 'Greenscaping',
-                ),
-                button(
-                  padding: 8.0,
-                  onPress: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            ShopListPage(category: "Pet Care")));
-                  },
-                  buttonColor: Colors.lightBlue[100],
-                  haveAdditional: true,
-                  textType: Theme.of(context).textTheme.titleSmall,
-                  image: 'images/icon_petcare.png',
-                  buttonText: 'Pet Care',
-                ),
+                for (var entry in serviceCategoryMap.entries)
+                  button(
+                    padding: 8.0,
+                    onPress: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              ShopListPage(category: entry.key)));
+                    },
+                    buttonColor: Colors.lightBlue[100],
+                    haveAdditional: true,
+                    textType: Theme.of(context).textTheme.titleSmall,
+                    image: entry.value,
+                    buttonText: entry.key,
+                  ),
               ],
             ),
           ],

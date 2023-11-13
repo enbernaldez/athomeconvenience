@@ -15,7 +15,7 @@ class CheckAuth extends ConsumerWidget {
       data: (bool data) {
         // Here, 'data' represents the value retrieved from SharedPreferences
         // You can conditionally return different widgets based on the authentication status
-        return data ? Navigation() : LandingPage();
+        return data ? const Navigation() : const LandingPage();
       },
       loading: () => const Scaffold(
         body: Center(

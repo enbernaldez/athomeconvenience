@@ -1,6 +1,5 @@
 import 'package:athomeconvenience/widgets/shop_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ShopListPage extends StatefulWidget {
@@ -63,7 +62,7 @@ class _ShopListPageState extends State<ShopListPage> {
               const SizedBox(
                 height: 10,
               ),
-              Divider(
+              const Divider(
                 height: 0,
               ),
               const SizedBox(

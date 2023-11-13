@@ -1,4 +1,3 @@
-import 'package:athomeconvenience/change_password_page.dart';
 import 'package:athomeconvenience/contact_us_page.dart';
 import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/terms_and_conditions_page.dart';
@@ -134,58 +133,32 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                       constraints: const BoxConstraints(
                         maxWidth: 640,
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 8,
-                            ),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) {
-                                    return const ChangePasswordPage();
-                                  }),
-                                );
-                              },
-                              child: Text(
-                                'CHANGE PASSWORD',
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ),
-                            ),
-                          ),
-                          const Divider(height: 1),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 8,
-                            ),
-                            child: GestureDetector(
-                              onTap: () async {
-                                // ?========set SharedPreference========
-                                final SharedPreferences s =
-                                    await SharedPreferences.getInstance();
-                                s.setBool("is_signedin", false);
-                                // ?==================================
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 8,
+                        ),
+                        child: GestureDetector(
+                          onTap: () async {
+                            // ?========set SharedPreference========
+                            final SharedPreferences s =
+                                await SharedPreferences.getInstance();
+                            s.setBool("is_signedin", false);
+                            // ?==================================
 
-                                await FirebaseAuth.instance.signOut();
+                            await FirebaseAuth.instance.signOut();
 
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            LandingPage()),
-                                    (route) => false);
-                              },
-                              child: Text(
-                                'LOG OUT',
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ),
-                            ),
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const LandingPage()),
+                                (route) => false);
+                          },
+                          child: Text(
+                            'LOG OUT',
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),

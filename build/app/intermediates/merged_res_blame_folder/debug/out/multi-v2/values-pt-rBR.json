@@ -4,24 +4,7 @@
             "outputFile": "com.example.athomeconvenience.app-mergeDebugResources-26:/values-pt-rBR/values-pt-rBR.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Tantan\\.gradle\\caches\\transforms-3\\6a1e08ae007a9c319ce8a4a6ae2d42e4\\transformed\\core-1.10.1\\res\\values-pt-rBR\\values-pt-rBR.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,152,254,353,453,560,670,790",
-                        "endColumns": "96,101,98,99,106,109,119,100",
-                        "endOffsets": "147,249,348,448,555,665,785,886"
-                    },
-                    "to": {
-                        "startLines": "2,3,4,5,6,7,8,31",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,152,254,353,453,560,670,3484",
-                        "endColumns": "96,101,98,99,106,109,119,100",
-                        "endOffsets": "147,249,348,448,555,665,785,3580"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Tantan\\.gradle\\caches\\transforms-3\\9cda2c31e5c87dcfcb05d8a0db910cfc\\transformed\\jetified-play-services-base-18.1.0\\res\\values-pt-rBR\\values.xml",
+                    "source": "C:\\Users\\Acer\\.gradle\\caches\\transforms-3\\9cda2c31e5c87dcfcb05d8a0db910cfc\\transformed\\jetified-play-services-base-18.1.0\\res\\values-pt-rBR\\values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
                         "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
@@ -38,24 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Tantan\\.gradle\\caches\\transforms-3\\6a12349dd5cc757cc765f44abef433c5\\transformed\\jetified-play-services-basement-18.1.0\\res\\values-pt-rBR\\values.xml",
-                    "from": {
-                        "startLines": "4",
-                        "startColumns": "0",
-                        "startOffsets": "199",
-                        "endColumns": "140",
-                        "endOffsets": "339"
-                    },
-                    "to": {
-                        "startLines": "17",
-                        "startColumns": "4",
-                        "startOffsets": "1802",
-                        "endColumns": "144",
-                        "endOffsets": "1942"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Tantan\\.gradle\\caches\\transforms-3\\de113a7e1c3b15bb1dc934cc94df3b28\\transformed\\browser-1.4.0\\res\\values-pt-rBR\\values-pt-rBR.xml",
+                    "source": "C:\\Users\\Acer\\.gradle\\caches\\transforms-3\\de113a7e1c3b15bb1dc934cc94df3b28\\transformed\\browser-1.4.0\\res\\values-pt-rBR\\values-pt-rBR.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",
@@ -69,6 +35,40 @@
                         "startOffsets": "3052,3167,3266,3378",
                         "endColumns": "114,98,111,105",
                         "endOffsets": "3162,3261,3373,3479"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Acer\\.gradle\\caches\\transforms-3\\6a1e08ae007a9c319ce8a4a6ae2d42e4\\transformed\\core-1.10.1\\res\\values-pt-rBR\\values-pt-rBR.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,152,254,353,453,560,670,790",
+                        "endColumns": "96,101,98,99,106,109,119,100",
+                        "endOffsets": "147,249,348,448,555,665,785,886"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,31",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,152,254,353,453,560,670,3484",
+                        "endColumns": "96,101,98,99,106,109,119,100",
+                        "endOffsets": "147,249,348,448,555,665,785,3580"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Acer\\.gradle\\caches\\transforms-3\\6a12349dd5cc757cc765f44abef433c5\\transformed\\jetified-play-services-basement-18.1.0\\res\\values-pt-rBR\\values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "199",
+                        "endColumns": "140",
+                        "endOffsets": "339"
+                    },
+                    "to": {
+                        "startLines": "17",
+                        "startColumns": "4",
+                        "startOffsets": "1802",
+                        "endColumns": "144",
+                        "endOffsets": "1942"
                     }
                 }
             ]

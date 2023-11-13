@@ -15,16 +15,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'landing_page.dart';
 
-List<String> serviceCategoryList = <String>[
-  'Electrical',
-  'Handyman',
-  'Bodygroomer',
-  'Plumber',
-  'Cleaning',
-  'Technician',
-  'Greenscaping',
-  'Pet Care',
-];
+Map<String, String> serviceCategoryMap = {
+  'Electrical': 'images/icon_electrical.png',
+  'Handyman': 'images/icon_handyman.png',
+  'Body Groomer': 'images/icon_bodygroomer.png',
+  'Plumber': 'images/icon_plumber.png',
+  'Cleaning': 'images/icon_cleaning.png',
+  'Technician': 'images/icon_technician.png',
+  'Greenscaping': 'images/icon_greenscaping.png',
+  'Pet Care': 'images/icon_petcare.png',
+};
+
+Iterable<String> categoryKeys = serviceCategoryMap.keys;
+List<String> categoryKeyList = categoryKeys.toList();
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -49,7 +52,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   // !=================================
 
   bool? _isServiceProvider = false;
-  String serviceCategory = serviceCategoryList.first; //*
+  String serviceCategory = categoryKeyList.first; //*
   final _registrationFormKey = GlobalKey<FormState>();
   TimeOfDay? selectedTimeST; //*
   TimeOfDay? selectedTimeET; //*
@@ -202,7 +205,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             serviceAddress.isEmpty &&
             gcashNum.isEmpty &&
             imagePath == null) {
-          SnackBar(
+          const SnackBar(
             content: Text("Please fill up the form!"),
           );
           return;
@@ -262,7 +265,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
       // ? Navigate to Navigation after successful registration
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => Navigation()),
+          MaterialPageRoute(builder: (BuildContext context) => const Navigation()),
           (route) => false);
     }
     // ! =================================================
@@ -442,7 +445,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                         serviceCategory = value!;
                                       });
                                     },
-                                    dropdownMenuEntries: serviceCategoryList
+                                    dropdownMenuEntries: categoryKeyList
                                         .map<DropdownMenuEntry<String>>(
                                             (String value) {
                                       return DropdownMenuEntry<String>(

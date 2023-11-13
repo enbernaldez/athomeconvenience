@@ -13,7 +13,7 @@ class Conversation extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: SafeArea(child: Column()),
+      body: const SafeArea(child: Column()),
     );
   }
 }

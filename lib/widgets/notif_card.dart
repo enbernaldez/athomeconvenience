@@ -12,7 +12,7 @@ class NotifCard extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (BuildContext context) => Conversation(),
+                builder: (BuildContext context) => const Conversation(),
               ),
             );
           },
@@ -23,7 +23,7 @@ class NotifCard extends StatelessWidget {
                 Container(
                   height: 75,
                   width: 75,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Colors.grey,
                       borderRadius: BorderRadius.all(Radius.circular(100))),
                 ),

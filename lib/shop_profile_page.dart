@@ -1,4 +1,3 @@
-import 'package:athomeconvenience/widgets/message/conversation.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/about.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/works.dart';
 import 'package:athomeconvenience/widgets/styledButton.dart';
@@ -117,7 +116,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                 Container(
                   width: 100,
                   height: 100,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Colors.grey,
                       borderRadius: BorderRadius.all(Radius.circular(100))),
                 ), //temporary grey circle muna
@@ -128,7 +127,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                 // SHOP NAME
                 Text(
                   shopData['service_provider_name'],
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
 
                 // STAR RATING (meron neto package)
@@ -201,7 +200,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: isAbout == true
-                                  ? Color(0xFF00A2FF)
+                                  ? const Color(0xFF00A2FF)
                                   : Colors.grey),
                         ),
                       ),
@@ -211,7 +210,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       Container(
                         height: 24, //adjust nalang height
                         width: 2,
-                        decoration: BoxDecoration(color: Colors.grey),
+                        decoration: const BoxDecoration(color: Colors.grey),
                       ),
                       const SizedBox(
                         width: 10,
@@ -228,7 +227,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: isAbout == false
-                                  ? Color(0xFF00A2FF)
+                                  ? const Color(0xFF00A2FF)
                                   : Colors.grey),
                         ),
                       ),
@@ -249,7 +248,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                           contactNum: shopData['contact_num'],
                           workingHours:
                               '${shopData['service_start']} - ${shopData['service_end']}')
-                      : WorksSection(),
+                      : const WorksSection(),
                 )
               ],
             ),

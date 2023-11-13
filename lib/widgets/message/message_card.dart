@@ -12,7 +12,7 @@ class MessageCard extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (BuildContext context) => Conversation(),
+                builder: (BuildContext context) => const Conversation(),
               ),
             );
           },
@@ -23,7 +23,7 @@ class MessageCard extends StatelessWidget {
                 Container(
                   height: 75,
                   width: 75,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Colors.grey,
                       borderRadius: BorderRadius.all(Radius.circular(100))),
                 ),
@@ -32,8 +32,8 @@ class MessageCard extends StatelessWidget {
                 ),
 
                 // Column
-                Flexible(
-                  child: const Column(
+                const Flexible(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // SHOP NAME
@@ -55,7 +55,7 @@ class MessageCard extends StatelessWidget {
                   width: 10,
                 ),
                 // timestamp
-                Text("8:00")
+                const Text("8:00")
               ],
             ),
           ),

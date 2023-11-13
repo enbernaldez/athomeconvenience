@@ -141,7 +141,7 @@ class _LogInPageState extends State<LogInPage> {
                           decoration: InputDecoration(
                               border: const OutlineInputBorder(),
                               labelText: 'Phone Number',
-                              contentPadding: EdgeInsets.all(15),
+                              contentPadding: const EdgeInsets.all(15),
                               prefixIcon: Container(
                                 padding: const EdgeInsets.all(8),
                                 child: InkWell(
@@ -191,7 +191,7 @@ class _LogInPageState extends State<LogInPage> {
                         // ),
                         const SizedBox(height: 10),
                         widget.isRegister == true
-                            ? SizedBox()
+                            ? const SizedBox()
                             : Column(
                                 children: [
                                   const Text("Don't have an account yet?"),
