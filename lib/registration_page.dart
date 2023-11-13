@@ -17,31 +17,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'landing_page.dart';
 
-// void addUserToFirestore() async {
-//   // Create a new user with a first and last name
-//   final user = <String, dynamic>{
-//     "fullName": "test",
-//     "phoneNumber": "09123456789",
-//     "address": "qwertyuiop",
-//     "emailAddress": "asdfghjkl",
-//     "password": "qazwsxedcrfvtgb",
-//     "profileName": "",
-//     "category": "",
-//     "contactNumber": "",
-//     "workingHours": "",
-//     "location": "",
-//     "gcashNumber": "",
-//     "forPhotoVerification": "",
-//   };
-
-//   // Get a reference to your Firestore database
-//   final db = FirebaseFirestore.instance;
-
-//   // Add a new document with a generated ID
-//   await db.collection("users").add(user).then((DocumentReference doc) =>
-//       print('DocumentSnapshot added with ID: ${doc.id}'));
-// }
-
 List<String> serviceCategoryList = <String>[
   'Electrical',
   'Handyman',
@@ -182,7 +157,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           u_address.isEmpty &&
           u_phoneNum.isEmpty &&
           emailAdd.isEmpty) {
-        SnackBar(
+        const SnackBar(
           content: Text("Please fill up the form!"),
         );
 
@@ -200,12 +175,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
               'email_add': emailAdd,
               'likes': []
             })
-            .then((value) => SnackBar(
+            .then((value) => const SnackBar(
                   content: Text("User signed up Successfully!"),
                 ))
             .catchError((error) {
               print(error);
-              return SnackBar(
+              return const SnackBar(
                 content: Text("Error occurred while signing up User Details!"),
               );
             });
@@ -216,8 +191,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         final String serviceName = serviceNameController.text;
         final String serviceCat = serviceCategory;
         final String serviceNum = contactNumController.text;
-        final TimeOfDay? serviceStart = selectedTimeST;
-        final TimeOfDay? serviceEnd = selectedTimeET;
+        final TimeOfDay? startTime = selectedTimeST;
+        final TimeOfDay? endTime = selectedTimeET;
         final String serviceAddress = serviceAddressController.text;
         final String gcashNum = gcashNumController.text;
         final String? imagePath = image?.path;
@@ -225,8 +200,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         if (serviceName.isEmpty &&
             serviceCategory.isEmpty &&
             serviceNum.isEmpty &&
-            serviceStart == null &&
-            serviceEnd == null &&
+            startTime == null &&
+            endTime == null &&
             serviceAddress.isEmpty &&
             gcashNum.isEmpty &&
             imagePath == null) {
@@ -235,11 +210,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
           );
           return;
         } else {
+          final String serviceStart = startTime!.format(context).toString();
+          final String serviceEnd = endTime!.format(context).toString();
           // ?======== Upload Image First in Firebase Storage==============
           File file = File(imagePath!);
 
           // Generate a unique image name using UUID
-          final imageName = Uuid().v4(); // Generates a random UUID
+          final imageName = const Uuid().v4(); // Generates a random UUID
 
           final storageRef = FirebaseStorage.instance
               .ref()
@@ -268,12 +245,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 'uploaded_doc': imageUrl,
                 'is_disabled': false,
               })
-              .then((value) => SnackBar(
+              .then((value) => const SnackBar(
                     content: Text("Service Provider signed up Successfully!"),
                   ))
               .catchError((error) {
                 print(error);
-                return SnackBar(
+                return const SnackBar(
                   content: Text(
                       "Error occurred while signing up Service Provider Details!"),
                 );

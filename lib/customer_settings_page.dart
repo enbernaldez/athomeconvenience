@@ -2,7 +2,9 @@ import 'package:athomeconvenience/change_password_page.dart';
 import 'package:athomeconvenience/contact_us_page.dart';
 import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/terms_and_conditions_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerSettingsPage extends StatefulWidget {
   const CustomerSettingsPage({super.key});
@@ -162,14 +164,20 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                               horizontal: 8,
                             ),
                             child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      return const LandingPage();
-                                    },
-                                  ),
-                                );
+                              onTap: () async {
+                                // ?========set SharedPreference========
+                                final SharedPreferences s =
+                                    await SharedPreferences.getInstance();
+                                s.setBool("is_signedin", false);
+                                // ?==================================
+
+                                await FirebaseAuth.instance.signOut();
+
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            LandingPage()),
+                                    (route) => false);
                               },
                               child: Text(
                                 'LOG OUT',
