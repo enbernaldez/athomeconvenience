@@ -4,7 +4,7 @@
             "outputFile": "com.example.athomeconvenience.app-mergeDebugResources-26:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Acer\\Desktop\\athomeconvenience\\android\\app\\src\\main\\res\\values-night\\styles.xml",
+                    "source": "C:\\Users\\Tantan\\AndroidStudioProjects\\athomeconvenience\\android\\app\\src\\main\\res\\values-night\\styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",
