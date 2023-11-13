@@ -23,60 +23,53 @@ class CategoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxWidth: 560.0,
-        minHeight: 50.0,
-      ),
-      child: Flexible(
-        flex: 1,
-        child: ElevatedButton(
-          onPressed: onPress,
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStatePropertyAll(buttonColor ?? Colors.blue),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-            ),
-            padding: const MaterialStatePropertyAll(
-              EdgeInsets.all(8),
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPress,
+        style: ButtonStyle(
+          backgroundColor: MaterialStatePropertyAll(buttonColor ?? Colors.blue),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
             ),
           ),
-          child: Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            children: [
-              Visibility(
-                visible: haveAdditional ?? false,
-                child: Image.asset(image ?? ''),
-              ),
-              Stack(
-                children: [
-                  Visibility(
-                    visible: haveAdditional ?? false,
-                    child: AutoSizeText(
-                      buttonText,
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            foreground: Paint()
-                              ..style = PaintingStyle.stroke
-                              ..strokeWidth = 6
-                              ..color = Colors.lightBlue[100]!,
-                          ),
-                      minFontSize: 12,
-                      maxLines: 1,
-                    ),
-                  ),
-                  AutoSizeText(
+          padding: MaterialStatePropertyAll(
+            EdgeInsets.symmetric(vertical: padding ?? 12.0, horizontal: 12.0),
+          ),
+        ),
+        child: Stack(
+          alignment: AlignmentDirectional.bottomCenter,
+          children: [
+            Visibility(
+              visible: haveAdditional ?? false,
+              child: Image.asset(image ?? ''),
+            ),
+            Stack(
+              children: [
+                Visibility(
+                  visible: haveAdditional ?? false,
+                  child: AutoSizeText(
                     buttonText,
-                    style: textType ?? Theme.of(context).textTheme.titleMedium,
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          foreground: Paint()
+                            ..style = PaintingStyle.stroke
+                            ..strokeWidth = 6
+                            ..color = Colors.lightBlue[100]!,
+                        ),
                     minFontSize: 12,
                     maxLines: 1,
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+                AutoSizeText(
+                  buttonText,
+                  style: textType ?? Theme.of(context).textTheme.titleMedium,
+                  minFontSize: 12,
+                  maxLines: 1,
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
