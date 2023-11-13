@@ -1,15 +1,20 @@
+import 'package:athomeconvenience/authentication/check_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:firebase_core/firebase_core.dart';
 // import 'firebase_options.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'landing_page.dart';
 
-void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(
-  //    options: DefaultFirebaseOptions.currentPlatform,
-  // );
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -84,7 +89,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const LandingPage(),
+      home: const CheckAuth(),
     );
   }
 }

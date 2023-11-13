@@ -1,4 +1,10 @@
 import 'dart:io';
+import 'package:athomeconvenience/authentication/otp_screen.dart';
+import 'package:athomeconvenience/navigation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:country_picker/country_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:full_screen_image/full_screen_image.dart';
@@ -7,32 +13,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 import 'landing_page.dart';
-
-// void addUserToFirestore() async {
-//   // Create a new user with a first and last name
-//   final user = <String, dynamic>{
-//     "fullName": "test",
-//     "phoneNumber": "09123456789",
-//     "address": "qwertyuiop",
-//     "emailAddress": "asdfghjkl",
-//     "password": "qazwsxedcrfvtgb",
-//     "profileName": "",
-//     "category": "",
-//     "contactNumber": "",
-//     "workingHours": "",
-//     "location": "",
-//     "gcashNumber": "",
-//     "forPhotoVerification": "",
-//   };
-
-//   // Get a reference to your Firestore database
-//   final db = FirebaseFirestore.instance;
-
-//   // Add a new document with a generated ID
-//   await db.collection("users").add(user).then((DocumentReference doc) =>
-//       print('DocumentSnapshot added with ID: ${doc.id}'));
-// }
 
 List<String> serviceCategoryList = <String>[
   'Electrical',
@@ -53,12 +36,26 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  bool _passwordVisible = false;
+  // ! ====TextEditing Controllers=====
+  // * USER
+  final fullNameController = TextEditingController();
+  final phoneNumController = TextEditingController();
+  final addressController = TextEditingController();
+  final emailAddressController = TextEditingController();
+
+  // * SERVICE PROVIDER
+  final serviceNameController = TextEditingController();
+  final contactNumController = TextEditingController();
+  final serviceAddressController = TextEditingController();
+  final gcashNumController = TextEditingController();
+  // !=================================
+
+  // bool _passwordVisible = false;
   bool? _isServiceProvider = false;
-  String serviceCategory = serviceCategoryList.first;
+  String serviceCategory = serviceCategoryList.first; //*
   final _registrationFormKey = GlobalKey<FormState>();
-  TimeOfDay? selectedTimeST;
-  TimeOfDay? selectedTimeET;
+  TimeOfDay? selectedTimeST; //*
+  TimeOfDay? selectedTimeET; //*
   TimePickerEntryMode entryMode = TimePickerEntryMode.dialOnly;
   TextDirection textDirection = TextDirection.ltr;
   MaterialTapTargetSize tapTargetSize = MaterialTapTargetSize.padded;
@@ -67,7 +64,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String startTime = '';
   String buttonTextST = 'Start Time';
   String buttonTextET = 'End Time';
-  XFile? image;
+  XFile? image; //*
   final ImagePicker picker = ImagePicker();
 
   Future getImage(ImageSource media) async {
@@ -147,6 +144,132 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+    // !  ============HANDLE REGISTER================
+    void handleRegister() async {
+      final firestore = FirebaseFirestore.instance;
+      String? uid = FirebaseAuth.instance.currentUser!.uid;
+      final String fullName = fullNameController.text;
+      final String u_address = addressController.text;
+      final String u_phoneNum = phoneNumController.text;
+      final String emailAdd = emailAddressController.text;
+
+      if (fullName.isEmpty &&
+          u_address.isEmpty &&
+          u_phoneNum.isEmpty &&
+          emailAdd.isEmpty) {
+        const SnackBar(
+          content: Text("Please fill up the form!"),
+        );
+
+        return;
+      } else {
+        // ?========= insert user details to firestore=================
+        await firestore
+            .collection('users')
+            .doc(uid)
+            .set({
+              'uid': uid,
+              'name': fullName,
+              'address': u_address,
+              'phone_num': u_phoneNum,
+              'email_add': emailAdd,
+              'likes': []
+            })
+            .then((value) => const SnackBar(
+                  content: Text("User signed up Successfully!"),
+                ))
+            .catchError((error) {
+              print(error);
+              return const SnackBar(
+                content: Text("Error occurred while signing up User Details!"),
+              );
+            });
+        // ?======================================================
+      }
+
+      if (_isServiceProvider == true) {
+        final String serviceName = serviceNameController.text;
+        final String serviceCat = serviceCategory;
+        final String serviceNum = contactNumController.text;
+        final TimeOfDay? startTime = selectedTimeST;
+        final TimeOfDay? endTime = selectedTimeET;
+        final String serviceAddress = serviceAddressController.text;
+        final String gcashNum = gcashNumController.text;
+        final String? imagePath = image?.path;
+
+        if (serviceName.isEmpty &&
+            serviceCategory.isEmpty &&
+            serviceNum.isEmpty &&
+            startTime == null &&
+            endTime == null &&
+            serviceAddress.isEmpty &&
+            gcashNum.isEmpty &&
+            imagePath == null) {
+          SnackBar(
+            content: Text("Please fill up the form!"),
+          );
+          return;
+        } else {
+          final String serviceStart = startTime!.format(context).toString();
+          final String serviceEnd = endTime!.format(context).toString();
+          // ?======== Upload Image First in Firebase Storage==============
+          File file = File(imagePath!);
+
+          // Generate a unique image name using UUID
+          final imageName = const Uuid().v4(); // Generates a random UUID
+
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('provider_profile')
+              .child('$imageName.jpg'); // Use the unique image name
+
+          final uploadImage = storageRef.putFile(file);
+
+          final TaskSnapshot snapshot1 = await uploadImage;
+          final imageUrl = await snapshot1.ref.getDownloadURL();
+          // ?============================================================
+
+          // ?==========insert service provider details================
+          await firestore
+              .collection('service_provider')
+              .doc(uid)
+              .set({
+                'uid': uid,
+                'service_provider_name': serviceName,
+                'category': serviceCat,
+                'contact_num': serviceNum,
+                'service_start': serviceStart,
+                'service_end': serviceEnd,
+                'service_address': serviceAddress,
+                'gcash_num': gcashNum,
+                'uploaded_doc': imageUrl,
+                'is_disabled': false,
+              })
+              .then((value) => const SnackBar(
+                    content: Text("Service Provider signed up Successfully!"),
+                  ))
+              .catchError((error) {
+                print(error);
+                return const SnackBar(
+                  content: Text(
+                      "Error occurred while signing up Service Provider Details!"),
+                );
+              });
+          // ?=========================================================
+        }
+      }
+      // ?========set SharedPreference========
+      final SharedPreferences s = await SharedPreferences.getInstance();
+      s.setBool("is_signedin", true);
+      // ?==================================
+
+      // ? Navigate to Navigation after successful registration
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => Navigation()),
+          (route) => false);
+    }
+    // ! =================================================
+
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
@@ -187,6 +310,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     child: Column(
                       children: [
                         TextFormField(
+                          controller: fullNameController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Required';
@@ -202,6 +326,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         ),
                         const SizedBox(height: 20),
                         TextFormField(
+                          controller: phoneNumController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Required';
@@ -223,6 +348,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         ),
                         const SizedBox(height: 20),
                         TextFormField(
+                          controller: addressController,
                           keyboardType: TextInputType.text,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
@@ -232,6 +358,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         ),
                         const SizedBox(height: 20),
                         TextFormField(
+                          controller: emailAddressController,
                           validator: (value) {
                             if (!EmailValidator.validate(value!)) {
                               return 'Please enter a valid email address.';
@@ -246,32 +373,32 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        TextFormField(
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Required';
-                            }
-                            return null;
-                          },
-                          obscureText: !_passwordVisible,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            labelText: 'Password',
-                            contentPadding: const EdgeInsets.all(15),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _passwordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _passwordVisible = !_passwordVisible;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
+                        // TextFormField(
+                        //   validator: (value) {
+                        //     if (value == null || value.isEmpty) {
+                        //       return 'Required';
+                        //     }
+                        //     return null;
+                        //   },
+                        //   obscureText: !_passwordVisible,
+                        //   decoration: InputDecoration(
+                        //     border: const OutlineInputBorder(),
+                        //     labelText: 'Password',
+                        //     contentPadding: const EdgeInsets.all(15),
+                        //     suffixIcon: IconButton(
+                        //       icon: Icon(
+                        //         _passwordVisible
+                        //             ? Icons.visibility
+                        //             : Icons.visibility_off,
+                        //       ),
+                        //       onPressed: () {
+                        //         setState(() {
+                        //           _passwordVisible = !_passwordVisible;
+                        //         });
+                        //       },
+                        //     ),
+                        //   ),
+                        // ),
                         const SizedBox(height: 20),
                         Align(
                           alignment: Alignment.topLeft,
@@ -317,6 +444,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             children: [
                               const SizedBox(height: 10),
                               TextFormField(
+                                controller: serviceNameController,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Required';
@@ -357,6 +485,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               ),
                               const SizedBox(height: 20),
                               TextFormField(
+                                controller: contactNumController,
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(11),
                                 ],
@@ -502,6 +631,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               ),
                               const SizedBox(height: 20),
                               TextFormField(
+                                controller: serviceAddressController,
                                 keyboardType: TextInputType.text,
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
@@ -511,6 +641,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               ),
                               const SizedBox(height: 20),
                               TextFormField(
+                                controller: gcashNumController,
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(11),
                                 ],
@@ -614,15 +745,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           child: SizedBox(
                             height: 50,
                             child: ElevatedButton(
-                              onPressed: () {
-                                if (_registrationFormKey.currentState!
-                                    .validate()) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text('Processing Data')),
-                                  );
-                                }
-                              },
+                              onPressed: handleRegister,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
                               ),

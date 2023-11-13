@@ -69,7 +69,9 @@ class LandingPage extends StatelessWidget {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (BuildContext context) {
-                                return const LogInPage();
+                                return LogInPage(
+                                  isRegister: false,
+                                );
                               },
                             ),
                           );
@@ -98,7 +100,7 @@ class LandingPage extends StatelessWidget {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (BuildContext context) {
-                                return const RegistrationPage();
+                                return LogInPage(isRegister: true);
                               },
                             ),
                           );
