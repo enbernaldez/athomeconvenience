@@ -1,4 +1,4 @@
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:athomeconvenience/widgets/category_button.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -104,443 +104,57 @@ class _HomePageState extends State<HomePage> {
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
-                    Column(
+                    const Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: Theme.of(context)
-                                      .elevatedButtonTheme
-                                      .style,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                    ),
-                                    child: Stack(
-                                      alignment:
-                                          AlignmentDirectional.bottomCenter,
-                                      children: [
-                                        Image.asset(
-                                            'images/icon_electrical.png'),
-                                        Stack(
-                                          children: [
-                                            AutoSizeText(
-                                              'Electrical',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall!
-                                                  .copyWith(
-                                                    foreground: Paint()
-                                                      ..style =
-                                                          PaintingStyle.stroke
-                                                      ..strokeWidth = 6
-                                                      ..color = Colors
-                                                          .lightBlue[100]!,
-                                                  ),
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                            AutoSizeText(
-                                              'Electrical',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall,
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            CategoryButton(
+                              image: 'images/icon_electrical.png',
+                              category: 'Electrical',
                             ),
-                            Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: Theme.of(context)
-                                      .elevatedButtonTheme
-                                      .style,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                    ),
-                                    child: Stack(
-                                      alignment:
-                                          AlignmentDirectional.bottomCenter,
-                                      children: [
-                                        Image.asset('images/icon_handyman.png'),
-                                        Stack(
-                                          children: [
-                                            AutoSizeText(
-                                              'Handyman',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall!
-                                                  .copyWith(
-                                                    foreground: Paint()
-                                                      ..style =
-                                                          PaintingStyle.stroke
-                                                      ..strokeWidth = 6
-                                                      ..color = Colors
-                                                          .lightBlue[100]!,
-                                                  ),
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                            AutoSizeText(
-                                              'Handyman',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall,
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            CategoryButton(
+                              image: 'images/icon_handyman.png',
+                              category: 'Handyman',
                             ),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: Theme.of(context)
-                                      .elevatedButtonTheme
-                                      .style,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                    ),
-                                    child: Stack(
-                                      alignment:
-                                          AlignmentDirectional.bottomCenter,
-                                      children: [
-                                        Image.asset(
-                                            'images/icon_bodygroomer.png'),
-                                        Stack(
-                                          children: [
-                                            AutoSizeText(
-                                              'Body Groomer',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall!
-                                                  .copyWith(
-                                                    foreground: Paint()
-                                                      ..style =
-                                                          PaintingStyle.stroke
-                                                      ..strokeWidth = 6
-                                                      ..color = Colors
-                                                          .lightBlue[100]!,
-                                                  ),
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                            AutoSizeText(
-                                              'Body Groomer',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall,
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            CategoryButton(
+                              image: 'images/icon_bodygroomer.png',
+                              category: 'Body Groomer',
                             ),
-                            Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: Theme.of(context)
-                                      .elevatedButtonTheme
-                                      .style,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                    ),
-                                    child: Stack(
-                                      alignment:
-                                          AlignmentDirectional.bottomCenter,
-                                      children: [
-                                        Image.asset('images/icon_plumber.png'),
-                                        Stack(
-                                          children: [
-                                            AutoSizeText(
-                                              'Plumber',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall!
-                                                  .copyWith(
-                                                    foreground: Paint()
-                                                      ..style =
-                                                          PaintingStyle.stroke
-                                                      ..strokeWidth = 6
-                                                      ..color = Colors
-                                                          .lightBlue[100]!,
-                                                  ),
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                            AutoSizeText(
-                                              'Plumber',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall,
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            CategoryButton(
+                              image: 'images/icon_plumber.png',
+                              category: 'Plumber',
                             ),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: Theme.of(context)
-                                      .elevatedButtonTheme
-                                      .style,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Stack(
-                                      alignment:
-                                          AlignmentDirectional.bottomCenter,
-                                      children: [
-                                        Image.asset('images/icon_cleaning.png'),
-                                        Stack(
-                                          children: [
-                                            AutoSizeText(
-                                              'Cleaning',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall!
-                                                  .copyWith(
-                                                    foreground: Paint()
-                                                      ..style =
-                                                          PaintingStyle.stroke
-                                                      ..strokeWidth = 6
-                                                      ..color = Colors
-                                                          .lightBlue[100]!,
-                                                  ),
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                            AutoSizeText(
-                                              'Cleaning',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall,
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            CategoryButton(
+                              image: 'images/icon_cleaning.png',
+                              category: 'Cleaning',
                             ),
-                            Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: Theme.of(context)
-                                      .elevatedButtonTheme
-                                      .style,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                    ),
-                                    child: Stack(
-                                      alignment:
-                                          AlignmentDirectional.bottomCenter,
-                                      children: [
-                                        Image.asset(
-                                            'images/icon_technician.png'),
-                                        Stack(
-                                          children: [
-                                            AutoSizeText(
-                                              'Technician',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall!
-                                                  .copyWith(
-                                                    foreground: Paint()
-                                                      ..style =
-                                                          PaintingStyle.stroke
-                                                      ..strokeWidth = 6
-                                                      ..color = Colors
-                                                          .lightBlue[100]!,
-                                                  ),
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                            AutoSizeText(
-                                              'Technician',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall,
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            CategoryButton(
+                              image: 'images/icon_technician.png',
+                              category: 'Technician',
                             ),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: Theme.of(context)
-                                      .elevatedButtonTheme
-                                      .style,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                    ),
-                                    child: Stack(
-                                      alignment:
-                                          AlignmentDirectional.bottomCenter,
-                                      children: [
-                                        Image.asset(
-                                            'images/icon_greenscaping.png'),
-                                        Stack(
-                                          children: [
-                                            AutoSizeText(
-                                              'Greenscaping',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall!
-                                                  .copyWith(
-                                                    foreground: Paint()
-                                                      ..style =
-                                                          PaintingStyle.stroke
-                                                      ..strokeWidth = 6
-                                                      ..color = Colors
-                                                          .lightBlue[100]!,
-                                                  ),
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                            AutoSizeText(
-                                              'Greenscaping',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall,
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            CategoryButton(
+                              image: 'images/icon_greenscaping.png',
+                              category: 'Greenscaping',
                             ),
-                            Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: Theme.of(context)
-                                      .elevatedButtonTheme
-                                      .style,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                    ),
-                                    child: Stack(
-                                      alignment:
-                                          AlignmentDirectional.bottomCenter,
-                                      children: [
-                                        Image.asset('images/icon_petcare.png'),
-                                        Stack(
-                                          children: [
-                                            AutoSizeText(
-                                              'Pet Care',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall!
-                                                  .copyWith(
-                                                    foreground: Paint()
-                                                      ..style =
-                                                          PaintingStyle.stroke
-                                                      ..strokeWidth = 6
-                                                      ..color = Colors
-                                                          .lightBlue[100]!,
-                                                  ),
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                            AutoSizeText(
-                                              'Pet Care',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall,
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            CategoryButton(
+                              image: 'images/icon_petcare.png',
+                              category: 'Pet Care',
                             ),
                           ],
                         ),
