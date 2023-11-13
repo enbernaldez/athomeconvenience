@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
-class CategoryButton extends StatelessWidget {
+class button extends StatelessWidget {
   final dynamic padding; //button vertical content padding
   final Function()? onPress;
   final Color? buttonColor;
@@ -10,7 +10,7 @@ class CategoryButton extends StatelessWidget {
   final String? image;
   final String buttonText;
 
-  const CategoryButton({
+  const button({
     super.key,
     this.padding,
     required this.onPress,

@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                CategoryButton(
+                button(
                   padding: 8.0,
                   onPress: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                   image: 'images/icon_electrical.png',
                   buttonText: 'Electrical',
                 ),
-                CategoryButton(
+                button(
                   padding: 8.0,
                   onPress: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -131,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                   image: 'images/icon_handyman.png',
                   buttonText: 'Handyman',
                 ),
-                CategoryButton(
+                button(
                   padding: 8.0,
                   onPress: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                   textType: Theme.of(context).textTheme.titleSmall,
                   buttonText: 'Body Groomer',
                 ),
-                CategoryButton(
+                button(
                   padding: 8.0,
                   onPress: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                   image: 'images/icon_plumber.png',
                   buttonText: 'Plumber',
                 ),
-                CategoryButton(
+                button(
                   padding: 8.0,
                   onPress: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                   image: 'images/icon_cleaning.png',
                   buttonText: 'Cleaning',
                 ),
-                CategoryButton(
+                button(
                   padding: 8.0,
                   onPress: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -183,7 +183,7 @@ class _HomePageState extends State<HomePage> {
                   image: 'images/icon_technician.png',
                   buttonText: 'Technician',
                 ),
-                CategoryButton(
+                button(
                   padding: 8.0,
                   onPress: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -196,7 +196,7 @@ class _HomePageState extends State<HomePage> {
                   image: 'images/icon_greenscaping.png',
                   buttonText: 'Greenscaping',
                 ),
-                CategoryButton(
+                button(
                   padding: 8.0,
                   onPress: () {
                     Navigator.of(context).push(MaterialPageRoute(

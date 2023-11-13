@@ -168,7 +168,7 @@ class _LogInPageState extends State<LogInPage> {
                               )),
                         ),
                         const SizedBox(height: 30),
-                        CategoryButton(
+                        button(
                           buttonText:
                               widget.isRegister == true ? 'NEXT' : 'SIGN IN',
                           onPress: handleClick,

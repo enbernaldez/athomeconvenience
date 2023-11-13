@@ -56,7 +56,7 @@ class LandingPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
-                CategoryButton(
+                button(
                   buttonText: 'LOG IN',
                   onPress: () {
                     Navigator.of(context).push(
@@ -71,7 +71,7 @@ class LandingPage extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 20),
-                CategoryButton(
+                button(
                   buttonText: 'REGISTER',
                   buttonColor: Colors.orange,
                   textType: Theme.of(context).textTheme.titleMedium!.copyWith(
