@@ -1,12 +1,10 @@
 import 'package:athomeconvenience/authentication/otp_screen.dart';
-import 'package:athomeconvenience/navigation.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'registration_page.dart';
-import 'package:athomeconvenience/forgot_password_page.dart';
+import 'package:athomeconvenience/widgets/buttons.dart';
 
 class LogInPage extends StatefulWidget {
   bool isRegister;
@@ -146,77 +144,28 @@ class _LogInPageState extends State<LogInPage> {
                                 ),
                               )),
                         ),
-                        // const SizedBox(height: 20),
-                        // TextFormField(
-                        //   validator: (value) {
-                        //     if (value == null || value.isEmpty) {
-                        //       return 'Required';
-                        //     }
-                        //     return null;
-                        //   },
-                        //   obscureText: !_passwordVisible,
-                        //   inputFormatters: [
-                        //     LengthLimitingTextInputFormatter(11),
-                        //   ],
-                        //   keyboardType: TextInputType.text,
-                        //   decoration: InputDecoration(
-                        //     border: const OutlineInputBorder(),
-                        //     labelText: 'Password',
-                        //     contentPadding: const EdgeInsets.all(15),
-                        //     suffixIcon: IconButton(
-                        //       icon: Icon(
-                        //         _passwordVisible
-                        //             ? Icons.visibility
-                        //             : Icons.visibility_off,
+                        const SizedBox(height: 30),
+                        CategoryButton(
+                          buttonText:
+                              widget.isRegister == true ? 'NEXT' : 'SIGN IN',
+                          onPress: handleClick,
+                        ),
+                        // FractionallySizedBox(
+                        //   widthFactor: 1,
+                        //   child: SizedBox(
+                        //     height: 50,
+                        //     child: ElevatedButton(
+                        //       onPressed: handleClick,
+                        //       style: ElevatedButton.styleFrom(
+                        //         backgroundColor: Colors.blue,
                         //       ),
-                        //       onPressed: () {
-                        //         setState(() {
-                        //           _passwordVisible = !_passwordVisible;
-                        //         });
-                        //       },
+                        //       child: Text(
+                        //         widget.isRegister == true ? 'NEXT' : 'SIGN IN',
+                        //         style: Theme.of(context).textTheme.titleMedium,
+                        //       ),
                         //     ),
                         //   ),
                         // ),
-                        // const SizedBox(height: 5),
-                        // Row(
-                        //   children: [
-                        //     const Text('Forgot password? '),
-                        //     GestureDetector(
-                        //       onTap: () {
-                        //         Navigator.of(context).push(
-                        //           MaterialPageRoute(
-                        //             builder: (BuildContext context) {
-                        //               return const ForgotPasswordPage();
-                        //             },
-                        //           ),
-                        //         );
-                        //       },
-                        //       child: const Text(
-                        //         'Click here.',
-                        //         style: TextStyle(
-                        //           color: Colors.blue,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                        const SizedBox(height: 30),
-                        FractionallySizedBox(
-                          widthFactor: 1,
-                          child: SizedBox(
-                            height: 50,
-                            child: ElevatedButton(
-                              onPressed: handleClick,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                              ),
-                              child: Text(
-                                widget.isRegister == true ? 'NEXT' : 'SIGN IN',
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                            ),
-                          ),
-                        ),
                         const SizedBox(height: 10),
                         widget.isRegister == true
                             ? SizedBox()

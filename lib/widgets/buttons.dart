@@ -2,11 +2,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class CategoryButton extends StatelessWidget {
-  final dynamic padding;
+  final dynamic padding; //button vertical content padding
   final Function()? onPress;
   final Color? buttonColor;
-  final bool? haveAdditional;
-  final TextStyle? textType;
+  final bool? haveAdditional; //for category button's image and stroke
+  final TextStyle? textType; //textStyle
   final String? image;
   final String buttonText;
 
@@ -23,11 +23,8 @@ class CategoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxWidth: 560.0,
-        minHeight: 50.0,
-      ),
+    return SizedBox(
+      width: double.infinity,
       child: ElevatedButton(
         onPressed: onPress,
         style: ButtonStyle(
@@ -37,8 +34,8 @@ class CategoryButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.0),
             ),
           ),
-          padding: const MaterialStatePropertyAll(
-            EdgeInsets.all(8),
+          padding: MaterialStatePropertyAll(
+            EdgeInsets.symmetric(vertical: padding ?? 12.0, horizontal: 12.0),
           ),
         ),
         child: Stack(
