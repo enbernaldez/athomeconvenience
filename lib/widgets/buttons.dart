@@ -2,11 +2,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class CategoryButton extends StatelessWidget {
-  final dynamic padding;
+  final dynamic padding; //button vertical content padding
   final Function()? onPress;
   final Color? buttonColor;
-  final bool? haveAdditional;
-  final TextStyle? textType;
+  final bool? haveAdditional; //for category button's image and stroke
+  final TextStyle? textType; //textStyle
   final String? image;
   final String buttonText;
 
