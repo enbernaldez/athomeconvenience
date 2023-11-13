@@ -1,3 +1,4 @@
+import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:athomeconvenience/navigation.dart';
@@ -56,67 +57,38 @@ class LandingPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 560,
-                  ),
-                  child: FractionallySizedBox(
-                    widthFactor: 1,
-                    child: SizedBox(
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) {
-                                return LogInPage(
-                                  isRegister: false,
-                                );
-                              },
-                            ),
+                CategoryButton(
+                  buttonText: 'LOG IN',
+                  onPress: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return LogInPage(
+                            isRegister: false,
                           );
                         },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue),
-                        child: Text(
-                          'LOG IN',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 560,
-                  ),
-                  child: FractionallySizedBox(
-                    widthFactor: 1,
-                    child: SizedBox(
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) {
-                                return LogInPage(isRegister: true);
-                              },
-                            ),
+                CategoryButton(
+                  buttonText: 'REGISTER',
+                  buttonColor: Colors.orange,
+                  textType: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        color: Colors.orange[50],
+                      ),
+                  onPress: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return LogInPage(
+                            isRegister: true,
                           );
                         },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orange),
-                        child: Text(
-                          'REGISTER',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(color: Colors.orange[50]),
-                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ],
             ),

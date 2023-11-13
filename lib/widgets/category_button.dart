@@ -1,4 +1,3 @@
-import 'package:athomeconvenience/shop_list_page.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
@@ -24,11 +23,7 @@ class _CategoryButtonState extends State<CategoryButton> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    ShopListPage(category: widget.category)));
-          },
+          onPressed: () {},
           style: Theme.of(context).elevatedButtonTheme.style,
           child: Padding(
             padding: const EdgeInsets.symmetric(
