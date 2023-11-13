@@ -1,4 +1,4 @@
-import 'package:athomeconvenience/widgets/category_button.dart';
+import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,42 +16,39 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.only(top: 36, bottom: 36),
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: FractionallySizedBox(
-                widthFactor: 0.9,
-                child: SearchAnchor(
-                  builder: (BuildContext context, SearchController controller) {
-                    return SearchBar(
-                      controller: controller,
-                      padding: const MaterialStatePropertyAll<EdgeInsets>(
-                        EdgeInsets.symmetric(horizontal: 16),
-                      ),
+            FractionallySizedBox(
+              widthFactor: 0.9,
+              child: SearchAnchor(
+                builder: (BuildContext context, SearchController controller) {
+                  return SearchBar(
+                    controller: controller,
+                    padding: const MaterialStatePropertyAll<EdgeInsets>(
+                      EdgeInsets.symmetric(horizontal: 16),
+                    ),
+                    onTap: () {
+                      controller.openView();
+                    },
+                    onChanged: (_) {
+                      controller.openView();
+                    },
+                    leading: const Icon(Icons.search),
+                    hintText: 'Search...',
+                  );
+                },
+                suggestionsBuilder:
+                    (BuildContext context, SearchController controller) {
+                  return List<ListTile>.generate(5, (int index) {
+                    final String item = 'item $index';
+                    return ListTile(
+                      title: Text(item),
                       onTap: () {
-                        controller.openView();
+                        setState(() {
+                          controller.closeView(item);
+                        });
                       },
-                      onChanged: (_) {
-                        controller.openView();
-                      },
-                      leading: const Icon(Icons.search),
-                      hintText: 'Search...',
                     );
-                  },
-                  suggestionsBuilder:
-                      (BuildContext context, SearchController controller) {
-                    return List<ListTile>.generate(5, (int index) {
-                      final String item = 'item $index';
-                      return ListTile(
-                        title: Text(item),
-                        onTap: () {
-                          setState(() {
-                            controller.closeView(item);
-                          });
-                        },
-                      );
-                    });
-                  },
-                ),
+                  });
+                },
               ),
             ),
             const SizedBox(height: 24),
@@ -62,7 +59,7 @@ class _HomePageState extends State<HomePage> {
               child: Container(
                 color: Colors.blue[50],
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
+                  padding: const EdgeInsets.fromLTRB(24, 16, 0, 16),
                   child: Row(
                     children: [
                       Expanded(
@@ -88,81 +85,98 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            const SizedBox(height: 24),
-            Align(
-              alignment: Alignment.topCenter,
-              child: FractionallySizedBox(
-                widthFactor: 0.9,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Services Available',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                    ),
-                    const Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CategoryButton(
-                              image: 'images/icon_electrical.png',
-                              category: 'Electrical',
-                            ),
-                            CategoryButton(
-                              image: 'images/icon_handyman.png',
-                              category: 'Handyman',
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CategoryButton(
-                              image: 'images/icon_bodygroomer.png',
-                              category: 'Body Groomer',
-                            ),
-                            CategoryButton(
-                              image: 'images/icon_plumber.png',
-                              category: 'Plumber',
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CategoryButton(
-                              image: 'images/icon_cleaning.png',
-                              category: 'Cleaning',
-                            ),
-                            CategoryButton(
-                              image: 'images/icon_technician.png',
-                              category: 'Technician',
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CategoryButton(
-                              image: 'images/icon_greenscaping.png',
-                              category: 'Greenscaping',
-                            ),
-                            CategoryButton(
-                              image: 'images/icon_petcare.png',
-                              category: 'Pet Care',
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+            const SizedBox(height: 24.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Services Available',
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
+            ),
+            GridView.count(
+              crossAxisCount: 2,
+              padding: const EdgeInsets.all(24.0),
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                CategoryButton(
+                  padding: 8.0,
+                  onPress: () {},
+                  buttonColor: Colors.lightBlue[100],
+                  haveAdditional: true,
+                  textType: Theme.of(context).textTheme.titleSmall,
+                  image: 'images/icon_electrical.png',
+                  buttonText: 'Electrical',
+                ),
+                CategoryButton(
+                  padding: 8.0,
+                  onPress: () {},
+                  buttonColor: Colors.lightBlue[100],
+                  haveAdditional: true,
+                  textType: Theme.of(context).textTheme.titleSmall,
+                  image: 'images/icon_handyman.png',
+                  buttonText: 'Handyman',
+                ),
+                CategoryButton(
+                  padding: 8.0,
+                  onPress: () {},
+                  buttonColor: Colors.lightBlue[100],
+                  image: 'images/icon_bodygroomer.png',
+                  haveAdditional: true,
+                  textType: Theme.of(context).textTheme.titleSmall,
+                  buttonText: 'Body Groomer',
+                ),
+                CategoryButton(
+                  padding: 8.0,
+                  onPress: () {},
+                  buttonColor: Colors.lightBlue[100],
+                  haveAdditional: true,
+                  textType: Theme.of(context).textTheme.titleSmall,
+                  image: 'images/icon_plumber.png',
+                  buttonText: 'Plumber',
+                ),
+                CategoryButton(
+                  padding: 8.0,
+                  onPress: () {},
+                  buttonColor: Colors.lightBlue[100],
+                  haveAdditional: true,
+                  textType: Theme.of(context).textTheme.titleSmall,
+                  image: 'images/icon_cleaning.png',
+                  buttonText: 'Cleaning',
+                ),
+                CategoryButton(
+                  padding: 8.0,
+                  onPress: () {},
+                  buttonColor: Colors.lightBlue[100],
+                  haveAdditional: true,
+                  textType: Theme.of(context).textTheme.titleSmall,
+                  image: 'images/icon_technician.png',
+                  buttonText: 'Technician',
+                ),
+                CategoryButton(
+                  padding: 8.0,
+                  onPress: () {},
+                  buttonColor: Colors.lightBlue[100],
+                  haveAdditional: true,
+                  textType: Theme.of(context).textTheme.titleSmall,
+                  image: 'images/icon_greenscaping.png',
+                  buttonText: 'Greenscaping',
+                ),
+                CategoryButton(
+                  padding: 8.0,
+                  onPress: () {},
+                  buttonColor: Colors.lightBlue[100],
+                  haveAdditional: true,
+                  textType: Theme.of(context).textTheme.titleSmall,
+                  image: 'images/icon_petcare.png',
+                  buttonText: 'Pet Care',
+                ),
+              ],
             ),
           ],
         ),
