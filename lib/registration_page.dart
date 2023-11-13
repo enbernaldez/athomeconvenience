@@ -48,7 +48,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final gcashNumController = TextEditingController();
   // !=================================
 
-  // bool _passwordVisible = false;
   bool? _isServiceProvider = false;
   String serviceCategory = serviceCategoryList.first; //*
   final _registrationFormKey = GlobalKey<FormState>();
@@ -370,33 +369,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             contentPadding: EdgeInsets.all(15),
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        // TextFormField(
-                        //   validator: (value) {
-                        //     if (value == null || value.isEmpty) {
-                        //       return 'Required';
-                        //     }
-                        //     return null;
-                        //   },
-                        //   obscureText: !_passwordVisible,
-                        //   decoration: InputDecoration(
-                        //     border: const OutlineInputBorder(),
-                        //     labelText: 'Password',
-                        //     contentPadding: const EdgeInsets.all(15),
-                        //     suffixIcon: IconButton(
-                        //       icon: Icon(
-                        //         _passwordVisible
-                        //             ? Icons.visibility
-                        //             : Icons.visibility_off,
-                        //       ),
-                        //       onPressed: () {
-                        //         setState(() {
-                        //           _passwordVisible = !_passwordVisible;
-                        //         });
-                        //       },
-                        //     ),
-                        //   ),
-                        // ),
                         const SizedBox(height: 20),
                         Align(
                           alignment: Alignment.topLeft,

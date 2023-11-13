@@ -1,4 +1,5 @@
 import 'package:athomeconvenience/authentication/otp_screen.dart';
+import 'package:athomeconvenience/registration_page.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -79,6 +80,28 @@ class _LogInPageState extends State<LogInPage> {
             Navigator.pop(context);
           },
         ),
+        //temporary solution
+        actions: [
+          Visibility(
+            visible: widget.isRegister,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (BuildContext context) {
+                    return const RegistrationPage();
+                  }),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Skip',
+                  style: Theme.of(context).textTheme.labelLarge!,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: FractionallySizedBox(
