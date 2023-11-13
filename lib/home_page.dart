@@ -1,3 +1,4 @@
+import 'package:athomeconvenience/shop_list_page.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 
@@ -106,7 +107,11 @@ class _HomePageState extends State<HomePage> {
               children: [
                 CategoryButton(
                   padding: 8.0,
-                  onPress: () {},
+                  onPress: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            ShopListPage(category: "Electrical")));
+                  },
                   buttonColor: Colors.lightBlue[100],
                   haveAdditional: true,
                   textType: Theme.of(context).textTheme.titleSmall,
@@ -115,7 +120,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 CategoryButton(
                   padding: 8.0,
-                  onPress: () {},
+                  onPress: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            ShopListPage(category: "Handyman")));
+                  },
                   buttonColor: Colors.lightBlue[100],
                   haveAdditional: true,
                   textType: Theme.of(context).textTheme.titleSmall,
@@ -124,7 +133,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 CategoryButton(
                   padding: 8.0,
-                  onPress: () {},
+                  onPress: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            ShopListPage(category: "Body Groomer")));
+                  },
                   buttonColor: Colors.lightBlue[100],
                   image: 'images/icon_bodygroomer.png',
                   haveAdditional: true,
@@ -133,7 +146,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 CategoryButton(
                   padding: 8.0,
-                  onPress: () {},
+                  onPress: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            ShopListPage(category: "Plumber")));
+                  },
                   buttonColor: Colors.lightBlue[100],
                   haveAdditional: true,
                   textType: Theme.of(context).textTheme.titleSmall,
@@ -142,7 +159,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 CategoryButton(
                   padding: 8.0,
-                  onPress: () {},
+                  onPress: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            ShopListPage(category: "Cleaning")));
+                  },
                   buttonColor: Colors.lightBlue[100],
                   haveAdditional: true,
                   textType: Theme.of(context).textTheme.titleSmall,
@@ -151,7 +172,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 CategoryButton(
                   padding: 8.0,
-                  onPress: () {},
+                  onPress: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            ShopListPage(category: "Technician")));
+                  },
                   buttonColor: Colors.lightBlue[100],
                   haveAdditional: true,
                   textType: Theme.of(context).textTheme.titleSmall,
@@ -160,7 +185,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 CategoryButton(
                   padding: 8.0,
-                  onPress: () {},
+                  onPress: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            ShopListPage(category: "Greenscaping")));
+                  },
                   buttonColor: Colors.lightBlue[100],
                   haveAdditional: true,
                   textType: Theme.of(context).textTheme.titleSmall,
@@ -169,7 +198,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 CategoryButton(
                   padding: 8.0,
-                  onPress: () {},
+                  onPress: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            ShopListPage(category: "Pet Care")));
+                  },
                   buttonColor: Colors.lightBlue[100],
                   haveAdditional: true,
                   textType: Theme.of(context).textTheme.titleSmall,

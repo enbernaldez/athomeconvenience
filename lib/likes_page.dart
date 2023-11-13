@@ -1,3 +1,6 @@
+import 'package:athomeconvenience/widgets/shop_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'text_theme_page.dart';
 
@@ -9,6 +12,34 @@ class LikesPage extends StatefulWidget {
 }
 
 class _LikesPageState extends State<LikesPage> {
+  List<String> userLikes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchLikes();
+  }
+
+  Future<void> fetchLikes() async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+
+      var userQuerySnapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .where("uid", isEqualTo: uid)
+          .get();
+
+      if (userQuerySnapshot.docs.isNotEmpty) {
+        var userLikesData = userQuerySnapshot.docs.first.data();
+        setState(() {
+          userLikes = List<String>.from(userLikesData['likes'] ?? []);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +69,34 @@ class _LikesPageState extends State<LikesPage> {
           ),
         ],
       ),
+      body: SafeArea(
+          child: SingleChildScrollView(
+        child: Column(
+          children: userLikes.map((like) {
+            return FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection("service_provider")
+                  .where("uid", isEqualTo: like)
+                  .get(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text("Error: ${snapshot.error}");
+                } else if (snapshot.hasData) {
+                  var serviceProviderData = snapshot.data!.docs.first.data();
+                  return ShopCard(
+                      shopName: serviceProviderData['service_provider_name'],
+                      shopAddress: serviceProviderData['service_address'],
+                      shopUid: like);
+                } else {
+                  return Text("No data");
+                }
+              },
+            );
+          }).toList(),
+        ),
+      )),
     );
   }
 }
