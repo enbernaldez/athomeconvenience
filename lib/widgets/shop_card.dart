@@ -2,7 +2,14 @@ import 'package:athomeconvenience/shop_profile_page.dart';
 import 'package:flutter/material.dart';
 
 class ShopCard extends StatelessWidget {
-  const ShopCard({super.key});
+  final String shopName;
+  final String shopAddress;
+  final String shopUid;
+  const ShopCard(
+      {super.key,
+      required this.shopName,
+      required this.shopAddress,
+      required this.shopUid});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +19,8 @@ class ShopCard extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (BuildContext context) => ShopProfilePage(),
+                builder: (BuildContext context) =>
+                    ShopProfilePage(shopUid: shopUid),
               ),
             );
           },
@@ -32,19 +40,19 @@ class ShopCard extends StatelessWidget {
                 ),
 
                 // Column
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // SHOP NAME
                     Text(
-                      "Jonnel Banka Services",
+                      shopName,
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
 
                     // Address
                     Text(
-                      "Balinad, Poland, Earth 616",
+                      shopAddress,
                       style: TextStyle(fontSize: 15),
                     ),
                   ],

@@ -1,16 +1,55 @@
 import 'package:athomeconvenience/widgets/shop_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class ShopListPage extends StatelessWidget {
+class ShopListPage extends StatefulWidget {
   final String category;
   const ShopListPage({super.key, required this.category});
 
   @override
+  State<ShopListPage> createState() => _ShopListPageState();
+}
+
+class _ShopListPageState extends State<ShopListPage> {
+  List<Map<String, dynamic>> shopList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchShop();
+  }
+
+  Future<void> fetchShop() async {
+    try {
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection("service_provider")
+          .where("category", isEqualTo: widget.category)
+          .get();
+
+      List<Map<String, dynamic>> tempShop = [];
+
+      querySnapshot.docs.forEach((doc) {
+        tempShop.add(doc.data());
+      });
+
+      // Update the state with the fetched data
+      setState(() {
+        shopList = tempShop;
+      });
+    } catch (e) {
+      print("Error fetching notifications: $e");
+      // Handle errors
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print(shopList);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          category,
+          widget.category,
           style: Theme.of(context).textTheme.titleLarge!,
         ),
         centerTitle: true,
@@ -30,9 +69,12 @@ class ShopListPage extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              ShopCard(),
-              ShopCard(),
-              ShopCard(),
+              for (final shop in shopList)
+                ShopCard(
+                  shopAddress: shop['service_address'],
+                  shopName: shop['service_provider_name'],
+                  shopUid: shop['uid'],
+                )
             ],
           ),
         ),
