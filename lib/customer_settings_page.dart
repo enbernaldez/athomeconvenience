@@ -1,6 +1,7 @@
 import 'package:athomeconvenience/contact_us_page.dart';
 import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/terms_and_conditions_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +17,49 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
   bool _readonly = true;
   String action = 'Edit';
 
+  final nameController = TextEditingController();
+  final addressController = TextEditingController();
+  final phoneNumController = TextEditingController();
+  final emailAddController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserDetails();
+  }
+
+  Future<void> fetchUserDetails() async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+
+      var documentSnapshot =
+          await FirebaseFirestore.instance.collection("users").doc(uid).get();
+
+      if (documentSnapshot.exists) {
+        // Access the data within the document
+        var userData = documentSnapshot.data();
+        if (userData != null) {
+          // Access specific fields within userData
+          // var username = userData['username'];
+          // var email = userData['email'];
+          // // Use the retrieved data as needed
+          // print('Username: $username');
+          // print('Email: $email');
+          setState(() {
+            nameController.text = userData['name'] ?? 'Loading';
+            addressController.text = userData['address'] ?? 'Loading';
+            phoneNumController.text = userData['phone_num'] ?? 'Loading';
+            emailAddController.text = userData['email_add'] ?? 'Loading';
+          });
+        }
+      } else {
+        print('Document does not exist');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +72,29 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
         centerTitle: true,
         actions: [
           GestureDetector(
-            onTap: () {
+            onTap: () async {
+              if (action == "Done") {
+                try {
+                  final String newName = nameController.text;
+                  final String newAddress = addressController.text;
+                  final String newPhoneNum = phoneNumController.text;
+                  final String newEmailAdd = emailAddController.text;
+
+                  final uid = FirebaseAuth.instance.currentUser!.uid;
+
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(uid)
+                      .update({
+                    'name': newName,
+                    'address': newAddress,
+                    'phone_num': newPhoneNum,
+                    'email_add': newEmailAdd,
+                  });
+                } catch (e) {
+                  print(e);
+                }
+              }
               setState(() {
                 _readonly = !_readonly;
                 action == 'Edit' ? action = 'Done' : action = 'Edit';
@@ -60,7 +126,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                     child: Column(
                       children: [
                         TextFormField(
-                          initialValue: 'Ben Mcdowell',
+                          controller: nameController,
                           readOnly: _readonly,
                           decoration: const InputDecoration(
                             labelText: 'NAME',
@@ -75,7 +141,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                           ),
                         ),
                         TextFormField(
-                          initialValue: 'Tuburan, Ligao City',
+                          controller: addressController,
                           readOnly: _readonly,
                           decoration: const InputDecoration(
                             labelText: 'ADDRESS',
@@ -90,7 +156,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                           ),
                         ),
                         TextFormField(
-                          initialValue: '0912 345 6789',
+                          controller: phoneNumController,
                           readOnly: _readonly,
                           decoration: const InputDecoration(
                             labelText: 'PHONE NUMBER',
@@ -105,7 +171,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                           ),
                         ),
                         TextFormField(
-                          initialValue: 'mcdowell.ben@gmail.com',
+                          controller: emailAddController,
                           readOnly: _readonly,
                           decoration: const InputDecoration(
                             labelText: 'EMAIL ADDRESS',
