@@ -306,7 +306,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         child: FractionallySizedBox(
           widthFactor: 0.8,
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(vertical: 48),
+            // padding: const EdgeInsets.symmetric(vertical: 48),
             child: Column(
               children: [
                 const SizedBox(height: 48),
