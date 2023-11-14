@@ -33,9 +33,8 @@ com.example.athomeconvenience.app-packaged_res-31 C:\Users\Acer\Desktop\athomeco
 com.example.athomeconvenience.app-packaged_res-32 C:\Users\Acer\Desktop\athomeconvenience\build\firebase_core\intermediates\packaged_res\debug
 com.example.athomeconvenience.app-packaged_res-33 C:\Users\Acer\Desktop\athomeconvenience\build\firebase_storage\intermediates\packaged_res\debug
 com.example.athomeconvenience.app-packaged_res-34 C:\Users\Acer\Desktop\athomeconvenience\build\flutter_plugin_android_lifecycle\intermediates\packaged_res\debug
-com.example.athomeconvenience.app-packaged_res-35 C:\Users\Acer\Desktop\athomeconvenience\build\fluttertoast\intermediates\packaged_res\debug
-com.example.athomeconvenience.app-packaged_res-36 C:\Users\Acer\Desktop\athomeconvenience\build\image_picker_android\intermediates\packaged_res\debug
-com.example.athomeconvenience.app-packaged_res-37 C:\Users\Acer\Desktop\athomeconvenience\build\path_provider_android\intermediates\packaged_res\debug
-com.example.athomeconvenience.app-packaged_res-38 C:\Users\Acer\Desktop\athomeconvenience\build\shared_preferences_android\intermediates\packaged_res\debug
-com.example.athomeconvenience.app-packaged_res-39 C:\Users\Acer\Desktop\athomeconvenience\build\smart_auth\intermediates\packaged_res\debug
-com.example.athomeconvenience.app-packaged_res-40 C:\Users\Acer\Desktop\athomeconvenience\build\sqflite\intermediates\packaged_res\debug
+com.example.athomeconvenience.app-packaged_res-35 C:\Users\Acer\Desktop\athomeconvenience\build\image_picker_android\intermediates\packaged_res\debug
+com.example.athomeconvenience.app-packaged_res-36 C:\Users\Acer\Desktop\athomeconvenience\build\path_provider_android\intermediates\packaged_res\debug
+com.example.athomeconvenience.app-packaged_res-37 C:\Users\Acer\Desktop\athomeconvenience\build\shared_preferences_android\intermediates\packaged_res\debug
+com.example.athomeconvenience.app-packaged_res-38 C:\Users\Acer\Desktop\athomeconvenience\build\smart_auth\intermediates\packaged_res\debug
+com.example.athomeconvenience.app-packaged_res-39 C:\Users\Acer\Desktop\athomeconvenience\build\sqflite\intermediates\packaged_res\debug

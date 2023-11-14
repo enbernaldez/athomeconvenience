@@ -78,37 +78,37 @@
 64            android:value="2" />
 65
 66        <service
-66-->[:cloud_firestore] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-12:19
+66-->[:cloud_functions] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_functions\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-12:19
 67            android:name="com.google.firebase.components.ComponentDiscoveryService"
-67-->[:cloud_firestore] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:8:18-89
+67-->[:cloud_functions] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_functions\intermediates\merged_manifest\debug\AndroidManifest.xml:8:18-89
 68            android:directBootAware="true"
 68-->[com.google.firebase:firebase-common:20.4.2] C:\Users\Acer\.gradle\caches\transforms-3\44e630c1e2ba996992f5a557513bf83a\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:32:13-43
 69            android:exported="false" >
 69-->[com.google.firebase:firebase-functions:20.4.0] C:\Users\Acer\.gradle\caches\transforms-3\53b92b096149a17e9efee80fffd88dfa\transformed\jetified-firebase-functions-20.4.0\AndroidManifest.xml:14:13-37
 70            <meta-data
-70-->[:cloud_firestore] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-11:85
-71                android:name="com.google.firebase.components:io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreRegistrar"
-71-->[:cloud_firestore] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:10:17-134
+70-->[:cloud_functions] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_functions\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-11:85
+71                android:name="com.google.firebase.components:io.flutter.plugins.firebase.functions.FlutterFirebaseAppRegistrar"
+71-->[:cloud_functions] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_functions\intermediates\merged_manifest\debug\AndroidManifest.xml:10:17-128
 72                android:value="com.google.firebase.components.ComponentRegistrar" />
-72-->[:cloud_firestore] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:11:17-82
+72-->[:cloud_functions] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_functions\intermediates\merged_manifest\debug\AndroidManifest.xml:11:17-82
 73            <meta-data
-73-->[:cloud_functions] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_functions\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-11:85
-74                android:name="com.google.firebase.components:io.flutter.plugins.firebase.functions.FlutterFirebaseAppRegistrar"
-74-->[:cloud_functions] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_functions\intermediates\merged_manifest\debug\AndroidManifest.xml:10:17-128
+73-->[:firebase_auth] C:\Users\Acer\Desktop\athomeconvenience\build\firebase_auth\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-11:85
+74                android:name="com.google.firebase.components:io.flutter.plugins.firebase.auth.FlutterFirebaseAuthRegistrar"
+74-->[:firebase_auth] C:\Users\Acer\Desktop\athomeconvenience\build\firebase_auth\intermediates\merged_manifest\debug\AndroidManifest.xml:10:17-124
 75                android:value="com.google.firebase.components.ComponentRegistrar" />
-75-->[:cloud_functions] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_functions\intermediates\merged_manifest\debug\AndroidManifest.xml:11:17-82
+75-->[:firebase_auth] C:\Users\Acer\Desktop\athomeconvenience\build\firebase_auth\intermediates\merged_manifest\debug\AndroidManifest.xml:11:17-82
 76            <meta-data
-76-->[:firebase_auth] C:\Users\Acer\Desktop\athomeconvenience\build\firebase_auth\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-11:85
-77                android:name="com.google.firebase.components:io.flutter.plugins.firebase.auth.FlutterFirebaseAuthRegistrar"
-77-->[:firebase_auth] C:\Users\Acer\Desktop\athomeconvenience\build\firebase_auth\intermediates\merged_manifest\debug\AndroidManifest.xml:10:17-124
+76-->[:firebase_storage] C:\Users\Acer\Desktop\athomeconvenience\build\firebase_storage\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-11:85
+77                android:name="com.google.firebase.components:io.flutter.plugins.firebase.storage.FlutterFirebaseAppRegistrar"
+77-->[:firebase_storage] C:\Users\Acer\Desktop\athomeconvenience\build\firebase_storage\intermediates\merged_manifest\debug\AndroidManifest.xml:10:17-126
 78                android:value="com.google.firebase.components.ComponentRegistrar" />
-78-->[:firebase_auth] C:\Users\Acer\Desktop\athomeconvenience\build\firebase_auth\intermediates\merged_manifest\debug\AndroidManifest.xml:11:17-82
+78-->[:firebase_storage] C:\Users\Acer\Desktop\athomeconvenience\build\firebase_storage\intermediates\merged_manifest\debug\AndroidManifest.xml:11:17-82
 79            <meta-data
-79-->[:firebase_storage] C:\Users\Acer\Desktop\athomeconvenience\build\firebase_storage\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-11:85
-80                android:name="com.google.firebase.components:io.flutter.plugins.firebase.storage.FlutterFirebaseAppRegistrar"
-80-->[:firebase_storage] C:\Users\Acer\Desktop\athomeconvenience\build\firebase_storage\intermediates\merged_manifest\debug\AndroidManifest.xml:10:17-126
+79-->[:cloud_firestore] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-11:85
+80                android:name="com.google.firebase.components:io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreRegistrar"
+80-->[:cloud_firestore] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:10:17-134
 81                android:value="com.google.firebase.components.ComponentRegistrar" />
-81-->[:firebase_storage] C:\Users\Acer\Desktop\athomeconvenience\build\firebase_storage\intermediates\merged_manifest\debug\AndroidManifest.xml:11:17-82
+81-->[:cloud_firestore] C:\Users\Acer\Desktop\athomeconvenience\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:11:17-82
 82            <meta-data
 82-->[:firebase_core] C:\Users\Acer\Desktop\athomeconvenience\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-11:85
 83                android:name="com.google.firebase.components:io.flutter.plugins.firebase.core.FlutterFirebaseCoreRegistrar"

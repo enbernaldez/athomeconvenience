@@ -126,8 +126,9 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
 
                 // SHOP NAME
                 Text(
-                  shopData['service_provider_name'],
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  shopData['service_provider_name'] ?? "Loading",
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
 
                 // STAR RATING (meron neto package)
@@ -243,11 +244,13 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: isAbout == true
                       ? AboutSection(
-                          category: shopData['category'],
-                          shopAddress: shopData['service_address'],
-                          contactNum: shopData['contact_num'],
+                          category: shopData['category'] ?? "Loading",
+                          shopAddress: shopData['service_address'] ?? "Loading",
+                          contactNum: shopData['contact_num'] ?? "Loading",
                           workingHours:
-                              '${shopData['service_start']} - ${shopData['service_end']}')
+                              '${shopData['service_start']} - ${shopData['service_end']}' ??
+                                  "Loading",
+                        )
                       : const WorksSection(),
                 )
               ],

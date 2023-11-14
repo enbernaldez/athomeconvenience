@@ -51,6 +51,7 @@ dependencies:
   country_picker: ^2.0.22
   pinput: ^3.0.1
   uuid: ^3.0.7
+  intl: ^0.18.1
   fluttertoast: ^8.2.4
 
 dev_dependencies:
