@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage> {
               physics: const NeverScrollableScrollPhysics(),
               children: [
                 for (var entry in serviceCategoryMap.entries)
-                  button(
+                  Button(
                     padding: 8.0,
                     onPress: () {
                       Navigator.of(context).push(MaterialPageRoute(

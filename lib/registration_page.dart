@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:athomeconvenience/navigation.dart';
+import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -271,6 +272,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           // ?=========================================================
         }
       }
+
       if (image == null) {
         widget.showToast();
       }
@@ -290,11 +292,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
-          child: const Icon(
-            Icons.arrow_back_ios_rounded,
-            color: Colors.blue,
-          ),
+        leading: BackArrow(
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (BuildContext context) {

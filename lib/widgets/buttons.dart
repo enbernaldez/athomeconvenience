@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
-class button extends StatelessWidget {
+class Button extends StatelessWidget {
   final dynamic padding; //button vertical content padding
   final Function()? onPress;
   final Color? buttonColor;
@@ -10,7 +10,7 @@ class button extends StatelessWidget {
   final String? image;
   final String buttonText;
 
-  const button({
+  const Button({
     super.key,
     this.padding,
     required this.onPress,
@@ -72,6 +72,26 @@ class button extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class BackArrow extends StatelessWidget {
+  final Function()? onTap;
+
+  const BackArrow({super.key,
+  this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      child: const Icon(
+        Icons.arrow_back_ios_rounded,
+        color: Colors.blue,
+      ),
+      onTap: () {
+        Navigator.pop(context);
+      },
     );
   }
 }

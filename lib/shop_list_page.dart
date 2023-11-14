@@ -1,3 +1,4 @@
+import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:athomeconvenience/widgets/shop_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,7 @@ class _ShopListPageState extends State<ShopListPage> {
     print(shopList);
     return Scaffold(
       appBar: AppBar(
+        leading: const BackArrow(),
         title: Text(
           widget.category,
           style: Theme.of(context).textTheme.titleLarge!,

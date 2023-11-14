@@ -71,15 +71,7 @@ class _LogInPageState extends State<LogInPage> {
     // ! =================================================
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
-          child: const Icon(
-            Icons.arrow_back_ios_rounded,
-            color: Colors.blue,
-          ),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
+        leading: const BackArrow(),
         //temporary solution
         actions: [
           Visibility(
@@ -168,7 +160,7 @@ class _LogInPageState extends State<LogInPage> {
                               )),
                         ),
                         const SizedBox(height: 30),
-                        button(
+                        Button(
                           buttonText:
                               widget.isRegister == true ? 'NEXT' : 'SIGN IN',
                           onPress: handleClick,
