@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AboutSection extends StatelessWidget {
   final String category;
@@ -23,94 +24,109 @@ class AboutSection extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  "Category",
-                  style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                  "Category:",
+                  style: GoogleFonts.dmSans(
+                      fontSize: 16, color: Colors.grey.shade600),
                 ),
               ),
               Expanded(
                 child: Text(
                   category,
-                  style: TextStyle(fontSize: 18),
+                  style: GoogleFonts.dmSans(
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 15),
         SizedBox(
           width: double.infinity,
           child: Row(
             children: [
               Expanded(
                 child: Text(
-                  "Location",
-                  style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                  "Location:",
+                  style: GoogleFonts.dmSans(
+                      fontSize: 16, color: Colors.grey.shade600),
                 ),
               ),
               Expanded(
                 child: Text(
                   shopAddress,
-                  style: TextStyle(fontSize: 18),
+                  style: GoogleFonts.dmSans(
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 15),
         SizedBox(
           width: double.infinity,
           child: Row(
             children: [
               Expanded(
                 child: Text(
-                  "Contact Number",
-                  style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                  "Contact Number:",
+                  style: GoogleFonts.dmSans(
+                      fontSize: 16, color: Colors.grey.shade600),
                 ),
               ),
               Expanded(
                 child: Text(
                   contactNum,
-                  style: TextStyle(fontSize: 18),
+                  style: GoogleFonts.dmSans(
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 15),
         SizedBox(
           width: double.infinity,
           child: Row(
             children: [
               Expanded(
                 child: Text(
-                  "Working Hours",
-                  style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                  "Working Hours:",
+                  style: GoogleFonts.dmSans(
+                      fontSize: 16, color: Colors.grey.shade600),
                 ),
               ),
               Expanded(
                 child: Text(
                   workingHours,
-                  style: TextStyle(fontSize: 18),
+                  style: GoogleFonts.dmSans(
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 15),
         SizedBox(
           width: double.infinity,
           child: Row(
             children: [
               Expanded(
                 child: Text(
-                  "Payment Options",
-                  style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                  "Payment Options:",
+                  style: GoogleFonts.dmSans(
+                      fontSize: 16, color: Colors.grey.shade600),
                 ),
               ),
               Expanded(
                 child: Text(
                   "Gcash, Cash",
-                  style: TextStyle(fontSize: 18),
+                  style: GoogleFonts.dmSans(
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ],

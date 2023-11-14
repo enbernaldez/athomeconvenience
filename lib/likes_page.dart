@@ -45,10 +45,7 @@ class _LikesPageState extends State<LikesPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(
-          'Likes',
-          style: Theme.of(context).textTheme.titleLarge!,
-        ),
+        title: const Text('Likes'),
         centerTitle: true,
         actions: [
           GestureDetector(

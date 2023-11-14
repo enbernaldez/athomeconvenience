@@ -4,6 +4,7 @@ import 'package:athomeconvenience/widgets/styledButton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ShopProfilePage extends StatefulWidget {
   final String shopUid;
@@ -103,43 +104,46 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: SizedBox(
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 50,
-                ),
-                // IMAGE/ICON
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: const BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.all(Radius.circular(100))),
-                ), //temporary grey circle muna
-                const SizedBox(
-                  height: 10,
-                ),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: FractionallySizedBox(
+            widthFactor: 0.85,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  // IMAGE/ICON
+                  const CircleAvatar(
+                    backgroundImage:
+                        AssetImage('images/default_profile_pic.png'),
+                    // minRadius: 30,
+                    maxRadius: 60,
+                  ),
+                  //temporary grey circle muna
+                  const SizedBox(
+                    height: 10,
+                  ),
 
-                // SHOP NAME
-                Text(
-                  shopData['service_provider_name'] ?? "Loading",
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+                  // SHOP NAME
+                  Text(
+                    shopData['service_provider_name'] ?? "Loading",
+                    style: GoogleFonts.dmSans(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
 
-                // STAR RATING (meron neto package)
+                  // STAR RATING (meron neto package)
 
-                // MESSAGE AND LIKE/HEART
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Row(
+                  // MESSAGE AND LIKE/HEART
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
                     children: [
                       // *message btn
                       Expanded(
@@ -179,15 +183,12 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       )
                     ],
                   ),
-                ),
 
-                // ABOUT | WORKS BTN
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Row(
+                  // ABOUT | WORKS BTN
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
                     children: [
                       GestureDetector(
                         onTap: () {
@@ -197,7 +198,8 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                         },
                         child: Text(
                           "About",
-                          style: TextStyle(
+                          style: GoogleFonts.dmSans(
+                              letterSpacing: -0.5,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: isAbout == true
@@ -210,7 +212,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       ),
                       Container(
                         height: 24, //adjust nalang height
-                        width: 2,
+                        width: 1.5,
                         decoration: const BoxDecoration(color: Colors.grey),
                       ),
                       const SizedBox(
@@ -224,7 +226,8 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                         },
                         child: Text(
                           "Works",
-                          style: TextStyle(
+                          style: GoogleFonts.dmSans(
+                              letterSpacing: -0.5,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: isAbout == false
@@ -234,15 +237,12 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
+                  const SizedBox(
+                    height: 20,
+                  ),
 
-                // ABOUT | WORKS CONTENT
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: isAbout == true
+                  // ABOUT | WORKS CONTENT
+                  isAbout == true
                       ? AboutSection(
                           category: shopData['category'] ?? "Loading",
                           shopAddress: shopData['service_address'] ?? "Loading",
@@ -251,9 +251,9 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                               '${shopData['service_start']} - ${shopData['service_end']}' ??
                                   "Loading",
                         )
-                      : const WorksSection(),
-                )
-              ],
+                      : const WorksSection()
+                ],
+              ),
             ),
           ),
         ),

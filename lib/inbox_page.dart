@@ -13,9 +13,8 @@ class _InboxPageState extends State<InboxPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(
-          'Messages',
-          style: Theme.of(context).textTheme.titleLarge!,
+        title: const Text(
+          'Messages'
         ),
         centerTitle: true,
         actions: [

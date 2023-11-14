@@ -32,9 +32,7 @@ class MyApp extends StatelessWidget {
             color: Colors.black87,
           ), // TextFormField widget (default) / HomePage banner
           bodyMedium: GoogleFonts.dmSans(), // Text widget (default)
-          bodySmall: GoogleFonts.dmSans(
-            color: Colors.red[100],
-          ),
+          bodySmall: GoogleFonts.dmSans(),
           displayLarge: GoogleFonts.dmSans(
             color: Colors.orange[900],
           ),

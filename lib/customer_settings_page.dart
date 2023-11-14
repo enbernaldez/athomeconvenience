@@ -125,6 +125,13 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                   child: Form(
                     child: Column(
                       children: [
+                        const CircleAvatar(
+                          backgroundImage:
+                              AssetImage('images/default_profile_pic.png'),
+                          // minRadius: 30,
+                          maxRadius: 60,
+                        ),
+                        const SizedBox(height: 15),
                         TextFormField(
                           controller: nameController,
                           readOnly: _readonly,

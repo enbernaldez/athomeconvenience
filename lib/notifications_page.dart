@@ -71,10 +71,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(
-          'Notifications',
-          style: Theme.of(context).textTheme.titleLarge!,
-        ),
+        title: const Text('Notifications'),
         centerTitle: true,
       ),
       body: SafeArea(

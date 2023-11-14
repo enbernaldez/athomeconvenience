@@ -15,55 +15,55 @@ class ShopCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    ShopProfilePage(shopUid: shopUid),
-              ),
-            );
-          },
-          child: Row(
-            children: [
-              // Image/Icon
-              Container(
-                height: 60,
-                width: 60,
-                decoration: const BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.all(Radius.circular(100))),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-
-              // Column
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // SHOP NAME
-                    Text(
-                      shopName,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-              
-                    // Address
-                    Text(
-                      shopAddress,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: const TextStyle(fontSize: 15),
-                    ),
-                  ],
+        FractionallySizedBox(
+          widthFactor: 0.9,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      ShopProfilePage(shopUid: shopUid),
                 ),
-              )
-            ],
+              );
+            },
+            child: Row(
+              children: [
+                // Image/Icon
+                const CircleAvatar(
+                  backgroundImage: AssetImage('images/default_profile_pic.png'),
+                  maxRadius: 30,
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+
+                // Column
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // SHOP NAME
+                      Text(
+                        shopName,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(color: Colors.black),
+                      ),
+
+                      // Address
+                      Text(
+                        shopAddress,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
         const SizedBox(
