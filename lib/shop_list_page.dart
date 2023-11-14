@@ -1,3 +1,4 @@
+import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:athomeconvenience/widgets/shop_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,7 @@ class _ShopListPageState extends State<ShopListPage> {
     print(shopList);
     return Scaffold(
       appBar: AppBar(
+        leading: const BackArrow(),
         title: Text(
           widget.category,
           style: Theme.of(context).textTheme.titleLarge!,
@@ -54,30 +56,35 @@ class _ShopListPageState extends State<ShopListPage> {
         centerTitle: true,
       ),
       body: SafeArea(
-          child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 10,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: FractionallySizedBox(
+              widthFactor: 0.8,
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Divider(
+                    height: 0,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  for (final shop in shopList)
+                    ShopCard(
+                      shopAddress: shop['service_address'],
+                      shopName: shop['service_provider_name'],
+                      shopUid: shop['uid'],
+                    )
+                ],
               ),
-              const Divider(
-                height: 0,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              for (final shop in shopList)
-                ShopCard(
-                  shopAddress: shop['service_address'],
-                  shopName: shop['service_provider_name'],
-                  shopUid: shop['uid'],
-                )
-            ],
+            ),
           ),
         ),
-      )),
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:athomeconvenience/navigation.dart';
+import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -14,6 +15,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'landing_page.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 Map<String, String> serviceCategoryMap = {
   'Electrical': 'images/icon_electrical.png',
@@ -34,6 +36,18 @@ class RegistrationPage extends StatefulWidget {
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
+
+  void showToast() {
+    Fluttertoast.showToast(
+      msg: "This is Center Short Toast",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
@@ -258,6 +272,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
           // ?=========================================================
         }
       }
+
+      if (image == null) {
+        widget.showToast();
+      }
+
       // ?========set SharedPreference========
       final SharedPreferences s = await SharedPreferences.getInstance();
       s.setBool("is_signedin", true);
@@ -265,18 +284,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
       // ? Navigate to Navigation after successful registration
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => const Navigation()),
+          MaterialPageRoute(
+              builder: (BuildContext context) => const Navigation()),
           (route) => false);
     }
     // ! =================================================
 
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
-          child: const Icon(
-            Icons.arrow_back_ios_rounded,
-            color: Colors.blue,
-          ),
+        leading: BackArrow(
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (BuildContext context) {
@@ -290,7 +306,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         child: FractionallySizedBox(
           widthFactor: 0.8,
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(vertical: 48),
+            // padding: const EdgeInsets.symmetric(vertical: 48),
             child: Column(
               children: [
                 const SizedBox(height: 48),
@@ -734,12 +750,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         const Text('By signing up, you agree to the'),
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) {
-                                return const RegistrationPage();
-                              }),
-                            );
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //       builder: (BuildContext context) {
+                            //     return const RegistrationPage();
+                            //   }),
+                            // );
                           },
                           child: const Text(
                             'Terms of Use and Privacy Policy',

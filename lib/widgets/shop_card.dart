@@ -39,22 +39,29 @@ class ShopCard extends StatelessWidget {
               ),
 
               // Column
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // SHOP NAME
-                  Text(
-                    shopName,
-                    style:
-                        const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-
-                  // Address
-                  Text(
-                    shopAddress,
-                    style: const TextStyle(fontSize: 15),
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // SHOP NAME
+                    Text(
+                      shopName,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+              
+                    // Address
+                    Text(
+                      shopAddress,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: const TextStyle(fontSize: 15),
+                    ),
+                  ],
+                ),
               )
             ],
           ),
