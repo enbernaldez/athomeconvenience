@@ -1,6 +1,7 @@
 import 'package:athomeconvenience/contact_us_page.dart';
 import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/terms_and_conditions_page.dart';
+import 'package:athomeconvenience/widgets/profile_pic.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -125,11 +126,9 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                   child: Form(
                     child: Column(
                       children: [
-                        const CircleAvatar(
-                          backgroundImage:
-                              AssetImage('images/default_profile_pic.png'),
-                          // minRadius: 30,
-                          maxRadius: 60,
+                        ProfilePic(
+                          edit: !_readonly,
+                          iconSize: 20,
                         ),
                         const SizedBox(height: 15),
                         TextFormField(

@@ -89,7 +89,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     });
   }
 
-  void myAlert() {
+  void uploadImage() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -226,6 +226,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         } else {
           final String serviceStart = startTime!.format(context).toString();
           final String serviceEnd = endTime!.format(context).toString();
+
           // ?======== Upload Image First in Firebase Storage==============
           File file = File(imagePath!);
 
@@ -709,7 +710,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                               ),
                                             ),
                                             onPressed: () {
-                                              myAlert();
+                                              uploadImage();
                                             },
                                             child: Text(
                                               'Upload ID / Business Permit',
