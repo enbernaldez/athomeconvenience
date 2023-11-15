@@ -53,6 +53,7 @@ dependencies:
   uuid: ^3.0.7
   intl: ^0.18.1
   fluttertoast: ^8.2.4
+  flutter_rating_bar: ^4.0.1
 
 dev_dependencies:
   flutter_test:

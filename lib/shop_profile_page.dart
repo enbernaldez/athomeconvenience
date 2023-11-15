@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ShopProfilePage extends StatefulWidget {
   final String shopUid;
@@ -137,7 +138,24 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                     ),
                   ),
 
-                  // STAR RATING (meron neto package)
+                  // STAR RATING (wala pang backend)
+                  RatingBar.builder(
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemSize: 30,
+                    itemPadding: const EdgeInsets.symmetric(
+                      horizontal: 3.0,
+                    ),
+                    itemBuilder: (context, _) => const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (rating) {
+                      print(rating);
+                    },
+                  ),
 
                   // MESSAGE AND LIKE/HEART
                   const SizedBox(

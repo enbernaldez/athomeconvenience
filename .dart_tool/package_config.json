@@ -254,6 +254,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "flutter_rating_bar",
+      "rootUri": "file:///C:/Users/Acer/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_rating_bar-4.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "flutter_riverpod",
       "rootUri": "file:///C:/Users/Acer/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_riverpod-2.4.5",
       "packageUri": "lib/",
@@ -638,7 +644,7 @@
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2023-11-14T17:19:31.597023Z",
+  "generated": "2023-11-15T14:20:08.382576Z",
   "generator": "pub",
   "generatorVersion": "3.1.5"
 }
