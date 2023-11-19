@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 
 class ShopListPage extends StatefulWidget {
   final String category;
-  const ShopListPage({super.key, required this.category});
+
+  const ShopListPage({
+    super.key,
+    required this.category,
+  });
 
   @override
   State<ShopListPage> createState() => _ShopListPageState();
@@ -61,7 +65,7 @@ class _ShopListPageState extends State<ShopListPage> {
           child: Align(
             alignment: Alignment.topCenter,
             child: FractionallySizedBox(
-              widthFactor: 0.8,
+              widthFactor: 0.85,
               child: Column(
                 children: [
                   const SizedBox(

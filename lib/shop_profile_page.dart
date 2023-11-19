@@ -1,6 +1,7 @@
+import 'package:athomeconvenience/constants.dart';
+import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/about.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/works.dart';
-import 'package:athomeconvenience/widgets/styledButton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +19,15 @@ class ShopProfilePage extends StatefulWidget {
 class _ShopProfilePageState extends State<ShopProfilePage> {
   Map<String, dynamic> shopData = {};
   List<String> userLikes = [];
+  bool _isServiceProvider = false;
+  String action = '';
 
   @override
   void initState() {
     super.initState();
     fetchShopData();
     fetchUserLikes();
+    checkIfServiceProvider();
   }
 
   Future<void> fetchShopData() async {
@@ -64,8 +68,21 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
     }
   }
 
+  Future<void> checkIfServiceProvider() async {
+    bool exists = await isServiceProvider();
+    setState(() {
+      _isServiceProvider = exists;
+      if (_isServiceProvider && uid == widget.shopUid) {
+        action = 'Edit';
+      }
+    });
+  }
+
   bool isAbout = true;
   bool isLiked = false;
+  Color? liked;
+
+  final uid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -85,11 +102,30 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
           // Access the first document, assuming unique UIDs
           var userDocRef = userQuerySnapshot.docs.first.reference;
 
-          // Update the 'likes' field in the document
-          userDocRef.update({
-            'likes': FieldValue.arrayUnion([shopData['uid']])
-          });
-          // 'new_like_item' can be the item you want to add to the 'likes' array
+          // Get the current 'likes' array
+          List<dynamic> currentLikes = userQuerySnapshot.docs.first['likes'];
+
+          if (isLiked) {
+            // If the shop is already liked, remove the UID from 'likes' array
+            if (currentLikes.contains(shopData['uid'])) {
+              userDocRef.update({
+                'likes': FieldValue.arrayRemove([shopData['uid']])
+              });
+              setState(() {
+                isLiked = false;
+                liked = Colors.blue[50];
+              });
+            }
+          } else {
+            // If the shop is not liked, add the UID to 'likes' array
+            userDocRef.update({
+              'likes': FieldValue.arrayUnion([shopData['uid']])
+            });
+            setState(() {
+              isLiked = true;
+              liked = Colors.red;
+            });
+          }
         } else {
           // Handle scenario when user document isn't found
         }
@@ -103,7 +139,29 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
     }
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: const BackArrow(),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _isServiceProvider == true && action == 'Edit'
+                    ? action = 'Done'
+                    : action = 'Edit';
+              });
+            },
+            child: Visibility(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  action,
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Align(
           alignment: Alignment.topCenter,
@@ -165,9 +223,8 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                     children: [
                       // *message btn
                       Expanded(
-                        child: StyledButton(
-                          btnText: "MESSAGE",
-                          onClick: () {
+                        child: Button(
+                          onPress: () {
                             // TODO NAVIGATE TO CONVERSATION PAGE
                             // TODO PASS THE SHOP UID & SHOP NAME TO THE CONVERSATION PAGE
                             // Navigator.of(context).push(
@@ -179,7 +236,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                             //   ),
                             // );
                           },
-                          noShadow: true,
+                          buttonText: 'Message',
                         ),
                       ),
                       const SizedBox(
@@ -188,17 +245,15 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
 
                       // * like btn
                       Container(
-                        decoration: const BoxDecoration(
-                            color: Color(0xFF00A2FF),
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
-                        child: IconButton(
-                          onPressed: isLiked == true ? null : handleLike,
-                          icon: const Icon(
-                            Icons.favorite,
-                            color: Colors.white,
-                          ),
+                        width: 50,
+                        child: Button(
+                          onPress: handleLike,
+                          buttonText: '',
+                          icon: Icons.favorite,
+                          iconColor:
+                              isLiked == true ? Colors.red : Colors.blue[50],
                         ),
-                      )
+                      ),
                     ],
                   ),
 
@@ -274,6 +329,18 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
               ),
             ),
           ),
+        ),
+      ),
+      floatingActionButton: Visibility(
+        visible: uid == widget.shopUid && isAbout == false ? true : false,
+        child: FloatingActionButton(
+          onPressed: () {},
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.blue,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(100)),
+          ),
+          child: const Icon(Icons.add),
         ),
       ),
     );

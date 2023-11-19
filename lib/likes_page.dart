@@ -67,33 +67,45 @@ class _LikesPageState extends State<LikesPage> {
         ],
       ),
       body: SafeArea(
-          child: SingleChildScrollView(
-        child: Column(
-          children: userLikes.map((like) {
-            return FutureBuilder(
-              future: FirebaseFirestore.instance
-                  .collection("service_provider")
-                  .where("uid", isEqualTo: like)
-                  .get(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
-                } else if (snapshot.hasData) {
-                  var serviceProviderData = snapshot.data!.docs.first.data();
-                  return ShopCard(
-                      shopName: serviceProviderData['service_provider_name'],
-                      shopAddress: serviceProviderData['service_address'],
-                      shopUid: like);
-                } else {
-                  return Text("No data");
-                }
-              },
-            );
-          }).toList(),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            children: userLikes.map((like) {
+              return Align(
+                alignment: Alignment.topCenter,
+                child: FractionallySizedBox(
+                  widthFactor: 0.85,
+                  child: FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection("service_provider")
+                        .where("uid", isEqualTo: like)
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: SizedBox(child: CircularProgressIndicator()),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text("Error: ${snapshot.error}");
+                      } else if (snapshot.hasData) {
+                        var serviceProviderData =
+                            snapshot.data!.docs.first.data();
+                        return ShopCard(
+                            shopName:
+                                serviceProviderData['service_provider_name'],
+                            shopAddress: serviceProviderData['service_address'],
+                            shopUid: like);
+                      } else {
+                        return const Center(child: Text("No data"));
+                      }
+                    },
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
         ),
-      )),
+      ),
     );
   }
 }

@@ -165,22 +165,6 @@ class _LogInPageState extends State<LogInPage> {
                               widget.isRegister == true ? 'NEXT' : 'SIGN IN',
                           onPress: handleClick,
                         ),
-                        // FractionallySizedBox(
-                        //   widthFactor: 1,
-                        //   child: SizedBox(
-                        //     height: 50,
-                        //     child: ElevatedButton(
-                        //       onPressed: handleClick,
-                        //       style: ElevatedButton.styleFrom(
-                        //         backgroundColor: Colors.blue,
-                        //       ),
-                        //       child: Text(
-                        //         widget.isRegister == true ? 'NEXT' : 'SIGN IN',
-                        //         style: Theme.of(context).textTheme.titleMedium,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
                         const SizedBox(height: 10),
                         widget.isRegister == true
                             ? const SizedBox()

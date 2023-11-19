@@ -1,10 +1,10 @@
 import 'package:athomeconvenience/customer_settings_page.dart';
+import 'package:athomeconvenience/home_page.dart';
 import 'package:athomeconvenience/inbox_page.dart';
 import 'package:athomeconvenience/likes_page.dart';
 import 'package:athomeconvenience/notifications_page.dart';
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'home_page.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});

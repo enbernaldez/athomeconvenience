@@ -7,7 +7,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:full_screen_image/full_screen_image.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,17 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'landing_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-Map<String, String> serviceCategoryMap = {
-  'Electrical': 'images/icon_electrical.png',
-  'Handyman': 'images/icon_handyman.png',
-  'Body Groomer': 'images/icon_bodygroomer.png',
-  'Plumber': 'images/icon_plumber.png',
-  'Cleaning': 'images/icon_cleaning.png',
-  'Technician': 'images/icon_technician.png',
-  'Greenscaping': 'images/icon_greenscaping.png',
-  'Pet Care': 'images/icon_petcare.png',
-};
+import 'constants.dart';
 
 Iterable<String> categoryKeys = serviceCategoryMap.keys;
 List<String> categoryKeyList = categoryKeys.toList();
@@ -68,6 +57,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
   bool? _isServiceProvider = false;
   String serviceCategory = categoryKeyList.first; //*
   final _registrationFormKey = GlobalKey<FormState>();
+  XFile? image; //*
+  final ImagePicker picker = ImagePicker();
+
+  // ==========Time Picker==========
   TimeOfDay? selectedTimeST; //*
   TimeOfDay? selectedTimeET; //*
   TimePickerEntryMode entryMode = TimePickerEntryMode.dialOnly;
@@ -78,8 +71,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String startTime = '';
   String buttonTextST = 'Start Time';
   String buttonTextET = 'End Time';
-  XFile? image; //*
-  final ImagePicker picker = ImagePicker();
+  //================================
 
   Future getImage(ImageSource media) async {
     var img = await picker.pickImage(source: media);

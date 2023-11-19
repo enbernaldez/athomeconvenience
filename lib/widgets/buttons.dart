@@ -9,6 +9,8 @@ class Button extends StatelessWidget {
   final TextStyle? textType; //textStyle
   final String? image;
   final String buttonText;
+  final IconData? icon;
+  final Color? iconColor;
 
   const Button({
     super.key,
@@ -19,6 +21,8 @@ class Button extends StatelessWidget {
     this.textType,
     this.image,
     required this.buttonText,
+    this.icon,
+    this.iconColor,
   });
 
   @override
@@ -42,6 +46,13 @@ class Button extends StatelessWidget {
           alignment: AlignmentDirectional.bottomCenter,
           children: [
             Visibility(
+              visible: icon != null ? true : false,
+              child: Icon(
+                icon,
+                color: iconColor ?? Colors.blue[50],
+              ),
+            ),
+            Visibility(
               visible: haveAdditional ?? false,
               child: Image.asset(image ?? ''),
             ),
@@ -63,7 +74,10 @@ class Button extends StatelessWidget {
                 ),
                 AutoSizeText(
                   buttonText,
-                  style: textType ?? Theme.of(context).textTheme.titleMedium,
+                  style: textType ??
+                      Theme.of(context).textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                   minFontSize: 12,
                   maxLines: 1,
                 ),
@@ -79,8 +93,7 @@ class Button extends StatelessWidget {
 class BackArrow extends StatelessWidget {
   final Function()? onTap;
 
-  const BackArrow({super.key,
-  this.onTap});
+  const BackArrow({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {

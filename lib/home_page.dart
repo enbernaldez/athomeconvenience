@@ -1,4 +1,4 @@
-import 'package:athomeconvenience/registration_page.dart';
+import 'package:athomeconvenience/constants.dart';
 import 'package:athomeconvenience/shop_list_page.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:flutter/material.dart';
@@ -114,8 +114,9 @@ class _HomePageState extends State<HomePage> {
                       padding: 8.0,
                       onPress: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                ShopListPage(category: entry.key)));
+                          builder: (BuildContext context) =>
+                              ShopListPage(category: entry.key),
+                        ));
                       },
                       buttonColor: Colors.lightBlue[100],
                       haveAdditional: true,

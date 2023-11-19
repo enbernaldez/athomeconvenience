@@ -16,48 +16,43 @@ class MessageCard extends StatelessWidget {
               ),
             );
           },
-          child: Container(
-            child: Row(
-              children: [
-                // Image/Icon
-                Container(
-                  height: 75,
-                  width: 75,
-                  decoration: const BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.all(Radius.circular(100))),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
+          child: const Row(
+            children: [
+              // Image/Icon
+              CircleAvatar(
+                backgroundImage: AssetImage('images/default_profile_pic.png'),
+                maxRadius: 30,
+              ),
+              SizedBox(
+                width: 20,
+              ),
 
-                // Column
-                const Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // SHOP NAME
-                      Text(
-                        "Jonnel Banka Services",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
+              // Column
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // SHOP NAME
+                    Text(
+                      "Jonnel Banka Services",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
 
-                      // messaged you
-                      Text(
-                        "You: I need it today",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ],
-                  ),
+                    // messaged you
+                    Text(
+                      "You: I need it today",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ],
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                // timestamp
-                const Text("8:00")
-              ],
-            ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              // timestamp
+              Text("8:00")
+            ],
           ),
         ),
         const SizedBox(

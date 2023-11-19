@@ -1,10 +1,13 @@
+import 'package:athomeconvenience/constants.dart';
 import 'package:athomeconvenience/contact_us_page.dart';
 import 'package:athomeconvenience/landing_page.dart';
+import 'package:athomeconvenience/shop_profile_page.dart';
 import 'package:athomeconvenience/terms_and_conditions_page.dart';
 import 'package:athomeconvenience/widgets/profile_pic.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerSettingsPage extends StatefulWidget {
@@ -22,24 +25,29 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
   final addressController = TextEditingController();
   final phoneNumController = TextEditingController();
   final emailAddController = TextEditingController();
+  final profileNameController = TextEditingController();
+  final contactNumController = TextEditingController();
+  final locationController = TextEditingController();
+  final gCashNumController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     fetchUserDetails();
+    checkIfServiceProvider();
   }
 
   Future<void> fetchUserDetails() async {
     try {
       final uid = FirebaseAuth.instance.currentUser!.uid;
 
-      var documentSnapshot =
+      var cDocumentSnapshot =
           await FirebaseFirestore.instance.collection("users").doc(uid).get();
 
-      if (documentSnapshot.exists) {
+      if (cDocumentSnapshot.exists) {
         // Access the data within the document
-        var userData = documentSnapshot.data();
-        if (userData != null) {
+        var cData = cDocumentSnapshot.data();
+        if (cData != null) {
           // Access specific fields within userData
           // var username = userData['username'];
           // var email = userData['email'];
@@ -47,10 +55,30 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
           // print('Username: $username');
           // print('Email: $email');
           setState(() {
-            nameController.text = userData['name'] ?? 'Loading';
-            addressController.text = userData['address'] ?? 'Loading';
-            phoneNumController.text = userData['phone_num'] ?? 'Loading';
-            emailAddController.text = userData['email_add'] ?? 'Loading';
+            nameController.text = cData['name'] ?? 'Loading';
+            addressController.text = cData['address'] ?? 'Loading';
+            phoneNumController.text = cData['phone_num'] ?? 'Loading';
+            emailAddController.text = cData['email_add'] ?? 'Loading';
+          });
+        }
+      } else {
+        print('Document does not exist');
+      }
+
+      var spDocumentSnapshot = await FirebaseFirestore.instance
+          .collection("service_provider")
+          .doc(uid)
+          .get();
+
+      if (spDocumentSnapshot.exists) {
+        var spData = spDocumentSnapshot.data();
+        if (spData != null) {
+          setState(() {
+            profileNameController.text =
+                spData['service_provider_name'] ?? 'Loading';
+            contactNumController.text = spData['contact_num'] ?? 'Loading';
+            locationController.text = spData['service_address'] ?? 'Loading';
+            gCashNumController.text = spData['gcash_num'] ?? 'Loading';
           });
         }
       } else {
@@ -59,6 +87,16 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
     } catch (e) {
       print(e);
     }
+  }
+
+  bool _isServiceProvider = false;
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+
+  Future<void> checkIfServiceProvider() async {
+    bool exists = await isServiceProvider();
+    setState(() {
+      _isServiceProvider = exists;
+    });
   }
 
   @override
@@ -81,6 +119,11 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                   final String newPhoneNum = phoneNumController.text;
                   final String newEmailAdd = emailAddController.text;
 
+                  final String newProfileName = profileNameController.text;
+                  final String newContactNum = contactNumController.text;
+                  final String newLocation = locationController.text;
+                  final String newGCashNum = gCashNumController.text;
+
                   final uid = FirebaseAuth.instance.currentUser!.uid;
 
                   await FirebaseFirestore.instance
@@ -91,6 +134,15 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                     'address': newAddress,
                     'phone_num': newPhoneNum,
                     'email_add': newEmailAdd,
+                  });
+                  await FirebaseFirestore.instance
+                      .collection('service_provider')
+                      .doc(uid)
+                      .update({
+                    'service_provider_name': newProfileName,
+                    'contact_num': newContactNum,
+                    'service_address': newLocation,
+                    'gcash_num': newGCashNum,
                   });
                 } catch (e) {
                   print(e);
@@ -133,6 +185,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                         const SizedBox(height: 15),
                         TextFormField(
                           controller: nameController,
+                          keyboardType: TextInputType.text,
                           readOnly: _readonly,
                           decoration: const InputDecoration(
                             labelText: 'NAME',
@@ -141,28 +194,34 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                           ),
                         ),
                         const Padding(
-                          padding: EdgeInsets.all(8.0),
+                          padding: EdgeInsets.symmetric(vertical: 8.0),
                           child: Divider(
                             height: 1,
                           ),
                         ),
                         TextFormField(
                           controller: addressController,
+                          keyboardType: TextInputType.text,
                           readOnly: _readonly,
                           decoration: const InputDecoration(
                             labelText: 'ADDRESS',
+                            hintText: 'Add your email address',
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
                           ),
                         ),
                         const Padding(
-                          padding: EdgeInsets.all(8.0),
+                          padding: EdgeInsets.symmetric(vertical: 8.0),
                           child: Divider(
                             height: 1,
                           ),
                         ),
                         TextFormField(
                           controller: phoneNumController,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(11),
+                          ],
+                          keyboardType: TextInputType.phone,
                           readOnly: _readonly,
                           decoration: const InputDecoration(
                             labelText: 'PHONE NUMBER',
@@ -171,16 +230,18 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                           ),
                         ),
                         const Padding(
-                          padding: EdgeInsets.all(8.0),
+                          padding: EdgeInsets.symmetric(vertical: 8.0),
                           child: Divider(
                             height: 1,
                           ),
                         ),
                         TextFormField(
                           controller: emailAddController,
+                          keyboardType: TextInputType.emailAddress,
                           readOnly: _readonly,
                           decoration: const InputDecoration(
                             labelText: 'EMAIL ADDRESS',
+                            hintText: 'Add your email address',
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
                           ),
@@ -188,6 +249,104 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                       ],
                     ),
                   ),
+                ),
+              ),
+            ),
+            Visibility(
+              visible: _isServiceProvider,
+              child: Center(
+                child: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Divider(),
+                    ),
+                    FractionallySizedBox(
+                      widthFactor: 0.8,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: 640,
+                        ),
+                        child: Form(
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                controller: profileNameController,
+                                keyboardType: TextInputType.text,
+                                readOnly: _readonly,
+                                decoration: const InputDecoration(
+                                  labelText: 'PROFILE NAME',
+                                  border: InputBorder.none,
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 8),
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: Divider(
+                                  height: 1,
+                                ),
+                              ),
+                              TextFormField(
+                                controller: contactNumController,
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(11),
+                                ],
+                                keyboardType: TextInputType.phone,
+                                readOnly: _readonly,
+                                decoration: const InputDecoration(
+                                  labelText: 'CONTACT NUMBER',
+                                  hintText: 'Add your contact number',
+                                  border: InputBorder.none,
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 8),
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: Divider(
+                                  height: 1,
+                                ),
+                              ),
+                              TextFormField(
+                                controller: locationController,
+                                keyboardType: TextInputType.text,
+                                readOnly: _readonly,
+                                decoration: const InputDecoration(
+                                  labelText: 'LOCATION',
+                                  hintText: 'Add your location',
+                                  border: InputBorder.none,
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 8),
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: Divider(
+                                  height: 1,
+                                ),
+                              ),
+                              TextFormField(
+                                controller: gCashNumController,
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(11),
+                                ],
+                                keyboardType: TextInputType.phone,
+                                readOnly: _readonly,
+                                decoration: const InputDecoration(
+                                  labelText: 'GCASH NUMBER',
+                                  hintText: 'Add your GCash number',
+                                  border: InputBorder.none,
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 8),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -205,32 +364,67 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                       constraints: const BoxConstraints(
                         maxWidth: 640,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 8,
-                        ),
-                        child: GestureDetector(
-                          onTap: () async {
-                            // ?========set SharedPreference========
-                            final SharedPreferences s =
-                                await SharedPreferences.getInstance();
-                            s.setBool("is_signedin", false);
-                            // ?==================================
-
-                            await FirebaseAuth.instance.signOut();
-
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        const LandingPage()),
-                                (route) => false);
-                          },
-                          child: Text(
-                            'LOG OUT',
-                            style: Theme.of(context).textTheme.bodyLarge,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Visibility(
+                            visible: _isServiceProvider,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                    horizontal: 8,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              ShopProfilePage(shopUid: uid),
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      'PREVIEW PROFILE',
+                                      style:
+                                          Theme.of(context).textTheme.bodyLarge,
+                                    ),
+                                  ),
+                                ),
+                                const Divider(height: 1),
+                              ],
+                            ),
                           ),
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 8,
+                            ),
+                            child: GestureDetector(
+                              onTap: () async {
+                                // ?========set SharedPreference========
+                                final SharedPreferences s =
+                                    await SharedPreferences.getInstance();
+                                s.setBool("is_signedin", false);
+                                // ?==================================
+
+                                await FirebaseAuth.instance.signOut();
+
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            const LandingPage()),
+                                    (route) => false);
+                              },
+                              child: Text(
+                                'LOG OUT',
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

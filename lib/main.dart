@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ), // 'Services Available' / AppBar title property
           titleMedium: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
+            // fontWeight: FontWeight.bold,
             color: Colors.blue[50],
           ), // ElevatedButton widget
           titleSmall:
