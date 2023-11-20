@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'package:athomeconvenience/constants.dart';
+import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/navigation.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
+import 'package:athomeconvenience/widgets/time_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -13,9 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-import 'landing_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'constants.dart';
 
 Iterable<String> categoryKeys = serviceCategoryMap.keys;
 List<String> categoryKeyList = categoryKeys.toList();
@@ -498,33 +499,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                         ),
                                       ),
                                       onPressed: () async {
-                                        TimeOfDay? time = await showTimePicker(
-                                          context: context,
-                                          initialTime:
-                                              selectedTimeST ?? TimeOfDay.now(),
-                                          initialEntryMode: entryMode,
-                                          orientation: orientation,
-                                          builder: (BuildContext context,
-                                              Widget? child) {
-                                            return Theme(
-                                              data: Theme.of(context).copyWith(
-                                                materialTapTargetSize:
-                                                    tapTargetSize,
-                                              ),
-                                              child: Directionality(
-                                                textDirection: textDirection,
-                                                child: MediaQuery(
-                                                  data: MediaQuery.of(context)
-                                                      .copyWith(
-                                                    alwaysUse24HourFormat:
-                                                        use24HourTime,
-                                                  ),
-                                                  child: child!,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
+                                        TimeOfDay? time =
+                                            await showTimePickerFunction(
+                                                context, selectedTimeST);
                                         setState(() {
                                           selectedTimeST = time;
                                           if (selectedTimeST != null) {
@@ -562,33 +539,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                         ),
                                       ),
                                       onPressed: () async {
-                                        TimeOfDay? time = await showTimePicker(
-                                          context: context,
-                                          initialTime:
-                                              selectedTimeET ?? TimeOfDay.now(),
-                                          initialEntryMode: entryMode,
-                                          orientation: orientation,
-                                          builder: (BuildContext context,
-                                              Widget? child) {
-                                            return Theme(
-                                              data: Theme.of(context).copyWith(
-                                                materialTapTargetSize:
-                                                    tapTargetSize,
-                                              ),
-                                              child: Directionality(
-                                                textDirection: textDirection,
-                                                child: MediaQuery(
-                                                  data: MediaQuery.of(context)
-                                                      .copyWith(
-                                                    alwaysUse24HourFormat:
-                                                        use24HourTime,
-                                                  ),
-                                                  child: child!,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
+                                        TimeOfDay? time =
+                                            await showTimePickerFunction(
+                                                context, selectedTimeST);
                                         setState(() {
                                           selectedTimeET = time;
                                           if (selectedTimeET != null) {
