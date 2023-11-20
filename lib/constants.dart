@@ -1,6 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 // ============== Service Categories ==============
 Map<String, String> serviceCategoryMap = {
   'Electrical': 'images/icon_electrical.png',

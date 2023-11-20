@@ -68,7 +68,7 @@ class _LikesPageState extends State<LikesPage> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
           child: Column(
             children: userLikes.map((like) {
               return Align(

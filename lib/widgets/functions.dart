@@ -5,6 +5,7 @@ FUNCTIONS:
 3. Image Picker
 */
 
+import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -148,6 +149,56 @@ class ImageHandler {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+}
+
+// ======================= trial: interaction dialog =======================
+class InteractionHandler {
+  static void showInteractionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          title: const Text('Share Location?'),
+          content: const Text(
+            'By sharing your location, the agreed-upon services will start.',
+            softWrap: true,
+          ),
+          contentPadding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 16.0),
+          actionsAlignment: MainAxisAlignment.center,
+          actionsPadding: const EdgeInsets.all(4.0),
+          actions: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 3,
+              child: DialogButton(
+                onPress: () {
+                  Navigator.pop(context);
+                },
+                buttonText: 'Cancel',
+                textColor: Colors.black,
+              ),
+            ),
+            Container(
+              height: 24, //adjust nalang height
+              width: 1.0,
+              color: Colors.black87,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 3,
+              child: DialogButton(
+                onPress: () {
+                  // TODO: Share location
+                },
+                buttonText: 'Share',
+              ),
+            ),
+          ],
         );
       },
     );

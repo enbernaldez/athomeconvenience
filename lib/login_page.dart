@@ -1,15 +1,18 @@
 import 'package:athomeconvenience/authentication/otp_screen.dart';
-import 'package:athomeconvenience/registration_page.dart';
+import 'package:athomeconvenience/widgets/buttons.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:athomeconvenience/widgets/buttons.dart';
 
 class LogInPage extends StatefulWidget {
-  bool isRegister;
-  LogInPage({super.key, required this.isRegister});
+  final bool isRegister;
+
+  const LogInPage({
+    super.key,
+    required this.isRegister,
+  });
 
   @override
   State<LogInPage> createState() => _LogInPageState();
@@ -155,7 +158,7 @@ class _LogInPageState extends State<LogInPage> {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (BuildContext context) {
-                                          return LogInPage(
+                                          return const LogInPage(
                                             isRegister: true,
                                           );
                                         }),

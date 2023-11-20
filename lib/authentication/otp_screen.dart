@@ -11,7 +11,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class OtpScreen extends StatefulWidget {
   final String verificationId;
 
-  OtpScreen({super.key, required this.verificationId});
+  const OtpScreen({
+    super.key,
+    required this.verificationId,
+  });
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -54,14 +57,14 @@ class _OtpScreenState extends State<OtpScreen> {
 
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
-                    builder: (BuildContext context) => Navigation(),
+                    builder: (BuildContext context) => const Navigation(),
                   ),
                   (route) => false);
             } else {
               // ! empty == no account yet
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (BuildContext context) => RegistrationPage(),
+                  builder: (BuildContext context) => const RegistrationPage(),
                 ),
               );
             }

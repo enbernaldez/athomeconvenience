@@ -1,3 +1,4 @@
+import 'package:athomeconvenience/widgets/functions.dart';
 import 'package:flutter/material.dart';
 
 class InboxPage extends StatefulWidget {
@@ -13,13 +14,13 @@ class _InboxPageState extends State<InboxPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text(
-          'Messages'
-        ),
+        title: const Text('Messages'),
         centerTitle: true,
         actions: [
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              InteractionHandler.showInteractionDialog(context);
+            },
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(

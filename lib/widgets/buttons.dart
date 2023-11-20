@@ -93,7 +93,10 @@ class Button extends StatelessWidget {
 class BackArrow extends StatelessWidget {
   final Function()? onTap;
 
-  const BackArrow({super.key, this.onTap});
+  const BackArrow({
+    super.key,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +108,33 @@ class BackArrow extends StatelessWidget {
       onTap: () {
         Navigator.pop(context);
       },
+    );
+  }
+}
+
+class DialogButton extends StatelessWidget {
+  final Function() onPress;
+  final String buttonText;
+  final Color? textColor;
+
+  const DialogButton({
+    super.key,
+    required this.onPress,
+    required this.buttonText,
+    this.textColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      onPressed: onPress,
+      style: OutlinedButton.styleFrom(
+        side: BorderSide.none,
+      ),
+      child: Text(
+        buttonText,
+        style: TextStyle(color: textColor),
+      ),
     );
   }
 }

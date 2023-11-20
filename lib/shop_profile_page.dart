@@ -176,14 +176,14 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                   const SizedBox(
                     height: 50,
                   ),
+
                   // IMAGE/ICON
                   const CircleAvatar(
                     backgroundImage:
                         AssetImage('images/default_profile_pic.png'),
-                    // minRadius: 30,
                     maxRadius: 60,
                   ),
-                  //temporary grey circle muna
+
                   const SizedBox(
                     height: 10,
                   ),
@@ -226,19 +226,22 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       // *message btn
                       Expanded(
                         child: Button(
-                          onPress: disableButton == false ? () {
-                            // TODO NAVIGATE TO CONVERSATION PAGE
-                            // TODO PASS THE SHOP UID & SHOP NAME TO THE CONVERSATION PAGE
-                            // Navigator.of(context).push(
-                            //   MaterialPageRoute(
-                            //     builder: (BuildContext context) => Conversation(
-                            //         shopUid: shopData['uid'],
-                            //         shopName:
-                            //             shopeData['service_provider_name']),
-                            //   ),
-                            // );
-                          } : null,
+                          onPress: disableButton == false
+                              ? () {
+                                  // TODO NAVIGATE TO CONVERSATION PAGE
+                                  // TODO PASS THE SHOP UID & SHOP NAME TO THE CONVERSATION PAGE
+                                  // Navigator.of(context).push(
+                                  //   MaterialPageRoute(
+                                  //     builder: (BuildContext context) => Conversation(
+                                  //         shopUid: shopData['uid'],
+                                  //         shopName:
+                                  //             shopeData['service_provider_name']),
+                                  //   ),
+                                  // );
+                                }
+                              : null,
                           buttonText: 'Message',
+                          textType: Theme.of(context).textTheme.displaySmall,
                         ),
                       ),
                       const SizedBox(
@@ -246,7 +249,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       ),
 
                       // * like btn
-                      Container(
+                      SizedBox(
                         width: 50,
                         child: Button(
                           onPress: disableButton == false ? handleLike : null,
