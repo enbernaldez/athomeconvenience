@@ -3,20 +3,20 @@ import 'package:athomeconvenience/constants.dart';
 import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/navigation.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
-import 'package:athomeconvenience/widgets/time_picker.dart';
+import 'package:athomeconvenience/widgets/functions.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:full_screen_image/full_screen_image.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 Iterable<String> categoryKeys = serviceCategoryMap.keys;
 List<String> categoryKeyList = categoryKeys.toList();
@@ -58,8 +58,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   bool? _isServiceProvider = false;
   String serviceCategory = categoryKeyList.first; //*
   final _registrationFormKey = GlobalKey<FormState>();
-  XFile? image; //*
-  final ImagePicker picker = ImagePicker();
+  XFile? image = ImageHandler.currentImage;
 
   // ==========Time Picker==========
   TimeOfDay? selectedTimeST; //*
@@ -73,81 +72,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String buttonTextST = 'Start Time';
   String buttonTextET = 'End Time';
   //================================
-
-  Future getImage(ImageSource media) async {
-    var img = await picker.pickImage(source: media);
-
-    setState(() {
-      image = img;
-    });
-  }
-
-  void uploadImage() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          title: const Text('Upload'),
-          content: SizedBox(
-            height: MediaQuery.of(context).size.height / 6,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.all(8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                    side: const BorderSide(color: Colors.blueAccent),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    getImage(ImageSource.gallery);
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.image,
-                        color: Colors.blue[700],
-                      ),
-                      const SizedBox(width: 8),
-                      const Text('From Gallery'),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.all(8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                    side: const BorderSide(color: Colors.blueAccent),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    getImage(ImageSource.camera);
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.camera,
-                        color: Colors.blue[700],
-                      ),
-                      const SizedBox(width: 8),
-                      const Text('From Camera'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -655,7 +579,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                               ),
                                             ),
                                             onPressed: () {
-                                              uploadImage();
+                                              ImageHandler.uploadImage(context);
                                             },
                                             child: Text(
                                               'Upload ID / Business Permit',
