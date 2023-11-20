@@ -1,5 +1,6 @@
 import 'package:athomeconvenience/navigation.dart';
 import 'package:athomeconvenience/registration_page.dart';
+import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -98,11 +99,11 @@ class _OtpScreenState extends State<OtpScreen> {
                 maxLines: 1,
               ),
               const SizedBox(
-                height: 10,
+                height: 20,
               ),
               const Text("Enter the OTP sent to your phone number"),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               // VERIFICATION CODE INPUT
               Pinput(
@@ -113,29 +114,15 @@ class _OtpScreenState extends State<OtpScreen> {
                 height: 20,
               ),
               // VERIFY BUTTON
-              FractionallySizedBox(
-                widthFactor: 1,
-                child: SizedBox(
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: handleClick,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                    ),
-                    child: Text(
-                      'VERIFY',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ),
-                ),
+              Button(
+                buttonText: 'VERIFY',
+                textType: Theme.of(context).textTheme.displaySmall,
+                onPress: handleClick,
               ),
               const SizedBox(
                 height: 20,
               ),
               const Text("Didn't receive any code?"),
-              const SizedBox(
-                height: 20,
-              ),
               const Text(
                 "Resend new code",
                 style: TextStyle(color: Colors.blue),
