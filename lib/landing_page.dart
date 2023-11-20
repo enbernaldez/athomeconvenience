@@ -12,24 +12,6 @@ class LandingPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (BuildContext context) {
-                  return const Navigation();
-                }),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'Skip',
-                style: Theme.of(context).textTheme.labelLarge!,
-              ),
-            ),
-          ),
-        ],
       ),
       body: Center(
         child: FractionallySizedBox(

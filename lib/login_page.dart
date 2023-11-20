@@ -72,28 +72,6 @@ class _LogInPageState extends State<LogInPage> {
     return Scaffold(
       appBar: AppBar(
         leading: const BackArrow(),
-        //temporary solution
-        actions: [
-          Visibility(
-            visible: widget.isRegister,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (BuildContext context) {
-                    return const RegistrationPage();
-                  }),
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Skip',
-                  style: Theme.of(context).textTheme.labelLarge!,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
       body: Center(
         child: FractionallySizedBox(
