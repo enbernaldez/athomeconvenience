@@ -58,6 +58,7 @@ class LandingPage extends StatelessWidget {
                 const SizedBox(height: 40),
                 Button(
                   buttonText: 'LOG IN',
+                  textType: Theme.of(context).textTheme.displaySmall,
                   onPress: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -74,7 +75,7 @@ class LandingPage extends StatelessWidget {
                 Button(
                   buttonText: 'REGISTER',
                   buttonColor: Colors.orange,
-                  textType: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  textType: Theme.of(context).textTheme.displaySmall!.copyWith(
                         color: Colors.orange[50],
                       ),
                   onPress: () {

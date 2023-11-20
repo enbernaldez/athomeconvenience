@@ -163,6 +163,7 @@ class _LogInPageState extends State<LogInPage> {
                         Button(
                           buttonText:
                               widget.isRegister == true ? 'NEXT' : 'SIGN IN',
+                          textType: Theme.of(context).textTheme.displaySmall,
                           onPress: handleClick,
                         ),
                         const SizedBox(height: 10),

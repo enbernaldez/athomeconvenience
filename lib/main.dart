@@ -39,9 +39,11 @@ class MyApp extends StatelessWidget {
           displayMedium: GoogleFonts.dmSans(
             color: Colors.orange,
           ),
-          displaySmall: GoogleFonts.dmSans(
-            color: Colors.orange[100],
-          ),
+          displaySmall: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: Colors.blue[50],
+          ), // ElevatedButton widget text
           headlineLarge: GoogleFonts.dmSans(
             color: Colors.green[900],
           ),
@@ -63,10 +65,7 @@ class MyApp extends StatelessWidget {
           titleLarge: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
           ), // 'Services Available' / AppBar title property
-          titleMedium: GoogleFonts.poppins(
-            // fontWeight: FontWeight.bold,
-            color: Colors.blue[50],
-          ), // ElevatedButton widget
+          titleMedium: GoogleFonts.poppins(),
           titleSmall:
               GoogleFonts.poppins(), // categories' ElevatedButton widget
         ),

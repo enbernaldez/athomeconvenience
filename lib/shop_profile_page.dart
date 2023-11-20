@@ -21,6 +21,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   List<String> userLikes = [];
   bool _isServiceProvider = false;
   String action = '';
+  bool disableButton = false;
 
   @override
   void initState() {
@@ -74,6 +75,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
       _isServiceProvider = exists;
       if (_isServiceProvider && uid == widget.shopUid) {
         action = 'Edit';
+        disableButton = true;
       }
     });
   }
@@ -224,7 +226,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       // *message btn
                       Expanded(
                         child: Button(
-                          onPress: () {
+                          onPress: disableButton == false ? () {
                             // TODO NAVIGATE TO CONVERSATION PAGE
                             // TODO PASS THE SHOP UID & SHOP NAME TO THE CONVERSATION PAGE
                             // Navigator.of(context).push(
@@ -235,7 +237,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                             //             shopeData['service_provider_name']),
                             //   ),
                             // );
-                          },
+                          } : null,
                           buttonText: 'Message',
                         ),
                       ),
@@ -247,7 +249,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       Container(
                         width: 50,
                         child: Button(
-                          onPress: handleLike,
+                          onPress: disableButton == false ? handleLike : null,
                           buttonText: '',
                           icon: Icons.favorite,
                           iconColor:

@@ -722,22 +722,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        FractionallySizedBox(
-                          widthFactor: 1,
-                          child: SizedBox(
-                            height: 50,
-                            child: ElevatedButton(
-                              onPressed: handleRegister,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                              ),
-                              child: AutoSizeText(
-                                'SUBMIT',
-                                style: Theme.of(context).textTheme.titleMedium,
-                                minFontSize: 16,
-                              ),
-                            ),
-                          ),
+                        Button(
+                          buttonText: 'SUBMIT',
+                          textType: Theme.of(context).textTheme.displaySmall,
+                          onPress: handleRegister,
                         ),
                         const SizedBox(height: 10),
                         const Text('By signing up, you agree to the'),

@@ -11,13 +11,10 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-          child: Text(
-        'Terms and Conditions',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.displayLarge,
-      )),
+      appBar: AppBar(
+        title: const Text('Terms and Conditions'),
+        centerTitle: true,
+      ),
     );
   }
 }
