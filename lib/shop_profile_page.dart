@@ -86,6 +86,45 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
 
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
+  ratingCalculation(
+    String spUid,
+    double rating,
+  ) async {
+    DocumentReference<Map<String, dynamic>> documentReference =
+        FirebaseFirestore.instance.collection('service_provider').doc(spUid);
+
+    final DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+        await documentReference.get();
+
+    // Check if the 'rating' field already exists
+    if (!documentSnapshot.data()!.containsKey(rating)) {
+      // Update the document with the new field
+      await documentReference.update({rating: 0.0});
+    } else {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot documentSnapshot =
+            await transaction.get(documentReference);
+
+        final lastRatingForTheUser = documentSnapshot.data() as Map;
+        String? newRating;
+        double? ratingOfUser = double.tryParse(lastRatingForTheUser['rating']);
+
+        setState(() {
+          rating = rating.ceilToDouble();
+        });
+
+        if (ratingOfUser == 0.0) {
+          newRating = rating.toString();
+        } else {
+          double calculateRating = (ratingOfUser! + rating) / 2;
+          newRating = calculateRating.toString();
+        }
+
+        transaction.update(documentReference, {'rating': newRating});
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     print(shopData);
@@ -200,10 +239,13 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
 
                   // STAR RATING (wala pang backend)
                   RatingBar.builder(
-                    minRating: 1,
-                    direction: Axis.horizontal,
                     allowHalfRating: true,
-                    itemCount: 5,
+                    glow: false,
+                    ignoreGestures: true,
+                    // TODO: ignoreGestures should be false after interaction is finished, then true after rating
+                    initialRating: shopData['rating'] != null
+                        ? double.parse(shopData['rating'])
+                        : 0.0,
                     itemSize: 30,
                     itemPadding: const EdgeInsets.symmetric(
                       horizontal: 3.0,
@@ -213,7 +255,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       color: Colors.amber,
                     ),
                     onRatingUpdate: (rating) {
-                      print(rating);
+                      ratingCalculation(widget.shopUid, rating);
                     },
                   ),
 
