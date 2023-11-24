@@ -44,7 +44,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   // ! ====TextEditing Controllers=====
   // * USER
   final fullNameController = TextEditingController();
-  final phoneNumController = TextEditingController();
+  // final phoneNumController = TextEditingController();
   final addressController = TextEditingController();
   final emailAddressController = TextEditingController();
 
@@ -60,6 +60,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final _registrationFormKey = GlobalKey<FormState>();
   XFile? image = ImageHandler.currentImage;
 
+  FirebaseAuth auth = FirebaseAuth.instance;
+  String phoneNumber = '';
+  bool readOnly = false;
+
   // ==========Time Picker==========
   TimeOfDay? selectedTimeST; //*
   TimeOfDay? selectedTimeET; //*
@@ -71,17 +75,30 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String startTime = '';
   String buttonTextST = 'Start Time';
   String buttonTextET = 'End Time';
-  //================================
+  // ===============================
 
   @override
   Widget build(BuildContext context) {
+    // ===== Retrieve Current User's Phone Number =====
+    User? user = auth.currentUser;
+
+    if (user != null) {
+      // This is the phone number used by user to verify
+      setState(() {
+        phoneNumber = user.phoneNumber ?? "";
+        phoneNumber = phoneNumber.replaceFirst("+63", "0");
+        readOnly = true;
+      });
+    }
+    // ================================================
+
     // !  ============HANDLE REGISTER================
     void handleRegister() async {
       final firestore = FirebaseFirestore.instance;
       String? uid = FirebaseAuth.instance.currentUser!.uid;
       final String fullName = fullNameController.text;
       final String u_address = addressController.text;
-      final String u_phoneNum = phoneNumController.text;
+      final String u_phoneNum = phoneNumber;
       final String emailAdd = emailAddressController.text;
 
       if (fullName.isEmpty &&
@@ -260,7 +277,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         ),
                         const SizedBox(height: 20),
                         TextFormField(
-                          controller: phoneNumController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Required';
@@ -273,6 +289,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(11),
                           ],
+                          initialValue: phoneNumber,
+                          readOnly: readOnly,
                           keyboardType: TextInputType.phone,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),

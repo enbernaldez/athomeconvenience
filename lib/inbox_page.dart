@@ -1,4 +1,3 @@
-import 'package:athomeconvenience/widgets/functions.dart';
 import 'package:flutter/material.dart';
 
 class InboxPage extends StatefulWidget {
@@ -18,9 +17,7 @@ class _InboxPageState extends State<InboxPage> {
         centerTitle: true,
         actions: [
           GestureDetector(
-            onTap: () {
-              InteractionHandler.showInteractionDialog(context);
-            },
+            onTap: () {},
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
