@@ -193,12 +193,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8.0),
-                          child: Divider(
-                            height: 1,
-                          ),
-                        ),
+                        const PaddedDivider(),
                         TextFormField(
                           controller: addressController,
                           keyboardType: TextInputType.text,
@@ -210,12 +205,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8.0),
-                          child: Divider(
-                            height: 1,
-                          ),
-                        ),
+                        const PaddedDivider(),
                         TextFormField(
                           controller: phoneNumController,
                           inputFormatters: [
@@ -229,12 +219,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8.0),
-                          child: Divider(
-                            height: 1,
-                          ),
-                        ),
+                        const PaddedDivider(),
                         TextFormField(
                           controller: emailAddController,
                           keyboardType: TextInputType.emailAddress,
@@ -281,12 +266,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                       EdgeInsets.symmetric(horizontal: 8),
                                 ),
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: Divider(
-                                  height: 1,
-                                ),
-                              ),
+                              const PaddedDivider(),
                               // TODO: service category
                               TextFormField(
                                 controller: contactNumController,
@@ -303,12 +283,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                       EdgeInsets.symmetric(horizontal: 8),
                                 ),
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: Divider(
-                                  height: 1,
-                                ),
-                              ),
+                              const PaddedDivider(),
                               // TODO: working hours
                               TextFormField(
                                 controller: locationController,
@@ -322,12 +297,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                       EdgeInsets.symmetric(horizontal: 8),
                                 ),
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: Divider(
-                                  height: 1,
-                                ),
-                              ),
+                              const PaddedDivider(),
                               TextFormField(
                                 controller: gCashNumController,
                                 inputFormatters: [
@@ -491,6 +461,20 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class PaddedDivider extends StatelessWidget {
+  const PaddedDivider({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.0),
+      child: Divider(
+        height: 1,
       ),
     );
   }

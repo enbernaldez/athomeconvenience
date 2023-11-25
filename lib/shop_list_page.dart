@@ -68,21 +68,82 @@ class _ShopListPageState extends State<ShopListPage> {
               widthFactor: 0.85,
               child: Column(
                 children: [
-                  const SizedBox(
-                    height: 10,
+                  FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection("service_provider")
+                        .where("category", isEqualTo: widget.category)
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: SizedBox(child: CircularProgressIndicator()),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text("Error: ${snapshot.error}");
+                      } else if (snapshot.hasData) {
+                        if (snapshot.data!.docs.isNotEmpty) {
+                          var serviceProviderData =
+                              snapshot.data!.docs.first.data();
+                          return ShopCard(
+                              shopAddress:
+                                  serviceProviderData['service_address'],
+                              shopName:
+                                  serviceProviderData['service_provider_name'],
+                              shopUid: serviceProviderData['uid']);
+                        } else {
+                          return const Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Divider(
+                                height: 0,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Center(
+                                child: Text(
+                                  "No data",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                      } else {
+                        return const Column(
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Divider(
+                              height: 0,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Center(
+                              child: Text(
+                                "No data",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    },
                   ),
-                  const Divider(
-                    height: 0,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  for (final shop in shopList)
-                    ShopCard(
-                      shopAddress: shop['service_address'],
-                      shopName: shop['service_provider_name'],
-                      shopUid: shop['uid'],
-                    )
+                  // for (final shop in shopList)
+                  //   ShopCard(
+                  //     shopAddress: shop['service_address'],
+                  //     shopName: shop['service_provider_name'],
+                  //     shopUid: shop['uid'],
+                  //   )
                 ],
               ),
             ),

@@ -138,3 +138,29 @@ class DialogButton extends StatelessWidget {
     );
   }
 }
+
+class EditButton extends StatelessWidget {
+  final Function() onPress;
+  final String buttonText;
+
+  const EditButton({
+    super.key,
+    required this.onPress,
+    required this.buttonText
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPress,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          buttonText,
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+      ),
+    );
+  }
+}
+
