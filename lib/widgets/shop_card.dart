@@ -15,6 +15,15 @@ class ShopCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        const SizedBox(
+          height: 10,
+        ),
+        const Divider(
+          height: 0,
+        ),
+        const SizedBox(
+          height: 10,
+        ),
         FractionallySizedBox(
           widthFactor: 0.9,
           child: GestureDetector(
@@ -66,15 +75,6 @@ class ShopCard extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(
-          height: 10,
-        ),
-        const Divider(
-          height: 0,
-        ),
-        const SizedBox(
-          height: 10,
-        )
       ],
     );
   }

@@ -7,6 +7,8 @@ class TextThemePage extends StatefulWidget {
   State<TextThemePage> createState() => TextThemePageState();
 }
 
+// this is a guide for the text themes I use
+
 class TextThemePageState extends State<TextThemePage> {
   @override
   Widget build(BuildContext context) {

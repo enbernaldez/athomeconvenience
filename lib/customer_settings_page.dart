@@ -287,6 +287,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                   height: 1,
                                 ),
                               ),
+                              // TODO: service category
                               TextFormField(
                                 controller: contactNumController,
                                 inputFormatters: [
@@ -308,6 +309,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                   height: 1,
                                 ),
                               ),
+                              // TODO: working hours
                               TextFormField(
                                 controller: locationController,
                                 keyboardType: TextInputType.text,

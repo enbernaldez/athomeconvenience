@@ -536,6 +536,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 ),
                               ),
                               const SizedBox(height: 20),
+                              // TODO: form should not submit if image for verification is not uploaded
+                              // haven't checked yet if toast works to prevent submission
+                              // TODO: toast should not show when registering for customer acc
                               image != null
                                   ? Padding(
                                       padding: const EdgeInsets.symmetric(

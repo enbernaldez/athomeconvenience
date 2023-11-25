@@ -237,7 +237,11 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                     ),
                   ),
 
-                  // STAR RATING (wala pang backend)
+                  // STAR RATING
+                  // TODO: make rating only once, after interaction
+                  // TODO: create dialog for rating
+                  // this rating bar should only for display of aggregated ratings
+                  // rating bar in dialog to rate
                   RatingBar.builder(
                     allowHalfRating: true,
                     glow: false,
