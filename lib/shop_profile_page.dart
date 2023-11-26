@@ -23,27 +23,15 @@ class ShopProfilePage extends StatefulWidget {
 }
 
 class _ShopProfilePageState extends State<ShopProfilePage> {
-<<<<<<< HEAD
-  Map<String, dynamic> shopData = {};
-  List<String> userLikes = [];
-  bool _isServiceProvider = false;
-  String action = '';
-  bool disableButton = false;
   String? chatDocId;
-=======
->>>>>>> upstream/main
 
   @override
   void initState() {
     super.initState();
     fetchShopData(context, widget.shopUid);
     fetchUserLikes();
-<<<<<<< HEAD
-    checkIfServiceProvider();
-    fetchChatDocId();
-=======
     forServiceProviderEdit();
->>>>>>> upstream/main
+    fetchChatDocId();
   }
 
   bool _isServiceProvider = false;
@@ -53,36 +41,16 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   Color? liked;
   bool isAbout = true;
 
-<<<<<<< HEAD
-      if (querySnapshot.docs.isNotEmpty) {
-        setState(() {
-          shopData = querySnapshot.docs.first
-              .data(); // Access data from the first document
-        });
+  Future<void> forServiceProviderEdit() async {
+    bool exists = await isServiceProvider();
+
+    setState(() {
+      _isServiceProvider = exists;
+      if (_isServiceProvider && uid == widget.shopUid) {
+        action = 'Edit';
+        disableButton = true;
       }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> fetchUserLikes() async {
-    try {
-      final uid = FirebaseAuth.instance.currentUser!.uid;
-
-      var userQuerySnapshot = await FirebaseFirestore.instance
-          .collection("users")
-          .where("uid", isEqualTo: uid)
-          .get();
-
-      if (userQuerySnapshot.docs.isNotEmpty) {
-        var userLikesData = userQuerySnapshot.docs.first.data();
-        setState(() {
-          userLikes = List<String>.from(userLikesData['likes'] ?? []);
-        });
-      }
-    } catch (e) {
-      print(e);
-    }
+    });
   }
 
   Future<void> fetchChatDocId() async {
@@ -108,21 +76,6 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
     } catch (e) {
       print(e);
     }
-  }
-
-  Future<void> checkIfServiceProvider() async {
-=======
-  Future<void> forServiceProviderEdit() async {
->>>>>>> upstream/main
-    bool exists = await isServiceProvider();
-
-    setState(() {
-      _isServiceProvider = exists;
-      if (_isServiceProvider && uid == widget.shopUid) {
-        action = 'Edit';
-        disableButton = true;
-      }
-    });
   }
 
   @override

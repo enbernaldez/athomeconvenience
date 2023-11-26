@@ -1,5 +1,4 @@
 import 'package:athomeconvenience/model/message_data.dart';
-import 'package:athomeconvenience/widgets/functions.dart';
 import 'package:athomeconvenience/widgets/message/message_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
