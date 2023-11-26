@@ -6,10 +6,31 @@ FUNCTIONS:
 */
 
 import 'package:athomeconvenience/widgets/buttons.dart';
+import 'package:athomeconvenience/widgets/star_rating.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+
+// ================ Fetch Service Provider Data ================
+Map<String, dynamic> shopData = {};
+
+Future<void> fetchShopData(BuildContext context, var shopUid) async {
+  try {
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection("service_provider")
+        .where("uid", isEqualTo: shopUid)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      shopData = querySnapshot.docs.first.data();
+    }
+  } catch (e) {
+    print(e);
+  }
+}
 
 // ====================== User Type Checker ======================
 Future<bool> isServiceProvider() async {
@@ -155,6 +176,116 @@ class ImageHandler {
   }
 }
 
+void showToast(String message) {
+  Fluttertoast.showToast(
+    msg: message,
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.CENTER,
+    timeInSecForIosWeb: 1,
+    backgroundColor: Colors.grey,
+    textColor: Colors.white,
+    fontSize: 12.0,
+  );
+}
+
+// ============================= Calculate Rating =============================
+ratingCalculation(String spUid, double rating) async {
+  DocumentReference<Map<String, dynamic>> documentReference =
+      FirebaseFirestore.instance.collection('service_provider').doc(spUid);
+
+  final DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+      await documentReference.get();
+
+  // Check if the 'rating' field already exists
+  if (!documentSnapshot.data()!.containsKey('rating')) {
+    // Update the document with the new field
+    await documentReference.update({rating: 0.0});
+  } else {
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentSnapshot documentSnapshot =
+          await transaction.get(documentReference);
+
+      final lastRatingForTheUser = documentSnapshot.data() as Map;
+      String? newRating;
+      double? ratingOfUser = double.tryParse(lastRatingForTheUser['rating']);
+
+      rating = rating.ceilToDouble();
+
+      if (ratingOfUser == 0.0) {
+        newRating = rating.toString();
+      } else {
+        double calculateRating = (ratingOfUser! + rating) / 2;
+        newRating = calculateRating.toString();
+      }
+
+      transaction.update(documentReference, {'rating': newRating});
+    });
+  }
+}
+
+// ======================== Rating Dialog ========================
+class RateHandler {
+  static void ratingHandler(BuildContext context, String shopUid) {
+    double? selectedRating;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          title: const Text('Rate'),
+          contentPadding: const EdgeInsets.all(8.0),
+          content: SizedBox(
+            height: 50,
+            child: Center(
+              child: StarRating(
+                onRatingChange: (rating) {
+                  selectedRating = rating;
+                },
+              ),
+            ),
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actionsPadding: const EdgeInsets.all(4.0),
+          actions: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 3,
+              child: DialogButton(
+                onPress: () {
+                  Navigator.pop(context);
+                },
+                buttonText: 'Cancel',
+                textColor: Colors.black,
+              ),
+            ),
+            Container(
+              height: 24, //adjust nalang height
+              width: 1.0,
+              color: Colors.black87,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 3,
+              child: DialogButton(
+                onPress: () {
+                  if (selectedRating != null) {
+                    ratingCalculation(shopUid, selectedRating!);
+                    Navigator.pop(context);
+                  } else {
+                    showToast('Please input your rating.');
+                  }
+                },
+                buttonText: 'Rate',
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
 // ======================= trial: interaction dialog =======================
 class InteractionHandler {
   static void showInteractionDialog(BuildContext context) {
@@ -192,9 +323,7 @@ class InteractionHandler {
             SizedBox(
               width: MediaQuery.of(context).size.width / 3,
               child: DialogButton(
-                onPress: () {
-                  // TODO: Share location
-                },
+                onPress: () {},
                 buttonText: 'Share',
               ),
             ),

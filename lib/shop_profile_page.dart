@@ -2,6 +2,7 @@ import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/about.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/works.dart';
 import 'package:athomeconvenience/widgets/functions.dart';
+import 'package:athomeconvenience/widgets/star_rating.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,14 +11,17 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ShopProfilePage extends StatefulWidget {
   final String shopUid;
-  const ShopProfilePage({super.key, required this.shopUid});
+
+  const ShopProfilePage({
+    super.key,
+    required this.shopUid,
+  });
 
   @override
   State<ShopProfilePage> createState() => _ShopProfilePageState();
 }
 
 class _ShopProfilePageState extends State<ShopProfilePage> {
-  Map<String, dynamic> shopData = {};
   List<String> userLikes = [];
   bool _isServiceProvider = false;
   String action = '';
@@ -26,27 +30,9 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   @override
   void initState() {
     super.initState();
-    fetchShopData();
+    fetchShopData(context, widget.shopUid);
     fetchUserLikes();
     checkIfServiceProvider();
-  }
-
-  Future<void> fetchShopData() async {
-    try {
-      var querySnapshot = await FirebaseFirestore.instance
-          .collection("service_provider")
-          .where("uid", isEqualTo: widget.shopUid)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        setState(() {
-          shopData = querySnapshot.docs.first
-              .data(); // Access data from the first document
-        });
-      }
-    } catch (e) {
-      print(e);
-    }
   }
 
   Future<void> fetchUserLikes() async {
@@ -85,45 +71,6 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   Color? liked;
 
   final uid = FirebaseAuth.instance.currentUser!.uid;
-
-  ratingCalculation(
-    String spUid,
-    double rating,
-  ) async {
-    DocumentReference<Map<String, dynamic>> documentReference =
-        FirebaseFirestore.instance.collection('service_provider').doc(spUid);
-
-    final DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-        await documentReference.get();
-
-    // Check if the 'rating' field already exists
-    if (!documentSnapshot.data()!.containsKey(rating)) {
-      // Update the document with the new field
-      await documentReference.update({rating: 0.0});
-    } else {
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        DocumentSnapshot documentSnapshot =
-            await transaction.get(documentReference);
-
-        final lastRatingForTheUser = documentSnapshot.data() as Map;
-        String? newRating;
-        double? ratingOfUser = double.tryParse(lastRatingForTheUser['rating']);
-
-        setState(() {
-          rating = rating.ceilToDouble();
-        });
-
-        if (ratingOfUser == 0.0) {
-          newRating = rating.toString();
-        } else {
-          double calculateRating = (ratingOfUser! + rating) / 2;
-          newRating = calculateRating.toString();
-        }
-
-        transaction.update(documentReference, {'rating': newRating});
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -239,28 +186,20 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
 
                   // STAR RATING
                   // TODO: make rating only once, after interaction
-                  // TODO: create dialog for rating
-                  // this rating bar should only for display of aggregated ratings
-                  // rating bar in dialog to rate
-                  RatingBar.builder(
-                    allowHalfRating: true,
-                    glow: false,
-                    ignoreGestures: true,
-                    // TODO: ignoreGestures should be false after interaction is finished, then true after rating
-                    initialRating: shopData['rating'] != null
-                        ? double.parse(shopData['rating'])
-                        : 0.0,
-                    itemSize: 30,
-                    itemPadding: const EdgeInsets.symmetric(
-                      horizontal: 3.0,
-                    ),
-                    itemBuilder: (context, _) => const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    onRatingUpdate: (rating) {
-                      ratingCalculation(widget.shopUid, rating);
+                  GestureDetector(
+                    onTap: () {
+                      // after interaction, canRate is set to true, so..
+                      // if canRate = true
+                      RateHandler.ratingHandler(context, widget.shopUid);
                     },
+                    child: StarRating(
+                      onRatingChange: (p0) {},
+                      initialRating: shopData['rating'] != null
+                          ? double.parse(shopData['rating'])
+                          : 0.0,
+                      allowHalfRating: true,
+                      ignoreGestures: true,
+                    ),
                   ),
 
                   // MESSAGE AND LIKE/HEART
@@ -368,12 +307,13 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                   // ABOUT | WORKS CONTENT
                   isAbout == true
                       ? AboutSection(
-                          category: shopData['category'] ?? "Loading",
-                          shopAddress: shopData['service_address'] ?? "Loading",
-                          contactNum: shopData['contact_num'] ?? "Loading",
+                          category: shopData['category'] ?? "Loading...",
+                          shopAddress:
+                              shopData['service_address'] ?? "Loading...",
+                          contactNum: shopData['contact_num'] ?? "Loading...",
                           workingHours:
                               '${shopData['service_start']} - ${shopData['service_end']}' ??
-                                  "Loading",
+                                  "Loading...",
                         )
                       : const WorksSection()
                 ],
