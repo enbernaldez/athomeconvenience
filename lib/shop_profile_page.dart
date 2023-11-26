@@ -1,12 +1,12 @@
+import 'package:athomeconvenience/functions/fetch_data.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/about.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/works.dart';
-import 'package:athomeconvenience/widgets/functions.dart';
+import 'package:athomeconvenience/functions/functions.dart';
 import 'package:athomeconvenience/widgets/star_rating.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ShopProfilePage extends StatefulWidget {
@@ -22,41 +22,25 @@ class ShopProfilePage extends StatefulWidget {
 }
 
 class _ShopProfilePageState extends State<ShopProfilePage> {
-  List<String> userLikes = [];
-  bool _isServiceProvider = false;
-  String action = '';
-  bool disableButton = false;
 
   @override
   void initState() {
     super.initState();
     fetchShopData(context, widget.shopUid);
     fetchUserLikes();
-    checkIfServiceProvider();
+    forServiceProviderEdit();
   }
 
-  Future<void> fetchUserLikes() async {
-    try {
-      final uid = FirebaseAuth.instance.currentUser!.uid;
+  bool _isServiceProvider = false;
+  String action = '';
+  bool disableButton = false;
+  bool isLiked = false;
+  Color? liked;
+  bool isAbout = true;
 
-      var userQuerySnapshot = await FirebaseFirestore.instance
-          .collection("users")
-          .where("uid", isEqualTo: uid)
-          .get();
-
-      if (userQuerySnapshot.docs.isNotEmpty) {
-        var userLikesData = userQuerySnapshot.docs.first.data();
-        setState(() {
-          userLikes = List<String>.from(userLikesData['likes'] ?? []);
-        });
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> checkIfServiceProvider() async {
+  Future<void> forServiceProviderEdit() async {
     bool exists = await isServiceProvider();
+
     setState(() {
       _isServiceProvider = exists;
       if (_isServiceProvider && uid == widget.shopUid) {
@@ -66,20 +50,10 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
     });
   }
 
-  bool isAbout = true;
-  bool isLiked = false;
-  Color? liked;
-
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-
   @override
   Widget build(BuildContext context) {
-    print(shopData);
-
     void handleLike() async {
       try {
-        final uid = FirebaseAuth.instance.currentUser!.uid;
-
         // Fetch the user document
         var userQuerySnapshot = await FirebaseFirestore.instance
             .collection("users")

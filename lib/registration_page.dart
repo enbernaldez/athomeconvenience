@@ -3,7 +3,7 @@ import 'package:athomeconvenience/constants.dart';
 import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/navigation.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
-import 'package:athomeconvenience/widgets/functions.dart';
+import 'package:athomeconvenience/functions/functions.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
