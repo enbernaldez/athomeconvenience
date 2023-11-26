@@ -1,4 +1,4 @@
-import 'package:athomeconvenience/customer_settings_page.dart';
+import 'package:athomeconvenience/settings_page.dart';
 import 'package:athomeconvenience/home_page.dart';
 import 'package:athomeconvenience/inbox_page.dart';
 import 'package:athomeconvenience/likes_page.dart';

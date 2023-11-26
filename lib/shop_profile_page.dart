@@ -5,7 +5,6 @@ import 'package:athomeconvenience/widgets/shopProfileView/works.dart';
 import 'package:athomeconvenience/functions/functions.dart';
 import 'package:athomeconvenience/widgets/star_rating.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -22,13 +21,13 @@ class ShopProfilePage extends StatefulWidget {
 }
 
 class _ShopProfilePageState extends State<ShopProfilePage> {
-
   @override
   void initState() {
     super.initState();
     fetchShopData(context, widget.shopUid);
     fetchUserLikes();
     forServiceProviderEdit();
+    fetchAverageRating(context, widget.shopUid);
   }
 
   bool _isServiceProvider = false;
@@ -158,21 +157,36 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                     ),
                   ),
 
+                  const SizedBox(
+                    height: 10,
+                  ),
+
                   // STAR RATING
                   // TODO: make rating only once, after interaction
                   GestureDetector(
                     onTap: () {
                       // after interaction, canRate is set to true, so..
                       // if canRate = true
-                      RateHandler.ratingHandler(context, widget.shopUid);
+                      RateHandler.ratingHandler(
+                        context,
+                        widget.shopUid,
+                        shopData['service_provider_name'],
+                      );
+                      // fetchAverageRating(context, widget.shopUid);
                     },
-                    child: StarRating(
-                      onRatingChange: (p0) {},
-                      initialRating: shopData['rating'] != null
-                          ? double.parse(shopData['rating'])
-                          : 0.0,
-                      allowHalfRating: true,
-                      ignoreGestures: true,
+                    child: Column(
+                      children: [
+                        StarRating(
+                          onRatingChange: (p0) {},
+                          initialRating: averageRating ?? 0.0,
+                          allowHalfRating: true,
+                          ignoreGestures: true,
+                        ),
+                        Text(
+                          "$strAverageRating ($numberOfRatings)",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
                     ),
                   ),
 

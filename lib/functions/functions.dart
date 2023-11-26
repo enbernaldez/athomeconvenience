@@ -11,6 +11,7 @@ import 'package:athomeconvenience/functions/fetch_data.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:athomeconvenience/widgets/star_rating.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -158,7 +159,11 @@ void showToast(String message) {
 
 // =========================== Rating Dialog ===========================
 class RateHandler {
-  static void ratingHandler(BuildContext context, String shopUid) {
+  static void ratingHandler(
+    BuildContext context,
+    String shopUid,
+    String shopName,
+  ) {
     double? selectedRating;
 
     showDialog(
@@ -169,16 +174,53 @@ class RateHandler {
             borderRadius: BorderRadius.circular(8),
           ),
           title: const Text('Rate'),
-          contentPadding: const EdgeInsets.all(8.0),
-          content: SizedBox(
-            height: 50,
-            child: Center(
-              child: StarRating(
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 8.0,
+            horizontal: 24.0,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              StarRating(
                 onRatingChange: (rating) {
                   selectedRating = rating;
                 },
               ),
-            ),
+              const SizedBox(
+                height: 16.0,
+              ),
+              // ===================== Review Field =====================
+              TextField(
+                controller: reviewController..text = '',
+                onChanged: (review) {
+                  print('Review: $review');
+                },
+                minLines: 1,
+                maxLines: 5,
+                maxLength: 100,
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                style: Theme.of(context).textTheme.bodyMedium,
+                decoration: InputDecoration(
+                  hintText: 'What do you think of $shopName?',
+                  hintStyle: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: Colors.grey[700]),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  contentPadding: const EdgeInsets.all(8.0),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              ),
+              // ========================================================
+            ],
           ),
           actionsAlignment: MainAxisAlignment.center,
           actionsPadding: const EdgeInsets.all(4.0),
@@ -203,8 +245,10 @@ class RateHandler {
               child: DialogButton(
                 onPress: () {
                   if (selectedRating != null) {
-                    ratingCalculation(shopUid, selectedRating!);
+                    String strRating = selectedRating!.toString();
+                    handleRateReview(shopUid, strRating, reviewController.text);
                     Navigator.pop(context);
+                    fetchAverageRating(context, shopUid);
                   } else {
                     showToast('Please input your rating.');
                   }
