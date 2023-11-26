@@ -141,6 +141,7 @@ class _LogInPageState extends State<LogInPage> {
                               )),
                         ),
                         const SizedBox(height: 30),
+                        // TODO: option to login or register thru gmail or fb
                         Button(
                           buttonText:
                               widget.isRegister == true ? 'NEXT' : 'SIGN IN',

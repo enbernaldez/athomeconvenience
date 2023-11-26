@@ -1,9 +1,10 @@
 import 'package:athomeconvenience/contact_us_page.dart';
+import 'package:athomeconvenience/functions/fetch_data.dart';
 import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/shop_profile_page.dart';
 import 'package:athomeconvenience/terms_and_conditions_page.dart';
 import 'package:athomeconvenience/widgets/profile_pic.dart';
-import 'package:athomeconvenience/widgets/functions.dart';
+import 'package:athomeconvenience/functions/functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -193,12 +194,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8.0),
-                          child: Divider(
-                            height: 1,
-                          ),
-                        ),
+                        const PaddedDivider(),
                         TextFormField(
                           controller: addressController,
                           keyboardType: TextInputType.text,
@@ -210,12 +206,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8.0),
-                          child: Divider(
-                            height: 1,
-                          ),
-                        ),
+                        const PaddedDivider(),
                         TextFormField(
                           controller: phoneNumController,
                           inputFormatters: [
@@ -229,12 +220,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8.0),
-                          child: Divider(
-                            height: 1,
-                          ),
-                        ),
+                        const PaddedDivider(),
                         TextFormField(
                           controller: emailAddController,
                           keyboardType: TextInputType.emailAddress,
@@ -281,12 +267,8 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                       EdgeInsets.symmetric(horizontal: 8),
                                 ),
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: Divider(
-                                  height: 1,
-                                ),
-                              ),
+                              const PaddedDivider(),
+                              // TODO: service category
                               TextFormField(
                                 controller: contactNumController,
                                 inputFormatters: [
@@ -302,12 +284,8 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                       EdgeInsets.symmetric(horizontal: 8),
                                 ),
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: Divider(
-                                  height: 1,
-                                ),
-                              ),
+                              const PaddedDivider(),
+                              // TODO: working hours
                               TextFormField(
                                 controller: locationController,
                                 keyboardType: TextInputType.text,
@@ -320,12 +298,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                       EdgeInsets.symmetric(horizontal: 8),
                                 ),
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: Divider(
-                                  height: 1,
-                                ),
-                              ),
+                              const PaddedDivider(),
                               TextFormField(
                                 controller: gCashNumController,
                                 inputFormatters: [
@@ -489,6 +462,20 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class PaddedDivider extends StatelessWidget {
+  const PaddedDivider({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.0),
+      child: Divider(
+        height: 1,
       ),
     );
   }

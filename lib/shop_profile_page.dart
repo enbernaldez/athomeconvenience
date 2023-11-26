@@ -1,46 +1,59 @@
+import 'package:athomeconvenience/functions/fetch_data.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:athomeconvenience/widgets/message/conversation.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/about.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/works.dart';
-import 'package:athomeconvenience/widgets/functions.dart';
+import 'package:athomeconvenience/functions/functions.dart';
+import 'package:athomeconvenience/widgets/star_rating.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ShopProfilePage extends StatefulWidget {
   final String shopUid;
-  const ShopProfilePage({super.key, required this.shopUid});
+
+  const ShopProfilePage({
+    super.key,
+    required this.shopUid,
+  });
 
   @override
   State<ShopProfilePage> createState() => _ShopProfilePageState();
 }
 
 class _ShopProfilePageState extends State<ShopProfilePage> {
+<<<<<<< HEAD
   Map<String, dynamic> shopData = {};
   List<String> userLikes = [];
   bool _isServiceProvider = false;
   String action = '';
   bool disableButton = false;
   String? chatDocId;
+=======
+>>>>>>> upstream/main
 
   @override
   void initState() {
     super.initState();
-    fetchShopData();
+    fetchShopData(context, widget.shopUid);
     fetchUserLikes();
+<<<<<<< HEAD
     checkIfServiceProvider();
     fetchChatDocId();
+=======
+    forServiceProviderEdit();
+>>>>>>> upstream/main
   }
 
-  Future<void> fetchShopData() async {
-    try {
-      var querySnapshot = await FirebaseFirestore.instance
-          .collection("service_provider")
-          .where("uid", isEqualTo: widget.shopUid)
-          .get();
+  bool _isServiceProvider = false;
+  String action = '';
+  bool disableButton = false;
+  bool isLiked = false;
+  Color? liked;
+  bool isAbout = true;
 
+<<<<<<< HEAD
       if (querySnapshot.docs.isNotEmpty) {
         setState(() {
           shopData = querySnapshot.docs.first
@@ -98,7 +111,11 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   }
 
   Future<void> checkIfServiceProvider() async {
+=======
+  Future<void> forServiceProviderEdit() async {
+>>>>>>> upstream/main
     bool exists = await isServiceProvider();
+
     setState(() {
       _isServiceProvider = exists;
       if (_isServiceProvider && uid == widget.shopUid) {
@@ -108,20 +125,10 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
     });
   }
 
-  bool isAbout = true;
-  bool isLiked = false;
-  Color? liked;
-
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-
   @override
   Widget build(BuildContext context) {
-    print(shopData);
-
     void handleLike() async {
       try {
-        final uid = FirebaseAuth.instance.currentUser!.uid;
-
         // Fetch the user document
         var userQuerySnapshot = await FirebaseFirestore.instance
             .collection("users")
@@ -226,23 +233,22 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                     ),
                   ),
 
-                  // STAR RATING (wala pang backend)
-                  RatingBar.builder(
-                    minRating: 1,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemSize: 30,
-                    itemPadding: const EdgeInsets.symmetric(
-                      horizontal: 3.0,
-                    ),
-                    itemBuilder: (context, _) => const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    onRatingUpdate: (rating) {
-                      print(rating);
+                  // STAR RATING
+                  // TODO: make rating only once, after interaction
+                  GestureDetector(
+                    onTap: () {
+                      // after interaction, canRate is set to true, so..
+                      // if canRate = true
+                      RateHandler.ratingHandler(context, widget.shopUid);
                     },
+                    child: StarRating(
+                      onRatingChange: (p0) {},
+                      initialRating: shopData['rating'] != null
+                          ? double.parse(shopData['rating'])
+                          : 0.0,
+                      allowHalfRating: true,
+                      ignoreGestures: true,
+                    ),
                   ),
 
                   // MESSAGE AND LIKE/HEART
@@ -364,12 +370,13 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                   // ABOUT | WORKS CONTENT
                   isAbout == true
                       ? AboutSection(
-                          category: shopData['category'] ?? "Loading",
-                          shopAddress: shopData['service_address'] ?? "Loading",
-                          contactNum: shopData['contact_num'] ?? "Loading",
+                          category: shopData['category'] ?? "Loading...",
+                          shopAddress:
+                              shopData['service_address'] ?? "Loading...",
+                          contactNum: shopData['contact_num'] ?? "Loading...",
                           workingHours:
                               '${shopData['service_start']} - ${shopData['service_end']}' ??
-                                  "Loading",
+                                  "Loading...",
                         )
                       : const WorksSection()
                 ],
