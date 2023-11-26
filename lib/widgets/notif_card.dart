@@ -85,7 +85,7 @@ class NotifCard extends StatelessWidget {
                 children: [
                   // SHOP NAME
                   Text(
-                    shopName ?? "Loading",
+                    shopName ?? "Loading...",
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
