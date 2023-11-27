@@ -40,7 +40,7 @@ Future<bool> isServiceProvider() async {
 // ========================= Fetch User Likes =========================
 List<String> userLikes = [];
 
-Future<void> fetchUserLikes() async {
+Future<void> fetchUserLikes(bool? isLiked) async {
   try {
     var userQuerySnapshot = await FirebaseFirestore.instance
         .collection("users")
@@ -50,13 +50,19 @@ Future<void> fetchUserLikes() async {
     if (userQuerySnapshot.docs.isNotEmpty) {
       var userData = userQuerySnapshot.docs.first.data();
       userLikes = List<String>.from(userData['likes'] ?? []);
+
+      if (userLikes.contains(shopData['uid'])) {
+        isLiked = true;
+      } else {
+        isLiked = false;
+      }
     }
   } catch (e) {
     print(e);
   }
 }
 
-// ==========
+// ==================== Insert Rate and Review in Database ====================
 final reviewController = TextEditingController();
 
 handleRateReview(String shopUid, String rating, String review) async {
@@ -79,8 +85,7 @@ handleRateReview(String shopUid, String rating, String review) async {
   return review;
 }
 
-// ==========
-// for star ratings display
+// ======================== Data for Display of Ratings ========================
 double averageRating = 0.0;
 num numberOfRatings = 0;
 String strAverageRating = '';
@@ -113,40 +118,5 @@ Future<void> fetchAverageRating(BuildContext context, String shopUid) async {
     // Now averageRating contains the average star rating
   } catch (e) {
     print("Error fetching data: $e");
-  }
-}
-
-// ============================= Rating Calculator =============================
-ratingCalculation(String spUid, double rating) async {
-  DocumentReference<Map<String, dynamic>> documentReference =
-      FirebaseFirestore.instance.collection('service_provider').doc(spUid);
-
-  final DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-      await documentReference.get();
-
-  // Check if the 'rating' field already exists
-  if (!documentSnapshot.data()!.containsKey('rating')) {
-    // Update the document with the new field
-    await documentReference.update({rating: 0.0});
-  } else {
-    await FirebaseFirestore.instance.runTransaction((transaction) async {
-      DocumentSnapshot documentSnapshot =
-          await transaction.get(documentReference);
-
-      final lastRatingForTheUser = documentSnapshot.data() as Map;
-      String? newRating;
-      double? ratingOfUser = double.tryParse(lastRatingForTheUser['rating']);
-
-      rating = rating.ceilToDouble();
-
-      if (ratingOfUser == 0.0) {
-        newRating = rating.toString();
-      } else {
-        double calculateRating = (ratingOfUser! + rating) / 2;
-        newRating = calculateRating.toString();
-      }
-
-      transaction.update(documentReference, {'rating': newRating});
-    });
   }
 }

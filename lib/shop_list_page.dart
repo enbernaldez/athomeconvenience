@@ -1,4 +1,5 @@
 import 'package:athomeconvenience/widgets/buttons.dart';
+import 'package:athomeconvenience/widgets/list_else.dart';
 import 'package:athomeconvenience/widgets/shop_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -75,9 +76,7 @@ class _ShopListPageState extends State<ShopListPage> {
                         .get(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: SizedBox(child: CircularProgressIndicator()),
-                        );
+                        return const DataLoading();
                       } else if (snapshot.hasError) {
                         return Text("Error: ${snapshot.error}");
                       } else if (snapshot.hasData) {
@@ -91,50 +90,10 @@ class _ShopListPageState extends State<ShopListPage> {
                                   serviceProviderData['service_provider_name'],
                               shopUid: serviceProviderData['uid']);
                         } else {
-                          return const Column(
-                            children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Divider(
-                                height: 0,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Center(
-                                child: Text(
-                                  "No data",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
+                          return const NoData();
                         }
                       } else {
-                        return const Column(
-                          children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Divider(
-                              height: 0,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Center(
-                              child: Text(
-                                "No data",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
+                        return const NoData();
                       }
                     },
                   ),

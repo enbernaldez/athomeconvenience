@@ -24,35 +24,20 @@ class ShopProfilePage extends StatefulWidget {
 
 class _ShopProfilePageState extends State<ShopProfilePage> {
   String? chatDocId;
+  bool? isLiked;
 
   @override
   void initState() {
     super.initState();
     fetchShopData(context, widget.shopUid);
-    fetchUserLikes();
-    forServiceProviderEdit();
+    fetchUserLikes(isLiked);
     fetchAverageRating(context, widget.shopUid);
     fetchChatDocId();
   }
 
-  bool _isServiceProvider = false;
-  String action = '';
   bool disableButton = false;
-  bool isLiked = false;
   Color? liked;
   bool isAbout = true;
-
-  Future<void> forServiceProviderEdit() async {
-    bool exists = await isServiceProvider();
-
-    setState(() {
-      _isServiceProvider = exists;
-      if (_isServiceProvider && uid == widget.shopUid) {
-        action = 'Edit';
-        disableButton = true;
-      }
-    });
-  }
 
   Future<void> fetchChatDocId() async {
     try {
@@ -81,6 +66,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    
     void handleLike() async {
       try {
         // Fetch the user document
@@ -96,7 +82,6 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
           // Get the current 'likes' array
           List<dynamic> currentLikes = userQuerySnapshot.docs.first['likes'];
 
-          if (isLiked) {
             // If the shop is already liked, remove the UID from 'likes' array
             if (currentLikes.contains(shopData['uid'])) {
               userDocRef.update({
@@ -104,19 +89,16 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
               });
               setState(() {
                 isLiked = false;
-                liked = Colors.blue[50];
+              });
+            } else {
+              // If the shop is not liked, add the UID to 'likes' array
+              userDocRef.update({
+                'likes': FieldValue.arrayUnion([shopData['uid']])
+              });
+              setState(() {
+                isLiked = true;
               });
             }
-          } else {
-            // If the shop is not liked, add the UID to 'likes' array
-            userDocRef.update({
-              'likes': FieldValue.arrayUnion([shopData['uid']])
-            });
-            setState(() {
-              isLiked = true;
-              liked = Colors.red;
-            });
-          }
         } else {
           // Handle scenario when user document isn't found
         }
@@ -132,26 +114,6 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
     return Scaffold(
       appBar: AppBar(
         leading: const BackArrow(),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _isServiceProvider == true && action == 'Edit'
-                    ? action = 'Done'
-                    : action = 'Edit';
-              });
-            },
-            child: Visibility(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  action,
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Align(

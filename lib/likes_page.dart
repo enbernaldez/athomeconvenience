@@ -12,6 +12,8 @@ class LikesPage extends StatefulWidget {
 }
 
 class _LikesPageState extends State<LikesPage> {
+  String action = 'Edit';
+  bool deleteMode = false;
   List<String> userLikes = [];
 
   @override
@@ -51,16 +53,15 @@ class _LikesPageState extends State<LikesPage> {
           // TODO: functional edit
           GestureDetector(
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (BuildContext context) {
-                  return const TextThemePage();
-                }),
-              );
+              setState(() {
+                action = (action == 'Edit') ? 'Done' : 'Edit';
+                deleteMode = !deleteMode;
+              });
             },
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                'Edit',
+                action,
                 style: Theme.of(context).textTheme.labelLarge,
               ),
             ),
@@ -92,10 +93,12 @@ class _LikesPageState extends State<LikesPage> {
                         var serviceProviderData =
                             snapshot.data!.docs.first.data();
                         return ShopCard(
-                            shopName:
-                                serviceProviderData['service_provider_name'],
-                            shopAddress: serviceProviderData['service_address'],
-                            shopUid: like);
+                          shopName:
+                              serviceProviderData['service_provider_name'],
+                          shopAddress: serviceProviderData['service_address'],
+                          shopUid: like,
+                          deleteMode: deleteMode,
+                        );
                       } else {
                         return const Center(child: Text("No data"));
                       }
