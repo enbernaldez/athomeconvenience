@@ -1,10 +1,12 @@
 import 'package:athomeconvenience/functions/fetch_data.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
+import 'package:athomeconvenience/widgets/message/conversation.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/about.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/works.dart';
 import 'package:athomeconvenience/functions/functions.dart';
 import 'package:athomeconvenience/widgets/star_rating.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -21,6 +23,8 @@ class ShopProfilePage extends StatefulWidget {
 }
 
 class _ShopProfilePageState extends State<ShopProfilePage> {
+  String? chatDocId;
+
   @override
   void initState() {
     super.initState();
@@ -28,6 +32,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
     fetchUserLikes();
     forServiceProviderEdit();
     fetchAverageRating(context, widget.shopUid);
+    fetchChatDocId();
   }
 
   bool _isServiceProvider = false;
@@ -47,6 +52,31 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
         disableButton = true;
       }
     });
+  }
+
+  Future<void> fetchChatDocId() async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+
+      final compositeId = '${uid}_${widget.shopUid}';
+
+      QuerySnapshot chatQuery = await FirebaseFirestore.instance
+          .collection('chats')
+          .where("composite_id", isEqualTo: compositeId)
+          .get();
+
+      if (chatQuery.docs.isNotEmpty) {
+        // Assuming there's only one document matching the condition
+        String docId = chatQuery.docs.first.id;
+        setState(() {
+          chatDocId = docId;
+        });
+      } else {
+        print('No matching chat document found.');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -199,21 +229,27 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       // *message btn
                       Expanded(
                         child: Button(
-                          onPress: disableButton == false
+                          onPress: shopData['uid'] !=
+                                  FirebaseAuth.instance.currentUser!.uid
                               ? () {
-                                  // TODO NAVIGATE TO CONVERSATION PAGE
-                                  // TODO PASS THE SHOP UID & SHOP NAME TO THE CONVERSATION PAGE
-                                  // Navigator.of(context).push(
-                                  //   MaterialPageRoute(
-                                  //     builder: (BuildContext context) => Conversation(
-                                  //         shopUid: shopData['uid'],
-                                  //         shopName:
-                                  //             shopeData['service_provider_name']),
-                                  //   ),
-                                  // );
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          Conversation(
+                                        docId: chatDocId,
+                                        shopId: shopData['uid'],
+                                        shopName:
+                                            shopData['service_provider_name'],
+                                      ),
+                                    ),
+                                  );
                                 }
                               : null,
                           buttonText: 'Message',
+                          buttonColor: shopData['uid'] ==
+                                  FirebaseAuth.instance.currentUser!.uid
+                              ? Colors.grey
+                              : null,
                           textType: Theme.of(context).textTheme.displaySmall,
                         ),
                       ),
@@ -225,9 +261,17 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       SizedBox(
                         width: 50,
                         child: Button(
-                          onPress: disableButton == false ? handleLike : null,
+                          onPress: disableButton == false ||
+                                  shopData['uid'] !=
+                                      FirebaseAuth.instance.currentUser!.uid
+                              ? handleLike
+                              : null,
                           buttonText: '',
                           icon: Icons.favorite,
+                          buttonColor: shopData['uid'] !=
+                                  FirebaseAuth.instance.currentUser!.uid
+                              ? null
+                              : Colors.grey,
                           iconColor:
                               isLiked == true ? Colors.red : Colors.blue[50],
                         ),

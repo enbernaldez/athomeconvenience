@@ -1,29 +1,92 @@
 import 'package:athomeconvenience/widgets/message/conversation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class MessageCard extends StatelessWidget {
-  const MessageCard({super.key});
+class MessageCard extends StatefulWidget {
+  final String docId;
+  final String shopId;
+  final String shopName;
+  final String? shopHours;
+  final Timestamp latestChatTime;
+  final String latestChatUser;
+  final String latestChatMsg;
+  const MessageCard(
+      {super.key,
+      required this.docId,
+      required this.shopId,
+      required this.shopName,
+      this.shopHours,
+      required this.latestChatTime,
+      required this.latestChatUser,
+      required this.latestChatMsg});
+
+  @override
+  State<MessageCard> createState() => _MessageCardState();
+}
+
+class _MessageCardState extends State<MessageCard> {
+  // ? =========================fetching uid======================
+  String uid = "";
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUID();
+  }
+
+  Future<void> fetchUID() async {
+    try {
+      final userId = FirebaseAuth.instance.currentUser!.uid;
+
+      setState(() {
+        uid = userId;
+      });
+    } catch (e) {
+      print("error fetching uid:$e");
+    }
+  }
+// ?=================================================================
 
   @override
   Widget build(BuildContext context) {
+    // ? ==========GETTING THE CORRECT TIME FOR DISPLAY==================
+    DateTime notificationTimeUtc =
+        widget.latestChatTime.toDate(); // Convert to UTC
+
+    DateTime notificationTimeLocal = notificationTimeUtc
+        .add(const Duration(hours: 8)); // Add 8 hours for UTC+8:00
+
+    DateTime now = DateTime.now();
+    bool isToday = now.difference(notificationTimeLocal).inDays == 0;
+
+    String formattedDateTime = isToday
+        ? '${DateFormat.Hm().format(notificationTimeLocal)}'
+        : DateFormat('yyyy/MM/dd HH:mm').format(notificationTimeLocal);
+    // ?=================================================================
     return Column(
       children: [
         GestureDetector(
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (BuildContext context) => const Conversation(),
+                builder: (BuildContext context) => Conversation(
+                  shopId: widget.shopId,
+                  shopName: widget.shopName,
+                  docId: widget.docId,
+                ),
               ),
             );
           },
-          child: const Row(
+          child: Row(
             children: [
               // Image/Icon
-              CircleAvatar(
+              const CircleAvatar(
                 backgroundImage: AssetImage('images/default_profile_pic.png'),
                 maxRadius: 30,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
 
@@ -34,24 +97,26 @@ class MessageCard extends StatelessWidget {
                   children: [
                     // SHOP NAME
                     Text(
-                      "Jonnel Banka Services",
+                      widget.shopName,
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
 
-                    // messaged you
+                    // message
                     Text(
-                      "You: I need it today",
-                      style: TextStyle(fontSize: 15),
+                      widget.latestChatUser == uid
+                          ? 'You: ${widget.latestChatMsg}'
+                          : widget.latestChatMsg,
+                      style: const TextStyle(fontSize: 15),
                     ),
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               // timestamp
-              Text("8:00")
+              Text(formattedDateTime)
             ],
           ),
         ),

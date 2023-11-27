@@ -4,7 +4,6 @@ import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/shop_profile_page.dart';
 import 'package:athomeconvenience/terms_and_conditions_page.dart';
 import 'package:athomeconvenience/widgets/profile_pic.dart';
-import 'package:athomeconvenience/functions/functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
