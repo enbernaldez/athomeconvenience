@@ -57,8 +57,11 @@ class NotifCard extends StatelessWidget {
 
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    const Conversation(), //TODO PASS THE SHOP UID AND SHOP NAME
+                builder: (BuildContext context) => Conversation(
+                  docId: "123123",
+                  shopId: "123",
+                  shopName: "Test Card",
+                ), //TODO PASS THE SHOP UID AND SHOP NAME
               ),
             );
           },
