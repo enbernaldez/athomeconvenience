@@ -4,29 +4,37 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class NotifCard extends StatelessWidget {
+  final String? chatDocId;
+  final bool isRate;
+  final bool isMessage;
+  final bool isAgreement;
   final String fromUid;
   final String shopName;
   final Timestamp dateTime;
   final bool isRead;
   final String docId;
+  final String notifMsg;
 
-  const NotifCard(
+  NotifCard(
       {super.key,
+      this.chatDocId,
       required this.fromUid,
       required this.shopName,
       required this.dateTime,
       required this.isRead,
-      required this.docId});
+      required this.docId,
+      required this.isMessage,
+      required this.isAgreement,
+      required this.isRate,
+      required this.notifMsg});
 
   @override
   Widget build(BuildContext context) {
+    //? DATE & TIME DISPLAY ============================================
     DateTime notificationTimeUtc = dateTime.toDate(); // Convert to UTC
 
     DateTime notificationTimeLocal = notificationTimeUtc
         .add(const Duration(hours: 8)); // Add 8 hours for UTC+8:00
-
-    print(
-        notificationTimeLocal); // Print the local time in Kuala Lumpur, Singapore time zone
 
     DateTime now = DateTime.now();
     bool isToday = now.difference(notificationTimeLocal).inDays == 0;
@@ -34,36 +42,46 @@ class NotifCard extends StatelessWidget {
     String formattedDateTime = isToday
         ? 'Today at ${DateFormat.Hm().format(notificationTimeLocal)}'
         : DateFormat('yyyy/MM/dd HH:mm').format(notificationTimeLocal);
+    // ? ===============================================================
+
+    Future<void> updateReadStatus() async {
+      try {
+        await FirebaseFirestore.instance
+            .collection('notification')
+            .doc(docId)
+            .update({
+          "is_read": true,
+        });
+      } catch (e) {
+        print(e);
+      }
+    }
 
     return Column(
       children: [
         GestureDetector(
-          onTap: () async {
-            // ?====update isRead status=========
-            try {
-              await FirebaseFirestore.instance
-                  .collection('notification')
-                  .doc(docId)
-                  .update({
-                "is_read": true,
-              });
-            } catch (e) {
-              print(e);
+          onTap: () {
+            updateReadStatus();
+
+            if (isMessage == true && isRate == false && isAgreement == false) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => Conversation(
+                    docId: chatDocId,
+                    shopId: fromUid,
+                    shopName: shopName,
+                  ),
+                ),
+              );
+            } else if (isRate == true &&
+                isMessage == false &&
+                isAgreement == false) {
+              print("rate");
+              // TODO NAVIGATE TO VIEW SHOP'S RATING & REVIEW
+            } else {
+              print('agreement');
+              // TODO NAVIGATE TO CONVERSATION PAGE
             }
-
-            // ?===========================
-
-            // ? ==========navigate to converstation page
-
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (BuildContext context) => const Conversation(
-                  docId: "123123",
-                  shopId: "123",
-                  shopName: "Test Card",
-                ), //TODO PASS THE SHOP UID AND SHOP NAME
-              ),
-            );
           },
           child: Row(
             children: [
@@ -96,7 +114,7 @@ class NotifCard extends StatelessWidget {
 
                   // messaged you
                   Text(
-                    "Messaged you",
+                    notifMsg,
                     style: TextStyle(
                         fontSize: 15,
                         color: isRead == false
