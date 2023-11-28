@@ -6,7 +6,11 @@ class WorksSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text("This section is under maintenance"),
+      child: Text(
+        "This is the Works Section. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 }

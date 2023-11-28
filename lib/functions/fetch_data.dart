@@ -85,6 +85,34 @@ handleRateReview(String shopUid, String rating, String review) async {
   return review;
 }
 
+// =========================== Retrieve User Details ===========================
+String customerName = '';
+
+Future<void> fetchUserDetails(String userId) async {
+  try {
+    // Get a reference to the Firestore database
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Get the document snapshot using the document ID
+    DocumentSnapshot documentSnapshot =
+        await firestore.collection('users').doc(userId).get();
+    // Check if the document exists
+    if (documentSnapshot.exists) {
+      // Access specific fields from the document data
+      dynamic userName = documentSnapshot.get('name');
+      // Replace 'field_name' with the actual field name you want to retrieve
+
+      // Use the retrieved data as needed
+      customerName = userName;
+      print('Field value: $userName');
+    } else {
+      print('User does not exist');
+    }
+  } catch (error) {
+    print('Error getting user details: $error');
+  }
+}
+
 // ======================== Data for Display of Ratings ========================
 double averageRating = 0.0;
 num numberOfRatings = 0;

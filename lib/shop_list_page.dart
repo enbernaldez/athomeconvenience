@@ -17,40 +17,8 @@ class ShopListPage extends StatefulWidget {
 }
 
 class _ShopListPageState extends State<ShopListPage> {
-  List<Map<String, dynamic>> shopList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    fetchShop();
-  }
-
-  Future<void> fetchShop() async {
-    try {
-      var querySnapshot = await FirebaseFirestore.instance
-          .collection("service_provider")
-          .where("category", isEqualTo: widget.category)
-          .get();
-
-      List<Map<String, dynamic>> tempShop = [];
-
-      querySnapshot.docs.forEach((doc) {
-        tempShop.add(doc.data());
-      });
-
-      // Update the state with the fetched data
-      setState(() {
-        shopList = tempShop;
-      });
-    } catch (e) {
-      print("Error fetching notifications: $e");
-      // Handle errors
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    print(shopList);
     return Scaffold(
       appBar: AppBar(
         leading: const BackArrow(),
@@ -97,12 +65,6 @@ class _ShopListPageState extends State<ShopListPage> {
                       }
                     },
                   ),
-                  // for (final shop in shopList)
-                  //   ShopCard(
-                  //     shopAddress: shop['service_address'],
-                  //     shopName: shop['service_provider_name'],
-                  //     shopUid: shop['uid'],
-                  //   )
                 ],
               ),
             ),

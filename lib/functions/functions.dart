@@ -64,9 +64,11 @@ class ImageHandler {
 
   static Future getImage(ImageSource media) async {
     var img = await picker.pickImage(source: media);
+    print('img: $img');
 
     if (img != null) {
       _image = img;
+      print('_image: $_image');
     }
   }
 
@@ -248,7 +250,6 @@ class RateHandler {
                     String strRating = selectedRating!.toString();
                     handleRateReview(shopUid, strRating, reviewController.text);
                     Navigator.pop(context);
-                    fetchAverageRating(context, shopUid);
                   } else {
                     showToast('Please input your rating.');
                   }

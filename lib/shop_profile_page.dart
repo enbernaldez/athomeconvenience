@@ -2,6 +2,7 @@ import 'package:athomeconvenience/functions/fetch_data.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:athomeconvenience/widgets/message/conversation.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/about.dart';
+import 'package:athomeconvenience/widgets/shopProfileView/reviews.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/works.dart';
 import 'package:athomeconvenience/functions/functions.dart';
 import 'package:athomeconvenience/widgets/star_rating.dart';
@@ -38,6 +39,8 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   bool disableButton = false;
   Color? liked;
   bool isAbout = true;
+  bool isWorks = false;
+  bool isReviews = false;
 
   Future<void> fetchChatDocId() async {
     try {
@@ -66,7 +69,6 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    
     void handleLike() async {
       try {
         // Fetch the user document
@@ -82,23 +84,23 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
           // Get the current 'likes' array
           List<dynamic> currentLikes = userQuerySnapshot.docs.first['likes'];
 
-            // If the shop is already liked, remove the UID from 'likes' array
-            if (currentLikes.contains(shopData['uid'])) {
-              userDocRef.update({
-                'likes': FieldValue.arrayRemove([shopData['uid']])
-              });
-              setState(() {
-                isLiked = false;
-              });
-            } else {
-              // If the shop is not liked, add the UID to 'likes' array
-              userDocRef.update({
-                'likes': FieldValue.arrayUnion([shopData['uid']])
-              });
-              setState(() {
-                isLiked = true;
-              });
-            }
+          // If the shop is already liked, remove the UID from 'likes' array
+          if (currentLikes.contains(shopData['uid'])) {
+            userDocRef.update({
+              'likes': FieldValue.arrayRemove([shopData['uid']])
+            });
+            setState(() {
+              isLiked = false;
+            });
+          } else {
+            // If the shop is not liked, add the UID to 'likes' array
+            userDocRef.update({
+              'likes': FieldValue.arrayUnion([shopData['uid']])
+            });
+            setState(() {
+              isLiked = true;
+            });
+          }
         } else {
           // Handle scenario when user document isn't found
         }
@@ -251,6 +253,8 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                         onTap: () {
                           setState(() {
                             isAbout = true;
+                            isWorks = false;
+                            isReviews = false;
                           });
                         },
                         child: Text(
@@ -279,6 +283,8 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                         onTap: () {
                           setState(() {
                             isAbout = false;
+                            isWorks = true;
+                            isReviews = false;
                           });
                         },
                         child: Text(
@@ -287,7 +293,37 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                               letterSpacing: -0.5,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: isAbout == false
+                              color: isWorks == true
+                                  ? const Color(0xFF00A2FF)
+                                  : Colors.grey),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        height: 24, //adjust nalang height
+                        width: 1.5,
+                        decoration: const BoxDecoration(color: Colors.grey),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isAbout = false;
+                            isWorks = false;
+                            isReviews = true;
+                          });
+                        },
+                        child: Text(
+                          "Reviews",
+                          style: GoogleFonts.dmSans(
+                              letterSpacing: -0.5,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: isReviews == true
                                   ? const Color(0xFF00A2FF)
                                   : Colors.grey),
                         ),
@@ -309,7 +345,22 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                               '${shopData['service_start']} - ${shopData['service_end']}' ??
                                   "Loading...",
                         )
-                      : const WorksSection()
+                      : (isWorks == true
+                          ? const WorksSection()
+                          : (isReviews == true
+                              ? ReviewsSection(
+                                  shopUid: widget.shopUid,
+                                )
+                              : const Center(
+                                  child: Column(
+                                    children: [
+                                      Text("There seems to be a problem."),
+                                      Text(
+                                        "Please exit the app and try again.",
+                                      ),
+                                    ],
+                                  ),
+                                )))
                 ],
               ),
             ),

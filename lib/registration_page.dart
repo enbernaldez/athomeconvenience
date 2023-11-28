@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:full_screen_image/full_screen_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,6 +26,18 @@ class RegistrationPage extends StatefulWidget {
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
+
+  void showToast() {
+    Fluttertoast.showToast(
+      msg: "This is Center Short Toast",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
@@ -196,7 +209,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       }
 
       if (image == null) {
-        showToast('Please upload a valid ID or business permit.');
+        widget.showToast();
       }
 
       // ?========set SharedPreference========
