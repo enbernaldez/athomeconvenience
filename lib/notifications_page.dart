@@ -43,7 +43,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         var serviceProviderSnapshot = await FirebaseFirestore.instance
             .collection("service_provider")
             .doc(notification[
-                'user_doc_id']) // Assuming user_doc_id is the ID in service_provider
+                'from_uid']) // Assuming user_doc_id is the ID in service_provider
             .get();
 
         if (serviceProviderSnapshot.exists) {
@@ -53,6 +53,18 @@ class _NotificationsPageState extends State<NotificationsPage> {
               serviceProviderData!['service_provider_name'];
 
           notification['service_provider_name'] = serviceProviderName;
+        } else {
+          // ! FETCH USER INSTEAD
+          var userQuery = await FirebaseFirestore.instance
+              .collection('users')
+              .where('uid', isEqualTo: notification['from_uid'])
+              .get();
+
+          if (userQuery.docs.isNotEmpty) {
+            String userName = userQuery.docs.first.get("name");
+
+            notification['service_provider_name'] = userName;
+          }
         }
       }
 
@@ -82,11 +94,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
             children: [
               for (final notif in notifications)
                 NotifCard(
+                  chatDocId: notif['chat_doc_id'],
                   fromUid: notif['from_uid'],
                   shopName: notif['service_provider_name'],
                   dateTime: notif['dateTime'],
                   isRead: notif['is_read'],
                   docId: notif['docId'],
+                  isMessage: notif['is_message'],
+                  isRate: notif['is_rate'],
+                  isAgreement: notif['is_agreement'],
+                  notifMsg: notif['notif_msg'],
                 )
             ],
           ),

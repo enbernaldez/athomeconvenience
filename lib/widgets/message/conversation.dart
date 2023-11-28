@@ -34,11 +34,11 @@ class _ConversationState extends State<Conversation> {
   Future<void> _sendMessage() async {
     String message = chatTextFieldController.text.trim();
     if (message.isNotEmpty) {
-      // _messages.add(message);
       final uid = FirebaseAuth.instance.currentUser!.uid;
 
       try {
         if (chatDocId != null) {
+          // ! =========== IF CHAT ALREADY EXIST ==================
           DocumentReference chatDoc =
               FirebaseFirestore.instance.collection('chats').doc(chatDocId);
 
@@ -62,7 +62,9 @@ class _ConversationState extends State<Conversation> {
           });
 
           print('message sent successfully');
+          sendNotification();
         } else {
+          // ! ========== IF CHAT IS A NEW CONVERSATION ==========
           try {
             CollectionReference chatsCollection =
                 FirebaseFirestore.instance.collection('chats');
@@ -97,6 +99,8 @@ class _ConversationState extends State<Conversation> {
             setState(() {
               chatDocId = newChatDocId;
             });
+
+            sendNotification();
           } catch (e) {
             print("error sending message: $e");
           }
@@ -106,6 +110,47 @@ class _ConversationState extends State<Conversation> {
       }
 
       chatTextFieldController.clear();
+
+      // !======== SEND A NOTIF=================
+    }
+  }
+
+  Future<void> sendNotification() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final today = Timestamp.now();
+
+    // Query to check if a notification has been sent today for a message
+    QuerySnapshot<Map<String, dynamic>> existingNotification =
+        await FirebaseFirestore.instance
+            .collection('notification')
+            .where('from_uid', isEqualTo: uid)
+            .where('is_message', isEqualTo: true)
+            .where('dateTime',
+                isGreaterThanOrEqualTo: Timestamp(today.seconds, 0))
+            .get();
+
+    if (existingNotification.docs.isEmpty) {
+      // If no notification has been sent for a message today, proceed with sending a new notification
+      try {
+        // Rest of your existing message sending logic
+
+        // After sending the message, create a notification
+        await FirebaseFirestore.instance.collection('notification').add({
+          'chat_doc_id': chatDocId ?? '',
+          'dateTime': today,
+          'from_uid': uid,
+          'is_agreement': false,
+          'is_message': true,
+          'is_rate': false,
+          'is_read': false,
+          'notif_msg': 'Messaged you.',
+          'user_doc_id': widget.shopId,
+        });
+      } catch (e) {
+        print("error sending message: $e");
+      }
+    } else {
+      print("Notification already sent for a message today");
     }
   }
 
