@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class StarRating extends StatefulWidget {
-  final Function(double) onRatingChange;
+  final Function(double)? onRatingChange;
   final double? initialRating;
   final bool? allowHalfRating;
   final bool? ignoreGestures;
@@ -35,7 +35,7 @@ class _StarRatingState extends State<StarRating> {
       initialRating: widget.initialRating ?? 0.0,
       allowHalfRating: widget.allowHalfRating ?? false,
       ignoreGestures: widget.ignoreGestures ?? false,
-      onRatingUpdate: widget.onRatingChange,
+      onRatingUpdate: widget.onRatingChange ?? (rating) {},
     );
   }
 }

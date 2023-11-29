@@ -1,6 +1,7 @@
 import 'package:athomeconvenience/contact_us_page.dart';
 import 'package:athomeconvenience/functions/fetch_data.dart';
 import 'package:athomeconvenience/landing_page.dart';
+import 'package:athomeconvenience/reviews_page.dart';
 import 'package:athomeconvenience/shop_profile_page.dart';
 import 'package:athomeconvenience/terms_and_conditions_page.dart';
 import 'package:athomeconvenience/widgets/profile_pic.dart';
@@ -18,6 +19,8 @@ class CustomerSettingsPage extends StatefulWidget {
 }
 
 class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
+  final String uid = FirebaseAuth.instance.currentUser!.uid;
+
   bool _readonly = true;
   String action = 'Edit';
 
@@ -39,8 +42,6 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
 
   Future<void> fetchUserDetails() async {
     try {
-      final uid = FirebaseAuth.instance.currentUser!.uid;
-
       var cDocumentSnapshot =
           await FirebaseFirestore.instance.collection("users").doc(uid).get();
 
@@ -62,7 +63,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
           });
         }
       } else {
-        print('Document does not exist');
+        print('User document does not exist');
       }
 
       var spDocumentSnapshot = await FirebaseFirestore.instance
@@ -82,7 +83,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
           });
         }
       } else {
-        print('Document does not exist');
+        print('Service provider document does not exist');
       }
     } catch (e) {
       print(e);
@@ -90,13 +91,17 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
   }
 
   bool _isServiceProvider = false;
-  final uid = FirebaseAuth.instance.currentUser!.uid;
 
   Future<void> checkIfServiceProvider() async {
+    print('uid: $uid');
+    print('_isServiceProvider = $_isServiceProvider');
     bool exists = await isServiceProvider();
-    setState(() {
-      _isServiceProvider = exists;
-    });
+    if (exists) {
+      setState(() {
+        _isServiceProvider = exists;
+        print(_isServiceProvider);
+      });
+    }
   }
 
   @override
@@ -123,8 +128,6 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                   final String newContactNum = contactNumController.text;
                   final String newLocation = locationController.text;
                   final String newGCashNum = gCashNumController.text;
-
-                  final uid = FirebaseAuth.instance.currentUser!.uid;
 
                   await FirebaseFirestore.instance
                       .collection('users')
@@ -353,6 +356,31 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                     onTap: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
+                                            builder: (BuildContext context) {
+                                          return const ReviewsPage(
+                                            whatReview: 'Service Reviews',
+                                            shopReviews: true,
+                                          );
+                                        }),
+                                      );
+                                    },
+                                    child: Text(
+                                      'SERVICE REVIEWS',
+                                      style:
+                                          Theme.of(context).textTheme.bodyLarge,
+                                    ),
+                                  ),
+                                ),
+                                const Divider(height: 1),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                    horizontal: 8,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
                                           builder: (BuildContext context) =>
                                               ShopProfilePage(shopUid: uid),
                                         ),
@@ -369,6 +397,30 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                               ],
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 8,
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const ReviewsPage(
+                                      whatReview: 'Your Reviews',
+                                      shopReviews: false,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                'YOUR REVIEWS',
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                            ),
+                          ),
+                          const Divider(height: 1),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               vertical: 12,

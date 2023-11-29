@@ -24,6 +24,8 @@ class ShopProfilePage extends StatefulWidget {
 }
 
 class _ShopProfilePageState extends State<ShopProfilePage> {
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+
   String? chatDocId;
   bool? isLiked;
 
@@ -177,7 +179,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                           ignoreGestures: true,
                         ),
                         Text(
-                          "$strAverageRating ($numberOfRatings)",
+                          "$strAverageRating/5 ($numberOfRatings)",
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
@@ -350,6 +352,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                           : (isReviews == true
                               ? ReviewsSection(
                                   shopUid: widget.shopUid,
+                                  shopReviews: true,
                                 )
                               : const Center(
                                   child: Column(

@@ -3,8 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-final String uid = FirebaseAuth.instance.currentUser!.uid;
-
 // ====================== Fetch A Service Provider Data ======================
 Map<String, dynamic> shopData = {};
 
@@ -25,11 +23,18 @@ Future<void> fetchShopData(BuildContext context, String shopUid) async {
 
 // ====================== User Type Checker ======================
 Future<bool> isServiceProvider() async {
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+  print('user_id: $uid');
   final CollectionReference serviceProviders =
       FirebaseFirestore.instance.collection('service_provider');
 
   try {
     var documentSnapshot = await serviceProviders.doc(uid).get();
+    if (documentSnapshot.exists) {
+      print('$uid is a service provider');
+    } else {
+      print('$uid is not a service provider');
+    }
     return documentSnapshot.exists;
   } catch (e) {
     print(e);
@@ -41,6 +46,7 @@ Future<bool> isServiceProvider() async {
 List<String> userLikes = [];
 
 Future<void> fetchUserLikes(bool? isLiked) async {
+  String uid = FirebaseAuth.instance.currentUser!.uid;
   try {
     var userQuerySnapshot = await FirebaseFirestore.instance
         .collection("users")
@@ -66,6 +72,7 @@ Future<void> fetchUserLikes(bool? isLiked) async {
 final reviewController = TextEditingController();
 
 handleRateReview(String shopUid, String rating, String review) async {
+  String uid = FirebaseAuth.instance.currentUser!.uid;
   final firestore = FirebaseFirestore.instance;
 
   try {
@@ -87,26 +94,42 @@ handleRateReview(String shopUid, String rating, String review) async {
 
 // =========================== Retrieve User Details ===========================
 String customerName = '';
+String shopName = '';
 
-Future<void> fetchUserDetails(String userId) async {
+Future<void> fetchUserDetails(String userId, String collection) async {
   try {
     // Get a reference to the Firestore database
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     // Get the document snapshot using the document ID
     DocumentSnapshot documentSnapshot =
-        await firestore.collection('users').doc(userId).get();
-    // Check if the document exists
-    if (documentSnapshot.exists) {
-      // Access specific fields from the document data
-      dynamic userName = documentSnapshot.get('name');
-      // Replace 'field_name' with the actual field name you want to retrieve
+        await firestore.collection(collection).doc(userId).get();
+    String fieldName;
 
-      // Use the retrieved data as needed
-      customerName = userName;
-      print('Field value: $userName');
+    if (collection == 'service_provider') {
+      fieldName = 'service_provider_name';
+      // Check if the document exists
+      if (documentSnapshot.exists) {
+        // Access specific fields from the document data
+        dynamic userName = documentSnapshot.get(fieldName);
+
+        // Use the retrieved data as needed
+        shopName = userName;
+      } else {
+        print('User does not exist');
+      }
     } else {
-      print('User does not exist');
+      fieldName = 'name';
+      // Check if the document exists
+      if (documentSnapshot.exists) {
+        // Access specific fields from the document data
+        dynamic userName = documentSnapshot.get(fieldName);
+
+        // Use the retrieved data as needed
+        customerName = userName;
+      } else {
+        print('User does not exist');
+      }
     }
   } catch (error) {
     print('Error getting user details: $error');
@@ -138,7 +161,7 @@ Future<void> fetchAverageRating(BuildContext context, String shopUid) async {
     if (starRatings.isNotEmpty) {
       numberOfRatings = starRatings.length;
       averageRating = starRatings.reduce((a, b) => a + b) / numberOfRatings;
-      strAverageRating = averageRating.toStringAsFixed(2);
+      strAverageRating = averageRating.toStringAsFixed(1);
     } else {
       print(shopUid);
       print('starRatings is empty.');

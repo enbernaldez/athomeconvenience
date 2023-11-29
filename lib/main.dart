@@ -48,8 +48,8 @@ class MyApp extends StatelessWidget {
             color: Colors.green[900],
           ),
           headlineMedium: GoogleFonts.poppins(
-            color: Colors.green,
-          ),
+            fontWeight: FontWeight.bold,
+          ), //rate
           headlineSmall: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
           ), // AppName / LogIn / CreateAnAccount / Alert title

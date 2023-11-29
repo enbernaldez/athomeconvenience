@@ -2,15 +2,18 @@ import 'package:athomeconvenience/functions/fetch_data.dart';
 import 'package:athomeconvenience/widgets/list_else.dart';
 import 'package:athomeconvenience/widgets/review_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ReviewsSection extends StatefulWidget {
-  final String shopUid;
+  final String? shopUid;
+  final bool shopReviews;
 
   const ReviewsSection({
     super.key,
-    required this.shopUid,
+    this.shopUid,
+    required this.shopReviews,
   });
 
   @override
@@ -18,6 +21,8 @@ class ReviewsSection extends StatefulWidget {
 }
 
 class _ReviewsSectionState extends State<ReviewsSection> {
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,10 +39,15 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                 height: 10,
               ),
               FutureBuilder(
-                future: FirebaseFirestore.instance
-                    .collection('ratings')
-                    .where('shop_id', isEqualTo: widget.shopUid)
-                    .get(),
+                future: widget.shopUid != null
+                    ? FirebaseFirestore.instance
+                        .collection('ratings')
+                        .where('shop_id', isEqualTo: widget.shopUid)
+                        .get()
+                    : FirebaseFirestore.instance
+                        .collection('ratings')
+                        .where('user_id', isEqualTo: uid)
+                        .get(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const DataLoading();
@@ -47,23 +57,34 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                     if (snapshot.data!.docs.isNotEmpty) {
                       var shopReview = snapshot.data!.docs.first.data();
                       print(shopReview);
-
-                      fetchUserDetails(shopReview['user_id']);
+                      if (widget.shopReviews == true) {
+                        fetchUserDetails(shopReview['user_id'], 'users');
+                      } else {
+                        fetchUserDetails(
+                            shopReview['shop_id'], 'service_provider');
+                      }
 
                       DateTime strTimeStamp = shopReview['timestamp'].toDate();
                       String timeStamp = DateFormat('MMMM dd, yyyy h:mm a')
                           .format(strTimeStamp);
 
-                      double customerRating = double.parse(shopReview['star_rating']);
+                      double customerRating =
+                          double.parse(shopReview['star_rating']);
 
                       return ReviewCard(
-                        customerId: shopReview['user_id'],
+                        shopId: shopReview['shop_id'],
                         timeStamp: timeStamp,
                         customerRating: customerRating,
                         customerReview: shopReview['review'],
+                        shopReviews: widget.shopReviews,
                       );
                     } else {
-                      return const NoData();
+                      return const Text(
+                        "You don't have reviews yet.",
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      );
                     }
                   } else {
                     return const NoData();
@@ -75,7 +96,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                       color: Colors.grey,
                     ),
-              )
+              ),
             ],
           ),
         ),
