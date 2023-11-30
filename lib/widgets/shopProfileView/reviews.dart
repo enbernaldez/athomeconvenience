@@ -55,29 +55,40 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                     return Text("Error: ${snapshot.error}");
                   } else if (snapshot.hasData) {
                     if (snapshot.data!.docs.isNotEmpty) {
-                      var shopReview = snapshot.data!.docs.first.data();
-                      print(shopReview);
-                      if (widget.shopReviews == true) {
-                        fetchUserDetails(shopReview['user_id'], 'users');
-                      } else {
-                        fetchUserDetails(
-                            shopReview['shop_id'], 'service_provider');
-                      }
+                      List<Widget> reviewWidgets = [];
 
-                      DateTime strTimeStamp = shopReview['timestamp'].toDate();
-                      String timeStamp = DateFormat('MMMM dd, yyyy h:mm a')
-                          .format(strTimeStamp);
+                      for (QueryDocumentSnapshot doc in snapshot.data!.docs) {
+                        Map<String, dynamic> shopReviewData =
+                            doc.data() as Map<String, dynamic>;
 
-                      double customerRating =
-                          double.parse(shopReview['star_rating']);
+                        if (widget.shopReviews == true) {
+                          fetchUserDetails(shopReviewData['user_id'], 'users');
+                        } else {
+                          fetchUserDetails(
+                              shopReviewData['shop_id'], 'service_provider');
+                        }
 
-                      return ReviewCard(
-                        shopId: shopReview['shop_id'],
-                        timeStamp: timeStamp,
-                        customerRating: customerRating,
-                        customerReview: shopReview['review'],
-                        shopReviews: widget.shopReviews,
-                      );
+                        DateTime strTimeStamp =
+                            shopReviewData['timestamp'].toDate();
+                        String timeStamp = DateFormat('MMMM dd, yyyy h:mm a')
+                            .format(strTimeStamp);
+
+                        double customerRating =
+                            double.parse(shopReviewData['star_rating']);
+
+                        reviewWidgets.add(
+                          ReviewCard(
+                            shopId: shopReviewData['shop_id'],
+                            timeStamp: timeStamp,
+                            customerRating: customerRating,
+                            customerReview: shopReviewData['review'],
+                            shopReviews: widget.shopReviews,
+                          ),
+                        );
+                      }return Column(
+          children: reviewWidgets,
+        );
+
                     } else {
                       return const Text(
                         "You don't have reviews yet.",
@@ -86,9 +97,8 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                         ),
                       );
                     }
-                  } else {
-                    return const NoData();
                   }
+                  return const NoData();
                 },
               ),
               Text(

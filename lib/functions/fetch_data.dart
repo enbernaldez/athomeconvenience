@@ -116,7 +116,7 @@ Future<void> fetchUserDetails(String userId, String collection) async {
         // Use the retrieved data as needed
         shopName = userName;
       } else {
-        print('User does not exist');
+        print('Shop does not exist');
       }
     } else {
       fieldName = 'name';

@@ -208,9 +208,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         }
       }
 
-      if (image == null) {
-        widget.showToast();
-      }
+      // if (image == null) {
+      //   widget.showToast();
+      // }
 
       // ?========set SharedPreference========
       final SharedPreferences s = await SharedPreferences.getInstance();

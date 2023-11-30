@@ -49,20 +49,24 @@ class _ShopListPageState extends State<ShopListPage> {
                         return Text("Error: ${snapshot.error}");
                       } else if (snapshot.hasData) {
                         if (snapshot.data!.docs.isNotEmpty) {
-                          var serviceProviderData =
-                              snapshot.data!.docs.first.data();
-                          return ShopCard(
+                          for (QueryDocumentSnapshot doc
+                              in snapshot.data!.docs) {
+                            Map<String, dynamic> serviceProviderData =
+                                doc.data() as Map<String, dynamic>;
+
+                            return ShopCard(
                               shopAddress:
                                   serviceProviderData['service_address'],
                               shopName:
                                   serviceProviderData['service_provider_name'],
-                              shopUid: serviceProviderData['uid']);
+                              shopUid: serviceProviderData['uid'],
+                            );
+                          }
                         } else {
                           return const NoData();
                         }
-                      } else {
-                        return const NoData();
                       }
+                      return const NoData();
                     },
                   ),
                 ],
