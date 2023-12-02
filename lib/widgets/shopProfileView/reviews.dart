@@ -78,6 +78,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
 
                         reviewWidgets.add(
                           ReviewCard(
+                            customerName: customerName,
                             shopId: shopReviewData['shop_id'],
                             timeStamp: timeStamp,
                             customerRating: customerRating,
@@ -85,10 +86,10 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                             shopReviews: widget.shopReviews,
                           ),
                         );
-                      }return Column(
-          children: reviewWidgets,
-        );
-
+                      }
+                      return Column(
+                        children: reviewWidgets,
+                      );
                     } else {
                       return const Text(
                         "You don't have reviews yet.",

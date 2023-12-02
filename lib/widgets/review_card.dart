@@ -6,6 +6,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ReviewCard extends StatefulWidget {
+  final String customerName;
   final String shopId;
   final String timeStamp;
   final double customerRating;
@@ -14,6 +15,7 @@ class ReviewCard extends StatefulWidget {
 
   const ReviewCard({
     super.key,
+    required this.customerName,
     required this.shopId,
     required this.timeStamp,
     required this.customerRating,
@@ -44,7 +46,7 @@ class _ReviewCardState extends State<ReviewCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          customerName,
+                          widget.customerName,
                           style:
                               GoogleFonts.poppins(fontWeight: FontWeight.bold),
                           maxLines: 1,

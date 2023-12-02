@@ -15,7 +15,7 @@ class NotifCard extends StatelessWidget {
   final String docId;
   final String notifMsg;
 
-  NotifCard(
+  const NotifCard(
       {super.key,
       this.chatDocId,
       required this.fromUid,
