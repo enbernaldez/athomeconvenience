@@ -142,7 +142,7 @@ class _ConversationState extends State<Conversation> {
           'is_message': true,
           'is_rate': false,
           'is_read': false,
-          'notif_msg': 'Messaged you.',
+          'notif_msg': 'messaged you.',
           'user_doc_id': widget.shopId,
         });
       } catch (e) {

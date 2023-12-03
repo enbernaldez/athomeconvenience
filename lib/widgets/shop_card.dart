@@ -108,7 +108,9 @@ class ShopCard extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium!
-                                .copyWith(color: Colors.black),
+                                .copyWith(
+                                  color: Colors.black,
+                                ),
                           ),
 
                           // Address

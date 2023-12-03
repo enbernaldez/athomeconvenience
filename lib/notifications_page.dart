@@ -87,9 +87,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
         centerTitle: true,
       ),
       body: SafeArea(
-          child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
           child: Column(
             children: [
               for (final notif in notifications)
@@ -108,7 +107,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
             ],
           ),
         ),
-      )),
+      ),
     );
   }
 }

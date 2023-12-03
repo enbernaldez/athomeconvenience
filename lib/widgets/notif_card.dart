@@ -1,6 +1,7 @@
 import 'package:athomeconvenience/widgets/message/conversation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class NotifCard extends StatelessWidget {
@@ -41,7 +42,7 @@ class NotifCard extends StatelessWidget {
 
     String formattedDateTime = isToday
         ? 'Today at ${DateFormat.Hm().format(notificationTimeLocal)}'
-        : DateFormat('yyyy/MM/dd HH:mm').format(notificationTimeLocal);
+        : DateFormat('MMM d \'at\' hh:mm a').format(notificationTimeLocal);
     // ? ===============================================================
 
     Future<void> updateReadStatus() async {
@@ -59,85 +60,105 @@ class NotifCard extends StatelessWidget {
 
     return Column(
       children: [
-        GestureDetector(
-          onTap: () {
-            updateReadStatus();
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          child: Divider(
+            height: 1,
+          ),
+        ),
+        Container(
+          color: isRead ? Colors.transparent : Colors.blue[100],
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: FractionallySizedBox(
+                  widthFactor: 0.78,
+                  child: GestureDetector(
+                    onTap: () {
+                      updateReadStatus();
 
-            if (isMessage == true && isRate == false && isAgreement == false) {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) => Conversation(
-                    docId: chatDocId,
-                    shopId: fromUid,
-                    shopName: shopName,
+                      if (isMessage == true &&
+                          isRate == false &&
+                          isAgreement == false) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => Conversation(
+                              docId: chatDocId,
+                              shopId: fromUid,
+                              shopName: shopName,
+                            ),
+                          ),
+                        );
+                      } else if (isRate == true &&
+                          isMessage == false &&
+                          isAgreement == false) {
+                        print("rate");
+                        // TODO NAVIGATE TO VIEW SHOP'S RATING & REVIEW
+                      } else {
+                        print('agreement');
+                        // TODO NAVIGATE TO CONVERSATION PAGE
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        // Image/Icon
+                        const CircleAvatar(
+                          backgroundImage:
+                              AssetImage('images/default_profile_pic.png'),
+                          maxRadius: 30,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+
+                        // Column
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // SHOP NAME
+                            Text(
+                              shopName ?? "Loading...",
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(color: Colors.black),
+                            ),
+
+                            // messaged you
+                            Text(
+                              notifMsg,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(color: Colors.black),
+                            ),
+
+                            // timestamp
+                            Text(
+                              formattedDateTime,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(color: Colors.grey[700]),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              );
-            } else if (isRate == true &&
-                isMessage == false &&
-                isAgreement == false) {
-              print("rate");
-              // TODO NAVIGATE TO VIEW SHOP'S RATING & REVIEW
-            } else {
-              print('agreement');
-              // TODO NAVIGATE TO CONVERSATION PAGE
-            }
-          },
-          child: Row(
-            children: [
-              // Image/Icon
-              Container(
-                height: 70,
-                width: 70,
-                decoration: const BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.all(Radius.circular(100))),
               ),
               const SizedBox(
-                width: 20,
+                height: 10,
               ),
-
-              // Column
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // SHOP NAME
-                  Text(
-                    shopName ?? "Loading...",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: isRead == false
-                            ? Colors.black
-                            : Colors.grey.shade600),
-                  ),
-
-                  // messaged you
-                  Text(
-                    notifMsg,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: isRead == false
-                            ? Colors.black
-                            : Colors.grey.shade600),
-                  ),
-
-                  // timestamp
-                  Text(
-                    formattedDateTime,
-                    style: TextStyle(
-                        color: isRead == false
-                            ? Colors.black
-                            : Colors.grey.shade600),
-                  )
-                ],
-              )
             ],
           ),
         ),
-        const SizedBox(
-          height: 10,
-        )
       ],
     );
   }
