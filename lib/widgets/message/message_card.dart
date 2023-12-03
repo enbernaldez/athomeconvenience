@@ -63,7 +63,7 @@ class _MessageCardState extends State<MessageCard> {
 
     String formattedDateTime = isToday
         ? '${DateFormat.Hm().format(notificationTimeLocal)}'
-        : DateFormat('yyyy/MM/dd HH:mm').format(notificationTimeLocal);
+        : DateFormat('MMM d').format(notificationTimeLocal);
     // ?=================================================================
     return Column(
       children: [
@@ -87,7 +87,7 @@ class _MessageCardState extends State<MessageCard> {
                 maxRadius: 30,
               ),
               const SizedBox(
-                width: 20,
+                width: 10,
               ),
 
               // Column
@@ -98,8 +98,9 @@ class _MessageCardState extends State<MessageCard> {
                     // SHOP NAME
                     Text(
                       widget.shopName,
-                      style:
-                          const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
                     ),
 
                     // message
@@ -107,6 +108,7 @@ class _MessageCardState extends State<MessageCard> {
                       widget.latestChatUser == uid
                           ? 'You: ${widget.latestChatMsg}'
                           : widget.latestChatMsg,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontSize: 15),
                     ),
                   ],
