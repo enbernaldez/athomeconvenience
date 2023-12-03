@@ -49,7 +49,6 @@ class _LikesPageState extends State<LikesPage> {
         title: const Text('Likes'),
         centerTitle: true,
         actions: [
-          // TODO: functional edit
           GestureDetector(
             onTap: () {
               setState(() {

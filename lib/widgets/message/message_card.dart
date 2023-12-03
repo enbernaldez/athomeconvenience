@@ -62,7 +62,7 @@ class _MessageCardState extends State<MessageCard> {
     bool isToday = now.difference(notificationTimeLocal).inDays == 0;
 
     String formattedDateTime = (isToday)
-        ? '${DateFormat.Hm().format(notificationTimeLocal)}'
+        ? DateFormat.Hm().format(notificationTimeLocal)
         : (notificationTimeLocal.isAfter(
             now.subtract(
               Duration(days: 7),
