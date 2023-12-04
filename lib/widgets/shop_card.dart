@@ -59,15 +59,6 @@ class ShopCard extends StatelessWidget {
 
     return Column(
       children: [
-        const SizedBox(
-          height: 10,
-        ),
-        const Divider(
-          height: 0,
-        ),
-        const SizedBox(
-          height: 10,
-        ),
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.8,
           child: Row(
@@ -113,7 +104,7 @@ class ShopCard extends StatelessWidget {
 
                           // Address
                           Text(
-                            shopAddress,
+                            shopAddress.isEmpty ? "Home Service" : shopAddress,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: Theme.of(context).textTheme.bodySmall,

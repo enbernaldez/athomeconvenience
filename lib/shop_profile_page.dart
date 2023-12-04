@@ -1,4 +1,3 @@
-import 'package:athomeconvenience/functions/fetch_data.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:athomeconvenience/widgets/message/conversation.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/about.dart';
@@ -29,12 +28,18 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   String? chatDocId;
   bool? isLiked;
 
+  Map<String, dynamic> shopData = {};
+  List<String> userLikes = [];
+  double averageRating = 0.0;
+  num numberOfRatings = 0;
+  String strAverageRating = '';
+
   @override
   void initState() {
     super.initState();
-    fetchShopData(context, widget.shopUid);
-    fetchUserLikes(isLiked);
-    fetchAverageRating(context, widget.shopUid);
+    fetchShopData();
+    fetchUserLikes();
+    fetchAverageRating();
     fetchChatDocId();
   }
 
@@ -43,31 +48,6 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   bool isAbout = true;
   bool isWorks = false;
   bool isReviews = false;
-
-  Future<void> fetchChatDocId() async {
-    try {
-      final uid = FirebaseAuth.instance.currentUser!.uid;
-
-      final compositeId = '${uid}_${widget.shopUid}';
-
-      QuerySnapshot chatQuery = await FirebaseFirestore.instance
-          .collection('chats')
-          .where("composite_id", isEqualTo: compositeId)
-          .get();
-
-      if (chatQuery.docs.isNotEmpty) {
-        // Assuming there's only one document matching the condition
-        String docId = chatQuery.docs.first.id;
-        setState(() {
-          chatDocId = docId;
-        });
-      } else {
-        print('No matching chat document found.');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +93,20 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
 
     if (userLikes.contains(shopData['uid'])) {
       isLiked = true;
+    }
+
+    String workingHours = 'Loading';
+
+    if (shopData['service_start'].toString().isNotEmpty &&
+        shopData['service_end'].toString().isNotEmpty) {
+      setState(() {
+        workingHours =
+            '${shopData['service_start']} - ${shopData['service_end']}';
+      });
+    } else {
+      setState(() {
+        workingHours = "N/A";
+      });
     }
 
     return Scaffold(
@@ -341,11 +335,12 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       ? AboutSection(
                           category: shopData['category'] ?? "Loading...",
                           shopAddress:
-                              shopData['service_address'] ?? "Loading...",
-                          contactNum: shopData['contact_num'] ?? "Loading...",
-                          workingHours:
-                              '${shopData['service_start']} - ${shopData['service_end']}' ??
+                              (shopData['service_address'].toString().isNotEmpty
+                                      ? shopData['service_address']
+                                      : "N/A") ??
                                   "Loading...",
+                          contactNum: shopData['contact_num'] ?? "Loading...",
+                          workingHours: workingHours,
                         )
                       : (isWorks == true
                           ? const WorksSection()
@@ -383,5 +378,109 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
         ),
       ),
     );
+  }
+
+  Future<void> fetchShopData() async {
+    try {
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection("service_provider")
+          .where("uid", isEqualTo: widget.shopUid)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        setState(() {
+          shopData = querySnapshot.docs.first.data();
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> fetchUserLikes() async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    try {
+      var userQuerySnapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .where("uid", isEqualTo: uid)
+          .get();
+
+      if (userQuerySnapshot.docs.isNotEmpty) {
+        var userData = userQuerySnapshot.docs.first.data();
+        setState(() {
+          userLikes = List<String>.from(userData['likes'] ?? []);
+        });
+
+        if (userLikes.contains(shopData['uid'])) {
+          setState(() {
+            isLiked = true;
+          });
+        } else {
+          setState(() {
+            isLiked = false;
+          });
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> fetchAverageRating() async {
+    try {
+      // Execute the query
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection("ratings")
+          .where("shop_id", isEqualTo: widget.shopUid)
+          .get();
+
+      // Extract star_rating values from each document
+      List<double> starRatings = [];
+      for (var document in querySnapshot.docs) {
+        // Assuming "star_rating" is the name of the field in your documents
+        double starRating = double.parse(document.get("star_rating"));
+        starRatings.add(starRating);
+      }
+
+      // Calculate the average
+      if (starRatings.isNotEmpty) {
+        setState(() {
+          numberOfRatings = starRatings.length;
+          averageRating = starRatings.reduce((a, b) => a + b) / numberOfRatings;
+          strAverageRating = averageRating.toStringAsFixed(1);
+        });
+      } else {
+        print(widget.shopUid);
+        print('starRatings is empty.');
+      }
+      // Now averageRating contains the average star rating
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
+  }
+
+  Future<void> fetchChatDocId() async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+
+      final compositeId = '${uid}_${widget.shopUid}';
+
+      QuerySnapshot chatQuery = await FirebaseFirestore.instance
+          .collection('chats')
+          .where("composite_id", isEqualTo: compositeId)
+          .get();
+
+      if (chatQuery.docs.isNotEmpty) {
+        // Assuming there's only one document matching the condition
+        String docId = chatQuery.docs.first.id;
+        setState(() {
+          chatDocId = docId;
+        });
+      } else {
+        print('No matching chat document found.');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }

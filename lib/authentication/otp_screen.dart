@@ -22,10 +22,15 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   final otpController = TextEditingController();
+
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     void handleClick() async {
       if (otpController.text.isNotEmpty) {
+        setState(() {
+          isLoading = true;
+        });
         final auth = FirebaseAuth.instance;
         final firestore = FirebaseFirestore.instance;
         try {
@@ -39,6 +44,10 @@ class _OtpScreenState extends State<OtpScreen> {
               await auth.signInWithCredential(phoneAuthCredential);
 
           print('User signed in: ${userCredential.user}');
+
+          setState(() {
+            isLoading = false;
+          });
 
           if (userCredential.user != null) {
             // ! check the firestore for user details
@@ -87,52 +96,60 @@ class _OtpScreenState extends State<OtpScreen> {
           },
         ),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 100,
+      body: Stack(
+        children: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 100,
+                  ),
+                  AutoSizeText(
+                    'Verification',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                    maxLines: 1,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text("Enter the OTP sent to your phone number"),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  // VERIFICATION CODE INPUT
+                  Pinput(
+                    length: 6,
+                    controller: otpController,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  // VERIFY BUTTON
+                  Button(
+                    buttonText: 'VERIFY',
+                    textType: Theme.of(context).textTheme.displaySmall,
+                    onPress: handleClick,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text("Didn't receive any code?"),
+                  const Text(
+                    "Resend new code",
+                    style: TextStyle(color: Colors.blue),
+                  )
+                ],
               ),
-              AutoSizeText(
-                'Verification',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineSmall,
-                maxLines: 1,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text("Enter the OTP sent to your phone number"),
-              const SizedBox(
-                height: 10,
-              ),
-              // VERIFICATION CODE INPUT
-              Pinput(
-                length: 6,
-                controller: otpController,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              // VERIFY BUTTON
-              Button(
-                buttonText: 'VERIFY',
-                textType: Theme.of(context).textTheme.displaySmall,
-                onPress: handleClick,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text("Didn't receive any code?"),
-              const Text(
-                "Resend new code",
-                style: TextStyle(color: Colors.blue),
-              )
-            ],
+            ),
           ),
-        ),
+          if (isLoading)
+            Center(
+              child: CircularProgressIndicator(),
+            )
+        ],
       ),
     );
   }
