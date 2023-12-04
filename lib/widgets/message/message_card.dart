@@ -53,24 +53,28 @@ class _MessageCardState extends State<MessageCard> {
   Widget build(BuildContext context) {
     // ? ==========GETTING THE CORRECT TIME FOR DISPLAY==================
 
-    DateTime notificationTimeLocal = widget.latestChatTime.toDate();
-
+    DateTime lastChatDateTime = widget.latestChatTime.toDate();
     DateTime now = DateTime.now();
-    bool isToday = now.difference(notificationTimeLocal).inDays == 0;
 
-    String formattedDateTime = (isToday)
-        ? DateFormat.Hm().format(notificationTimeLocal)
-        : (notificationTimeLocal.isAfter(
+    DateTime dateToday = DateTime(now.year, now.month, now.day);
+    DateTime lastChatDate = DateTime(
+        lastChatDateTime.year, lastChatDateTime.month, lastChatDateTime.day);
+
+    bool isSameDate = dateToday.isAtSameMomentAs(lastChatDate);
+
+    String formattedDateTime = (isSameDate)
+        ? DateFormat.Hm().format(lastChatDateTime)
+        : (lastChatDateTime.isAfter(
             now.subtract(
               Duration(days: 7),
             ),
           ))
-            ? DateFormat('EEE').format(notificationTimeLocal)
-            : (notificationTimeLocal.isAfter(
+            ? DateFormat('EEE').format(lastChatDateTime)
+            : (lastChatDateTime.isAfter(
                 DateTime(now.year - 1, now.month, now.day),
               ))
-                ? DateFormat('MMM d').format(notificationTimeLocal)
-                : DateFormat('MM/dd/yy').format(notificationTimeLocal);
+                ? DateFormat('MMM d').format(lastChatDateTime)
+                : DateFormat('MM/dd/yy').format(lastChatDateTime);
     // ?=================================================================
     return Column(
       children: [

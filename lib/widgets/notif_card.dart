@@ -30,19 +30,30 @@ class NotifCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //? DATE & TIME DISPLAY ============================================
-    DateTime notificationTimeUtc = dateTime.toDate(); // Convert to UTC
-
-    DateTime notificationTimeLocal = notificationTimeUtc
-        .add(const Duration(hours: 8)); // Add 8 hours for UTC+8:00
-
+    //? DATE & TIME DISPLAY ====================================================
+    DateTime notifDateTime = dateTime.toDate();
     DateTime now = DateTime.now();
-    bool isToday = now.difference(notificationTimeLocal).inDays == 0;
 
-    String formattedDateTime = isToday
-        ? 'Today at ${DateFormat.Hm().format(notificationTimeLocal)}'
-        : DateFormat('MMM d \'at\' hh:mm a').format(notificationTimeLocal);
-    // ? ===============================================================
+    DateTime dateToday = DateTime(now.year, now.month, now.day);
+    DateTime notifDate =
+        DateTime(notifDateTime.year, notifDateTime.month, notifDateTime.day);
+
+    bool isSameDate = dateToday.isAtSameMomentAs(notifDate);
+
+    String formattedDateTime = (isSameDate)
+        ? DateFormat('hh:mm a').format(notifDateTime)
+        : (notifDateTime.isAfter(
+            now.subtract(
+              const Duration(days: 7),
+            ),
+          ))
+            ? DateFormat('EEE \'at\' hh:mm a').format(notifDateTime)
+            : (notifDateTime.isAfter(
+                DateTime(now.year - 1, now.month, now.day),
+              ))
+                ? DateFormat('MMM d \'at\' hh:mm a').format(notifDateTime)
+                : DateFormat('MM/dd/yy \'at\' hh:mm a').format(notifDateTime);
+    // ? =======================================================================
 
     Future<void> updateReadStatus() async {
       try {

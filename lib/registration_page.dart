@@ -229,7 +229,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         child: FractionallySizedBox(
           widthFactor: 0.8,
           child: SingleChildScrollView(
-            // padding: const EdgeInsets.symmetric(vertical: 48),
+            padding: const EdgeInsets.symmetric(vertical: 24.0),
             child: Column(
               children: [
                 const SizedBox(height: 48),
@@ -617,14 +617,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         const Text('By signing up, you agree to the'),
                         GestureDetector(
                           onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      return const TermsOfUseAndPrivacyPolicy();
-                                    },
-                                  ),
-                                );
-                              },
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) {
+                                  return const TermsOfUseAndPrivacyPolicy();
+                                },
+                              ),
+                            );
+                          },
                           child: const Text(
                             'Terms of Use and Privacy Policy',
                             style: TextStyle(

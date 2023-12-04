@@ -220,17 +220,20 @@ class _ConversationState extends State<Conversation> {
                           FirebaseAuth.instance.currentUser!.uid;
                       // ===================== Time Display =====================
                       DateTime timeReceived = msg[index].timestamp.toDate();
-
                       DateTime now = DateTime.now();
-                      bool isToday = now
-                              .difference(msg[index].timestamp.toDate())
-                              .inDays ==
-                          0;
-                      String formattedDateTime = (isToday)
+
+                      DateTime dateToday =
+                          DateTime(now.year, now.month, now.day);
+                      DateTime dateReceived = DateTime(timeReceived.year,
+                          timeReceived.month, timeReceived.day);
+
+                      bool isSameDate = dateToday.isAtSameMomentAs(dateReceived);
+
+                      String formattedDateTime = (isSameDate)
                           ? DateFormat('hh:mm a').format(timeReceived)
                           : (timeReceived.isAfter(
                               now.subtract(
-                                Duration(days: 7),
+                                const Duration(days: 7),
                               ),
                             ))
                               ? DateFormat('EEE \'at\' hh:mm a')
