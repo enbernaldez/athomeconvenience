@@ -166,6 +166,8 @@ Future<void> fetchAverageRating(BuildContext context, String shopUid) async {
       print(shopUid);
       print('starRatings is empty.');
     }
+
+    print(strAverageRating);
     // Now averageRating contains the average star rating
   } catch (e) {
     print("Error fetching data: $e");

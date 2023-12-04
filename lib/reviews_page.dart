@@ -23,6 +23,12 @@ class _ReviewsPageState extends State<ReviewsPage> {
   String uid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
+  void initState() {
+    super.initState();
+    fetchAverageRating(context, uid);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
