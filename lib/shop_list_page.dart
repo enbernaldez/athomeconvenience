@@ -35,41 +35,50 @@ class _ShopListPageState extends State<ShopListPage> {
             alignment: Alignment.topCenter,
             child: FractionallySizedBox(
               widthFactor: 0.85,
-              child: Column(
-                children: [
-                  FutureBuilder(
-                    future: FirebaseFirestore.instance
-                        .collection("service_provider")
-                        .where("category", isEqualTo: widget.category)
-                        .get(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const DataLoading();
-                      } else if (snapshot.hasError) {
-                        return Text("Error: ${snapshot.error}");
-                      } else if (snapshot.hasData) {
-                        if (snapshot.data!.docs.isNotEmpty) {
-                          for (QueryDocumentSnapshot doc
-                              in snapshot.data!.docs) {
-                            Map<String, dynamic> serviceProviderData =
-                                doc.data() as Map<String, dynamic>;
+              child: FutureBuilder(
+                future: FirebaseFirestore.instance
+                    .collection("service_provider")
+                    .where("category", isEqualTo: widget.category)
+                    .where('status', isEqualTo: "Accepted")
+                    .get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const DataLoading();
+                  } else if (snapshot.hasError) {
+                    return Text("Error: ${snapshot.error}");
+                  } else if (snapshot.hasData) {
+                    if (snapshot.data!.docs.isNotEmpty) {
+                      var serviceProviderData = snapshot.data!.docs;
 
-                            return ShopCard(
-                              shopAddress:
-                                  serviceProviderData['service_address'],
-                              shopName:
-                                  serviceProviderData['service_provider_name'],
-                              shopUid: serviceProviderData['uid'],
-                            );
-                          }
-                        } else {
-                          return const NoData();
-                        }
-                      }
+                      return Column(
+                        children: [
+                          for (final doc in serviceProviderData)
+                            Column(
+                              children: [
+                                ShopCard(
+                                    shopAddress: doc['service_address'],
+                                    shopName: doc['service_provider_name'],
+                                    shopUid: doc['uid']),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                const Divider(
+                                  height: 0,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                )
+                              ],
+                            )
+                        ],
+                      );
+                    } else {
                       return const NoData();
-                    },
-                  ),
-                ],
+                    }
+                  } else {
+                    return const NoData();
+                  }
+                },
               ),
             ),
           ),

@@ -1,6 +1,9 @@
 import 'package:athomeconvenience/constants.dart';
+import 'package:athomeconvenience/model/search_items.dart';
 import 'package:athomeconvenience/shop_list_page.dart';
+import 'package:athomeconvenience/shop_profile_page.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,41 +24,145 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
             children: [
-              FractionallySizedBox(
-                widthFactor: 0.9,
-                child: SearchAnchor(
-                  builder: (BuildContext context, SearchController controller) {
-                    return SearchBar(
-                      controller: controller,
-                      padding: const MaterialStatePropertyAll<EdgeInsets>(
-                        EdgeInsets.symmetric(horizontal: 16),
-                      ),
-                      onTap: () {
-                        controller.openView();
-                      },
-                      onChanged: (_) {
-                        controller.openView();
-                      },
-                      leading: const Icon(Icons.search),
-                      hintText: 'Search...',
-                    );
-                  },
-                  suggestionsBuilder:
-                      (BuildContext context, SearchController controller) {
-                    return List<ListTile>.generate(5, (int index) {
-                      final String item = 'item $index';
-                      return ListTile(
-                        title: Text(item),
-                        onTap: () {
-                          setState(() {
-                            controller.closeView(item);
-                          });
-                        },
+              StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('service_provider')
+                      .where('status', isEqualTo: "Accepted")
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                      return FractionallySizedBox(
+                        widthFactor: 0.9,
+                        child: SearchAnchor(
+                          builder: (BuildContext context,
+                              SearchController controller) {
+                            return SearchBar(
+                              controller: controller,
+                              padding:
+                                  const MaterialStatePropertyAll<EdgeInsets>(
+                                EdgeInsets.symmetric(horizontal: 16),
+                              ),
+                              onTap: () {
+                                controller.openView();
+                              },
+                              onChanged: (_) {
+                                controller.openView();
+                              },
+                              leading: const Icon(Icons.search),
+                              hintText: 'Search...',
+                            );
+                          },
+                          suggestionsBuilder: (BuildContext context,
+                              SearchController controller) {
+                            if (controller.text.isEmpty) {
+                              final List<SearchItem> items =
+                                  snapshot.data!.docs.map((doc) {
+                                // Modify this according to your Firestore document structure
+                                return SearchItem(
+                                    shopName: doc['service_provider_name'],
+                                    shopId: doc['uid']);
+                              }).toList();
+
+                              final List<SearchItem> itemsLimit =
+                                  items.take(5).toList();
+
+                              List<Widget> searchItem = [];
+                              print(items);
+                              print(itemsLimit);
+
+                              for (final item in itemsLimit) {
+                                searchItem.add(
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              ShopProfilePage(
+                                                  shopUid: item.shopId),
+                                        ),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 8),
+                                      child: Text(
+                                        item.shopName,
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              return searchItem;
+                            } else {
+                              final List<SearchItem> items =
+                                  snapshot.data!.docs.map((doc) {
+                                // Modify this according to your Firestore document structure
+                                return SearchItem(
+                                    shopName: doc['service_provider_name'],
+                                    shopId: doc['uid']);
+                              }).toList();
+
+                              // final SearchItem singleItem = items.singleWhere(
+                              //     (item) => item.shopName
+                              //         .toLowerCase()
+                              //         .contains(controller.text.toLowerCase()));
+
+                              // print(singleItem);
+
+                              final filteredItems = items.where(
+                                (item) => item.shopName.toLowerCase().contains(
+                                      controller.text.toLowerCase(),
+                                    ),
+                              );
+
+                              List<Widget> searchItem = [];
+                              for (final item in filteredItems) {
+                                searchItem.add(
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              ShopProfilePage(
+                                                  shopUid: item.shopId),
+                                        ),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 8),
+                                      child: Row(
+                                        children: [
+                                          const CircleAvatar(
+                                            backgroundImage: AssetImage(
+                                                'images/default_profile_pic.png'),
+                                            maxRadius: 10,
+                                          ), //! issue: not displaying
+                                          Text(
+                                            item.shopName,
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              return searchItem;
+                            }
+
+                            return [];
+                          },
+                        ),
                       );
-                    });
-                  },
-                ),
-              ),
+                    }
+
+                    return const SizedBox();
+                  }),
               const SizedBox(height: 24),
               ConstrainedBox(
                 constraints: const BoxConstraints(

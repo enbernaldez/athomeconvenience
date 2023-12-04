@@ -72,6 +72,10 @@ class ImageHandler {
     }
   }
 
+  static void removeImage() {
+    _image = null;
+  }
+
   static void uploadImage(BuildContext context) {
     showDialog(
       context: context,
