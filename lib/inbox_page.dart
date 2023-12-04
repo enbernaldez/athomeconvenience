@@ -32,61 +32,68 @@ class _InboxPageState extends State<InboxPage> {
           ),
         ],
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('chats')
-            .where('users_id',
-                arrayContains: FirebaseAuth.instance.currentUser!.uid)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-              child: Text('No chats available.'),
-            );
-          }
-
-          return FutureBuilder<List<MessageData>>(
-            future: processChats(snapshot.data!.docs),
-            builder: (BuildContext context,
-                AsyncSnapshot<List<MessageData>> chatsSnapshot) {
-              if (chatsSnapshot.connectionState == ConnectionState.waiting) {
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('chats')
+                .where('users_id',
+                    arrayContains: FirebaseAuth.instance.currentUser!.uid)
+                .snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (!chatsSnapshot.hasData || chatsSnapshot.data!.isEmpty) {
+              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                 return const Center(
                   child: Text('No chats available.'),
                 );
               }
 
-              List<MessageData> chats = chatsSnapshot.data!;
+              return FutureBuilder<List<MessageData>>(
+                future: processChats(snapshot.data!.docs),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<MessageData>> chatsSnapshot) {
+                  if (chatsSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Column(
-                    children: [
-                      for (final chat in chats)
-                        MessageCard(
-                          docId: chat.docId,
-                          shopId: chat.incomingId,
-                          shopName: chat.shopName,
-                          shopHours: chat.shopHours,
-                          latestChatTime: chat.latestChatTime,
-                          latestChatUser: chat.latestChatUser,
-                          latestChatMsg: chat.latestChatMsg,
-                        )
-                    ],
-                  ),
-                ),
+                  if (!chatsSnapshot.hasData || chatsSnapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Text('No chats available.'),
+                    );
+                  }
+
+                  List<MessageData> chats = chatsSnapshot.data!;
+
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Column(
+                        children: [
+                          for (final chat in chats)
+                            MessageCard(
+                              docId: chat.docId,
+                              shopId: chat.incomingId,
+                              shopName: chat.shopName,
+                              shopHours: chat.shopHours,
+                              latestChatTime: chat.latestChatTime,
+                              latestChatUser: chat.latestChatUser,
+                              latestChatMsg: chat.latestChatMsg,
+                            )
+                        ],
+                      ),
+                    ),
+                  );
+                },
               );
             },
-          );
-        },
+          ),
+        ),
       ),
     );
   }

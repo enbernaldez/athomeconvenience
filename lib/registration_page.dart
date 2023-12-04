@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:athomeconvenience/constants.dart';
 import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/navigation.dart';
+import 'package:athomeconvenience/terms/terms_of_use_and_privacy_policy_page.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:athomeconvenience/functions/functions.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -11,7 +12,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:full_screen_image/full_screen_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,18 +26,6 @@ class RegistrationPage extends StatefulWidget {
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
-
-  void showToast() {
-    Fluttertoast.showToast(
-      msg: "This is Center Short Toast",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
-  }
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
@@ -747,7 +735,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             const SizedBox(height: 10),
                             const Text('By signing up, you agree to the'),
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                                      return const TermsOfUseAndPrivacyPolicy();
+                                    },
+                                  ),
+                                );
+                              },
                               child: const Text(
                                 'Terms of Use and Privacy Policy',
                                 style: TextStyle(

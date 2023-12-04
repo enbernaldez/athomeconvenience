@@ -2,7 +2,6 @@ import 'package:athomeconvenience/widgets/shop_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'text_theme_page.dart';
 
 class LikesPage extends StatefulWidget {
   const LikesPage({super.key});
@@ -50,7 +49,6 @@ class _LikesPageState extends State<LikesPage> {
         title: const Text('Likes'),
         centerTitle: true,
         actions: [
-          // TODO: functional edit
           GestureDetector(
             onTap: () {
               setState(() {

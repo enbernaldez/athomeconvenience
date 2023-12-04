@@ -1,7 +1,10 @@
 import 'package:athomeconvenience/model/indiv_message.dart';
+import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -252,26 +255,71 @@ class _ConversationState extends State<Conversation> {
                       bool isCurrentUser = msg[index].senderId ==
                           FirebaseAuth.instance.currentUser!.uid;
 
+                      // ===================== Time Display =====================
+                      DateTime timeReceived = msg[index].timestamp.toDate();
+
+                      DateTime now = DateTime.now();
+                      bool isToday = now
+                              .difference(msg[index].timestamp.toDate())
+                              .inDays ==
+                          0;
+                      String formattedDateTime = (isToday)
+                          ? DateFormat('hh:mm a').format(timeReceived)
+                          : (timeReceived.isAfter(
+                              now.subtract(
+                                Duration(days: 7),
+                              ),
+                            ))
+                              ? DateFormat('EEE \'at\' hh:mm a')
+                                  .format(timeReceived)
+                              : (timeReceived.isAfter(
+                                  DateTime(now.year - 1, now.month, now.day),
+                                ))
+                                  ? DateFormat('MMM d \'at\' hh:mm a')
+                                      .format(timeReceived)
+                                  : DateFormat('MM/dd/yy \'at\' hh:mm a')
+                                      .format(timeReceived);
+                      // ========================================================
+
                       return ListTile(
                         title: Container(
                           alignment: isCurrentUser
                               ? Alignment.centerRight
                               : Alignment.centerLeft,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: isCurrentUser
-                                  ? Colors.blueAccent
-                                  : Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              msg[index].messageText,
-                              style: TextStyle(
-                                color:
-                                    isCurrentUser ? Colors.white : Colors.black,
+                          child: Column(
+                            crossAxisAlignment: isCurrentUser
+                                ? CrossAxisAlignment.end
+                                : CrossAxisAlignment.start,
+                            children: [
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.sizeOf(context).width * 0.80,
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: isCurrentUser
+                                        ? Colors.blueAccent
+                                        : Colors.grey.shade300,
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    msg[index].messageText,
+                                    style: TextStyle(
+                                      color: isCurrentUser
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                              const SizedBox(
+                                height: 4.0,
+                              ),
+                              Text(formattedDateTime,
+                                  style: GoogleFonts.dmSans(fontSize: 11))
+                            ],
                           ),
                         ),
                       );
@@ -385,25 +433,29 @@ class _ConversationState extends State<Conversation> {
 
                       return const SizedBox();
                     }),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  color: Colors.grey[200],
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: chatTextFieldController,
-                          decoration: const InputDecoration(
-                            hintText: 'Type a message...',
-                            border: InputBorder.none,
-                          ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    width: MediaQuery.sizeOf(context).width,
+                    child: TextField(
+                      controller: chatTextFieldController,
+                      minLines: 1,
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        hintText: 'Type a message...',
+                        hintStyle: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(color: Colors.grey),
+                        contentPadding: const EdgeInsets.all(8),
+                        border: const OutlineInputBorder(),
+                        focusedBorder: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.send),
+                          onPressed: _sendMessage,
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.send),
-                        onPressed: _sendMessage,
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ],
@@ -526,7 +578,7 @@ class _ConversationState extends State<Conversation> {
           'is_message': true,
           'is_rate': false,
           'is_read': false,
-          'notif_msg': 'Messaged you.',
+          'notif_msg': 'messaged you.',
           'user_doc_id': widget.shopId,
         });
       } catch (e) {

@@ -52,77 +52,89 @@ class _MessageCardState extends State<MessageCard> {
   @override
   Widget build(BuildContext context) {
     // ? ==========GETTING THE CORRECT TIME FOR DISPLAY==================
-    DateTime notificationTimeUtc =
-        widget.latestChatTime.toDate(); // Convert to UTC
 
-    DateTime notificationTimeLocal = notificationTimeUtc
-        .add(const Duration(hours: 8)); // Add 8 hours for UTC+8:00
+    DateTime notificationTimeLocal = widget.latestChatTime.toDate();
 
     DateTime now = DateTime.now();
     bool isToday = now.difference(notificationTimeLocal).inDays == 0;
 
-    String formattedDateTime = isToday
-        ? '${DateFormat.Hm().format(notificationTimeLocal)}'
-        : DateFormat('yyyy/MM/dd HH:mm').format(notificationTimeLocal);
+    String formattedDateTime = (isToday)
+        ? DateFormat.Hm().format(notificationTimeLocal)
+        : (notificationTimeLocal.isAfter(
+            now.subtract(
+              Duration(days: 7),
+            ),
+          ))
+            ? DateFormat('EEE').format(notificationTimeLocal)
+            : (notificationTimeLocal.isAfter(
+                DateTime(now.year - 1, now.month, now.day),
+              ))
+                ? DateFormat('MMM d').format(notificationTimeLocal)
+                : DateFormat('MM/dd/yy').format(notificationTimeLocal);
     // ?=================================================================
     return Column(
       children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (BuildContext context) => Conversation(
-                  shopId: widget.shopId,
-                  shopName: widget.shopName,
-                  docId: widget.docId,
+        const Divider(),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => Conversation(
+                    shopId: widget.shopId,
+                    shopName: widget.shopName,
+                    docId: widget.docId,
+                  ),
                 ),
-              ),
-            );
-          },
-          child: Row(
-            children: [
-              // Image/Icon
-              const CircleAvatar(
-                backgroundImage: AssetImage('images/default_profile_pic.png'),
-                maxRadius: 30,
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-
-              // Column
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // SHOP NAME
-                    Text(
-                      widget.shopName,
-                      style:
-                          const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-
-                    // message
-                    Text(
-                      widget.latestChatUser == uid
-                          ? 'You: ${widget.latestChatMsg}'
-                          : widget.latestChatMsg,
-                      style: const TextStyle(fontSize: 15),
-                    ),
-                  ],
+              );
+            },
+            child: Row(
+              children: [
+                // Image/Icon
+                const CircleAvatar(
+                  backgroundImage: AssetImage('images/default_profile_pic.png'),
+                  maxRadius: 30,
                 ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              // timestamp
-              Text(formattedDateTime)
-            ],
+                const SizedBox(
+                  width: 10,
+                ),
+
+                // Column
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // SHOP NAME
+                      Text(
+                        widget.shopName,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(color: Colors.black),
+                      ),
+
+                      // message
+                      Text(
+                        widget.latestChatUser == uid
+                            ? 'You: ${widget.latestChatMsg}'
+                            : widget.latestChatMsg,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                // timestamp
+                Text(formattedDateTime)
+              ],
+            ),
           ),
         ),
-        const SizedBox(
-          height: 10,
-        )
       ],
     );
   }
