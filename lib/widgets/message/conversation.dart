@@ -242,7 +242,6 @@ class _ConversationState extends State<Conversation> {
                                       .format(timeReceived)
                                   : DateFormat('MM/dd/yy \'at\' hh:mm a')
                                       .format(timeReceived);
-                      bool seeTime = false;
                       // ========================================================
 
                       return ListTile(

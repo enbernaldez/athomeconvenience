@@ -3,7 +3,7 @@ import 'package:athomeconvenience/functions/fetch_data.dart';
 import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/reviews_page.dart';
 import 'package:athomeconvenience/shop_profile_page.dart';
-import 'package:athomeconvenience/terms_and_conditions_page.dart';
+import 'package:athomeconvenience/terms/terms_and_conditions_page.dart';
 import 'package:athomeconvenience/widgets/profile_pic.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

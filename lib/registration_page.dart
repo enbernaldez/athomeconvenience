@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:athomeconvenience/constants.dart';
 import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/navigation.dart';
+import 'package:athomeconvenience/terms/terms_of_use_and_privacy_policy_page.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:athomeconvenience/functions/functions.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -616,13 +617,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         const Text('By signing up, you agree to the'),
                         GestureDetector(
                           onTap: () {
-                            // Navigator.of(context).push(
-                            //   MaterialPageRoute(
-                            //       builder: (BuildContext context) {
-                            //     return const RegistrationPage();
-                            //   }),
-                            // );
-                          },
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                                      return const TermsOfUseAndPrivacyPolicy();
+                                    },
+                                  ),
+                                );
+                              },
                           child: const Text(
                             'Terms of Use and Privacy Policy',
                             style: TextStyle(
