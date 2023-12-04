@@ -497,7 +497,7 @@ class _ConversationState extends State<Conversation> {
           });
 
           print('message sent successfully');
-          sendNotification();
+          sendNotification('message');
         } else {
           // ! ========== IF CHAT IS A NEW CONVERSATION ==========
           try {
@@ -535,7 +535,7 @@ class _ConversationState extends State<Conversation> {
               chatDocId = newChatDocId;
             });
 
-            sendNotification();
+            sendNotification('message');
           } catch (e) {
             print("error sending message: $e");
           }
@@ -550,42 +550,110 @@ class _ConversationState extends State<Conversation> {
     }
   }
 
-  Future<void> sendNotification() async {
+  Future<void> sendNotification(String type) async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
     final today = Timestamp.now();
+    if (type == 'message') {
+      // Query to check if a notification has been sent today for a message
+      QuerySnapshot<Map<String, dynamic>> existingNotification =
+          await FirebaseFirestore.instance
+              .collection('notification')
+              .where('from_uid', isEqualTo: uid)
+              .where('is_message', isEqualTo: true)
+              .where('dateTime',
+                  isGreaterThanOrEqualTo: Timestamp(today.seconds, 0))
+              .get();
 
-    // Query to check if a notification has been sent today for a message
-    QuerySnapshot<Map<String, dynamic>> existingNotification =
-        await FirebaseFirestore.instance
-            .collection('notification')
-            .where('from_uid', isEqualTo: uid)
-            .where('is_message', isEqualTo: true)
-            .where('dateTime',
-                isGreaterThanOrEqualTo: Timestamp(today.seconds, 0))
-            .get();
+      if (existingNotification.docs.isEmpty) {
+        // If no notification has been sent for a message today, proceed with sending a new notification
+        try {
+          // Rest of your existing message sending logic
 
-    if (existingNotification.docs.isEmpty) {
-      // If no notification has been sent for a message today, proceed with sending a new notification
-      try {
-        // Rest of your existing message sending logic
+          // After sending the message, create a notification
+          await FirebaseFirestore.instance.collection('notification').add({
+            'chat_doc_id': chatDocId ?? '',
+            'dateTime': today,
+            'from_uid': uid,
+            'is_agreement': false,
+            'is_message': true,
+            'is_rate': false,
+            'is_read': false,
+            'notif_msg': 'messaged you.',
+            'user_doc_id': widget.shopId,
+          });
+        } catch (e) {
+          print("error sending message: $e");
+        }
+      } else {
+        print("Notification already sent for a message today");
+      }
+    } else if (type == 'agreement') {
+      // Query to check if a notification has been sent today for a message
+      QuerySnapshot<Map<String, dynamic>> existingNotification =
+          await FirebaseFirestore.instance
+              .collection('notification')
+              .where('from_uid', isEqualTo: uid)
+              .where('is_agreement', isEqualTo: true)
+              .where('dateTime',
+                  isGreaterThanOrEqualTo: Timestamp(today.seconds, 0))
+              .get();
 
-        // After sending the message, create a notification
-        await FirebaseFirestore.instance.collection('notification').add({
-          'chat_doc_id': chatDocId ?? '',
-          'dateTime': today,
-          'from_uid': uid,
-          'is_agreement': false,
-          'is_message': true,
-          'is_rate': false,
-          'is_read': false,
-          'notif_msg': 'messaged you.',
-          'user_doc_id': widget.shopId,
-        });
-      } catch (e) {
-        print("error sending message: $e");
+      if (existingNotification.docs.isEmpty) {
+        // If no notification has been sent for a message today, proceed with sending a new notification
+        try {
+          // Rest of your existing message sending logic
+
+          // After sending the message, create a notification
+          await FirebaseFirestore.instance.collection('notification').add({
+            'chat_doc_id': chatDocId ?? '',
+            'dateTime': today,
+            'from_uid': uid,
+            'is_agreement': true,
+            'is_message': false,
+            'is_rate': false,
+            'is_read': false,
+            'notif_msg': 'initiated an agreement.',
+            'user_doc_id': widget.shopId,
+          });
+        } catch (e) {
+          print("error sending message: $e");
+        }
+      } else {
+        print("Notification already sent for a message today");
       }
     } else {
-      print("Notification already sent for a message today");
+      QuerySnapshot<Map<String, dynamic>> existingNotification =
+          await FirebaseFirestore.instance
+              .collection('notification')
+              .where('from_uid', isEqualTo: uid)
+              .where('is_rate', isEqualTo: true)
+              .where('dateTime',
+                  isGreaterThanOrEqualTo: Timestamp(today.seconds, 0))
+              .get();
+
+      if (existingNotification.docs.isEmpty) {
+        // If no notification has been sent for a message today, proceed with sending a new notification
+        try {
+          // Rest of your existing message sending logic
+
+          // After sending the message, create a notification
+          await FirebaseFirestore.instance.collection('notification').add({
+            'chat_doc_id': chatDocId ?? '',
+            'dateTime': today,
+            'from_uid': uid,
+            'is_agreement': false,
+            'is_message': false,
+            'is_rate': true,
+            'is_read': false,
+            'notif_msg': 'rated and reviewed your service.',
+            'user_doc_id': widget.shopId,
+          });
+        } catch (e) {
+          print("error sending message: $e");
+        }
+      } else {
+        print("Notification already sent for a message today");
+      }
     }
   }
 
@@ -620,41 +688,55 @@ class _ConversationState extends State<Conversation> {
 
   Future<void> setUserLocationInFirestore(
       String userId, String shopId, double lat, double long) async {
-    final userLocationRef = FirebaseFirestore.instance
-        .collection('chats')
-        .doc(chatDocId)
-        .collection('location');
-    await userLocationRef.doc().set({
-      'active': true,
-      'latitude': lat,
-      'longitude': long,
-      'shop_id': shopId,
-      'user_id': userId,
-      'timestamp': Timestamp.now(),
-    });
+    try {
+      final userLocationRef = FirebaseFirestore.instance
+          .collection('chats')
+          .doc(chatDocId)
+          .collection('location');
+      await userLocationRef.doc().set({
+        'active': true,
+        'latitude': lat,
+        'longitude': long,
+        'shop_id': shopId,
+        'user_id': userId,
+        'timestamp': Timestamp.now(),
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> stopSharingLocation(String docId) async {
-    final userLocationRef = FirebaseFirestore.instance
-        .collection('chats')
-        .doc(chatDocId)
-        .collection('location');
-    await userLocationRef.doc(docId).update({
-      'active': false,
-    });
+    try {
+      final userLocationRef = FirebaseFirestore.instance
+          .collection('chats')
+          .doc(chatDocId)
+          .collection('location');
+      await userLocationRef.doc(docId).update({
+        'active': false,
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> startAgreement(String userId, String shopId) async {
-    final userLocationRef = FirebaseFirestore.instance
-        .collection('chats')
-        .doc(chatDocId)
-        .collection('agreement');
-    await userLocationRef.doc().set({
-      'status': 'Active',
-      'shop_id': shopId,
-      'user_id': userId,
-      'timestamp': Timestamp.now(),
-    });
+    try {
+      final userLocationRef = FirebaseFirestore.instance
+          .collection('chats')
+          .doc(chatDocId)
+          .collection('agreement');
+      await userLocationRef.doc().set({
+        'status': 'Active',
+        'shop_id': shopId,
+        'user_id': userId,
+        'timestamp': Timestamp.now(),
+      });
+
+      sendNotification('agreement');
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> endAgreement(String docId, String? fromUID) async {

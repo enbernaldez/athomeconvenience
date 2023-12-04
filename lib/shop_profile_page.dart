@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:athomeconvenience/widgets/message/conversation.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/about.dart';
@@ -7,8 +9,11 @@ import 'package:athomeconvenience/functions/functions.dart';
 import 'package:athomeconvenience/widgets/star_rating.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class ShopProfilePage extends StatefulWidget {
   final String shopUid;
@@ -33,6 +38,9 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   double averageRating = 0.0;
   num numberOfRatings = 0;
   String strAverageRating = '';
+
+  final ImagePicker picker = ImagePicker();
+  XFile? image;
 
   @override
   void initState() {
@@ -343,7 +351,9 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                           workingHours: workingHours,
                         )
                       : (isWorks == true
-                          ? const WorksSection()
+                          ? WorksSection(
+                              shopId: widget.shopUid,
+                            )
                           : (isReviews == true
                               ? ReviewsSection(
                                   shopUid: widget.shopUid,
@@ -366,9 +376,17 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
         ),
       ),
       floatingActionButton: Visibility(
-        visible: uid == widget.shopUid && isAbout == false ? true : false,
+        visible: uid == widget.shopUid && isAbout == false && isReviews == false
+            ? true
+            : false,
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            myAlert();
+            if (image != null) {
+              print(image!.path);
+              insertWork();
+            }
+          },
           foregroundColor: Colors.white,
           backgroundColor: Colors.blue,
           shape: const RoundedRectangleBorder(
@@ -481,6 +499,122 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future getImage(ImageSource media) async {
+    var img = await picker.pickImage(source: media);
+
+    setState(() {
+      image = img;
+    });
+  }
+
+  void myAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          title: const Text('Upload'),
+          content: SizedBox(
+            height: MediaQuery.of(context).size.height / 6,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.all(8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    side: const BorderSide(color: Colors.blueAccent),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    getImage(ImageSource.gallery);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.image,
+                        color: Colors.blue[700],
+                      ),
+                      const SizedBox(width: 8),
+                      const Text('From Gallery'),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.all(8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    side: const BorderSide(color: Colors.blueAccent),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    getImage(ImageSource.camera);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.camera,
+                        color: Colors.blue[700],
+                      ),
+                      const SizedBox(width: 8),
+                      const Text('From Camera'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> insertWork() async {
+    final String? imagePath = image?.path;
+    if (imagePath == null || imagePath.isEmpty) {
+      showToast("Please upload your image");
+      return;
+    } else {
+      try {
+        // ?======== Upload Image First in Firebase Storage==============
+        File file = File(imagePath);
+
+        // Generate a unique image name using UUID
+        final imageName = const Uuid().v4(); // Generates a random UUID
+
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('works')
+            .child('$imageName.jpg'); // Use the unique image name
+
+        final uploadImage = storageRef.putFile(file);
+
+        final TaskSnapshot snapshot1 = await uploadImage;
+        final imageUrl = await snapshot1.ref.getDownloadURL();
+        // ?============================================================
+
+        // ?==========insert service provider details================
+        await FirebaseFirestore.instance.collection('works').doc().set({
+          'uid': FirebaseAuth.instance.currentUser!.uid,
+          'image_url': imageUrl,
+        }).then((value) {
+          showToast("Image Uploaded Successfully");
+        }).catchError((error) {
+          print(error);
+          showToast("Error occured while uploading image");
+        });
+        // ?=========================================================
+      } catch (e) {
+        print("error uploading work: $e");
+      }
     }
   }
 }
