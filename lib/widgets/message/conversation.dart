@@ -1,3 +1,4 @@
+import 'package:athomeconvenience/functions/functions.dart';
 import 'package:athomeconvenience/model/indiv_message.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -415,10 +416,19 @@ class _ConversationState extends State<Conversation> {
                                       fromUserId ==
                                               FirebaseAuth
                                                   .instance.currentUser!.uid
-                                          ? Text(
-                                              "Time to rate!",
-                                              style:
-                                                  TextStyle(color: Colors.blue),
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                RateHandler.ratingHandler(
+                                                  context,
+                                                  widget.shopId,
+                                                  widget.shopName,
+                                                );
+                                              },
+                                              child: Text(
+                                                "Time to rate!",
+                                                style: TextStyle(
+                                                    color: Colors.blue),
+                                              ),
                                             )
                                           : const SizedBox(),
                                     ],
