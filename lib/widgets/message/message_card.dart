@@ -52,11 +52,8 @@ class _MessageCardState extends State<MessageCard> {
   @override
   Widget build(BuildContext context) {
     // ? ==========GETTING THE CORRECT TIME FOR DISPLAY==================
-    DateTime notificationTimeUtc =
-        widget.latestChatTime.toDate(); // Convert to UTC
 
-    DateTime notificationTimeLocal = notificationTimeUtc
-        .add(const Duration(hours: 8)); // Add 8 hours for UTC+8:00
+    DateTime notificationTimeLocal = widget.latestChatTime.toDate();
 
     DateTime now = DateTime.now();
     bool isToday = now.difference(notificationTimeLocal).inDays == 0;
@@ -77,7 +74,7 @@ class _MessageCardState extends State<MessageCard> {
     // ?=================================================================
     return Column(
       children: [
-        Divider(),
+        const Divider(),
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.8,
           child: GestureDetector(

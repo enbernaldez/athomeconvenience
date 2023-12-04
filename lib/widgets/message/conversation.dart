@@ -255,20 +255,26 @@ class _ConversationState extends State<Conversation> {
                                 ? CrossAxisAlignment.end
                                 : CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: isCurrentUser
-                                      ? Colors.blueAccent
-                                      : Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(8.0),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.sizeOf(context).width * 0.80,
                                 ),
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  msg[index].messageText,
-                                  style: TextStyle(
+                                child: Container(
+                                  decoration: BoxDecoration(
                                     color: isCurrentUser
-                                        ? Colors.white
-                                        : Colors.black,
+                                        ? Colors.blueAccent
+                                        : Colors.grey.shade300,
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    msg[index].messageText,
+                                    style: TextStyle(
+                                      color: isCurrentUser
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -290,6 +296,8 @@ class _ConversationState extends State<Conversation> {
                     width: MediaQuery.sizeOf(context).width,
                     child: TextField(
                       controller: chatTextFieldController,
+                      minLines: 1,
+                      maxLines: 5,
                       decoration: InputDecoration(
                         hintText: 'Type a message...',
                         hintStyle: Theme.of(context)
