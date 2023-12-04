@@ -12,6 +12,7 @@ class NotificationsPage extends StatefulWidget {
 
 class _NotificationsPageState extends State<NotificationsPage> {
   List<Map<String, dynamic>> notifications = []; // List to store fetched data
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -70,6 +71,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
       // Update the state with the fetched data
       setState(() {
+        isLoading = false;
         notifications = tempNotifications;
       });
     } catch (e) {
@@ -86,27 +88,35 @@ class _NotificationsPageState extends State<NotificationsPage> {
         title: const Text('Notifications'),
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          child: Column(
-            children: [
-              for (final notif in notifications)
-                NotifCard(
-                  chatDocId: notif['chat_doc_id'],
-                  fromUid: notif['from_uid'],
-                  shopName: notif['service_provider_name'],
-                  dateTime: notif['dateTime'],
-                  isRead: notif['is_read'],
-                  docId: notif['docId'],
-                  isMessage: notif['is_message'],
-                  isRate: notif['is_rate'],
-                  isAgreement: notif['is_agreement'],
-                  notifMsg: notif['notif_msg'],
-                )
-            ],
+      body: Stack(
+        children: [
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Column(
+                children: [
+                  for (final notif in notifications)
+                    NotifCard(
+                      chatDocId: notif['chat_doc_id'],
+                      fromUid: notif['from_uid'],
+                      shopName: notif['service_provider_name'],
+                      dateTime: notif['dateTime'],
+                      isRead: notif['is_read'],
+                      docId: notif['docId'],
+                      isMessage: notif['is_message'],
+                      isRate: notif['is_rate'],
+                      isAgreement: notif['is_agreement'],
+                      notifMsg: notif['notif_msg'],
+                    )
+                ],
+              ),
+            ),
           ),
-        ),
+          if (isLoading)
+            Center(
+              child: CircularProgressIndicator(),
+            )
+        ],
       ),
     );
   }

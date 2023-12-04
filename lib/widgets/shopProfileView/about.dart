@@ -16,6 +16,8 @@ class AboutSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('this is the shop addres: $shopAddress');
+    print('this is the working hours: $workingHours');
     return Column(
       children: [
         SizedBox(

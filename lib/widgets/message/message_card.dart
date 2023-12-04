@@ -105,7 +105,7 @@ class _MessageCardState extends State<MessageCard> {
                 ),
 
                 // Column
-                Flexible(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
