@@ -43,9 +43,7 @@ class NotifCard extends StatelessWidget {
     String formattedDateTime = (isSameDate)
         ? DateFormat('hh:mm a').format(notifDateTime)
         : (notifDateTime.isAfter(
-            now.subtract(
-              const Duration(days: 7),
-            ),
+            now.subtract(const Duration(days: 6)),
           ))
             ? DateFormat('EEE \'at\' hh:mm a').format(notifDateTime)
             : (notifDateTime.isAfter(

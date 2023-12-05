@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                                           horizontal: 16, vertical: 8),
                                       child: Text(
                                         item.shopName,
-                                        style: TextStyle(fontSize: 20),
+                                        style: const TextStyle(fontSize: 20),
                                       ),
                                     ),
                                   ),
@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                                           ), //! issue: not displaying
                                           Text(
                                             item.shopName,
-                                            style: TextStyle(fontSize: 20),
+                                            style: const TextStyle(fontSize: 20),
                                           ),
                                         ],
                                       ),
@@ -154,8 +154,6 @@ class _HomePageState extends State<HomePage> {
 
                               return searchItem;
                             }
-
-                            return [];
                           },
                         ),
                       );

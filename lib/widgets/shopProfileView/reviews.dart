@@ -43,10 +43,12 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                     ? FirebaseFirestore.instance
                         .collection('ratings')
                         .where('shop_id', isEqualTo: widget.shopUid)
+                        .orderBy('timestamp', descending: true)
                         .get()
                     : FirebaseFirestore.instance
                         .collection('ratings')
                         .where('user_id', isEqualTo: uid)
+                        .orderBy('timestamp', descending: true)
                         .get(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {

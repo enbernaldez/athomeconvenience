@@ -393,12 +393,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             const SizedBox(height: 20),
                             TextFormField(
                               controller: addressController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Required';
-                                }
-                                return null;
-                              },
+                              // validator: (value) {
+                              //   if (value == null || value.isEmpty) {
+                              //     return 'Required';
+                              //   }
+                              //   return null;
+                              // },
                               keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
@@ -410,8 +410,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             TextFormField(
                               controller: emailAddressController,
                               validator: (value) {
-                                if (!EmailValidator.validate(value!)) {
-                                  return 'Please enter a valid email address.';
+                                if (value != null && value.isNotEmpty) {
+                                  if (!EmailValidator.validate(value)) {
+                                    return 'Please enter a valid email address.';
+                                  }
                                 }
                                 return null;
                               },
@@ -761,7 +763,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ),
           ),
           if (isLoading)
-            Center(
+            const Center(
               child: CircularProgressIndicator(),
             )
         ],

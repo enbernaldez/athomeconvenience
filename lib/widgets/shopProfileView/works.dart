@@ -27,6 +27,7 @@ class WorksSection extends StatelessWidget {
                 return FractionallySizedBox(
                   widthFactor: 0.48,
                   child: FullScreenWidget(
+                    disposeLevel: DisposeLevel.Low,
                     child: Center(
                       child: Hero(
                         tag: link,
@@ -40,14 +41,13 @@ class WorksSection extends StatelessWidget {
                         ),
                       ),
                     ),
-                    disposeLevel: DisposeLevel.Low,
                   ),
                 );
               }).toList(),
             );
           }
 
-          return Text('No works yet');
+          return const Text('No works yet');
         });
   }
 }

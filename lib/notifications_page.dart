@@ -27,6 +27,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       var querySnapshot = await FirebaseFirestore.instance
           .collection("notification")
           .where("user_doc_id", isEqualTo: uid)
+          .orderBy('dateTime', descending: true)
           .get();
 
       List<Map<String, dynamic>> tempNotifications =

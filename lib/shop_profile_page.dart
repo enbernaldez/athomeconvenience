@@ -38,6 +38,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   double averageRating = 0.0;
   num numberOfRatings = 0;
   String strAverageRating = '';
+  bool haveRatings = false;
 
   final ImagePicker picker = ImagePicker();
   XFile? image;
@@ -82,6 +83,8 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
             setState(() {
               isLiked = false;
             });
+            String serviceProvider = shopData['service_provider_name'];
+            showToast("You unliked $serviceProvider");
           } else {
             // If the shop is not liked, add the UID to 'likes' array
             userDocRef.update({
@@ -90,6 +93,8 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
             setState(() {
               isLiked = true;
             });
+            String serviceProvider = shopData['service_provider_name'];
+            showToast("You liked $serviceProvider");
           }
         } else {
           // Handle scenario when user document isn't found
@@ -180,9 +185,12 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                           allowHalfRating: true,
                           ignoreGestures: true,
                         ),
-                        Text(
-                          "$strAverageRating/5 ($numberOfRatings)",
-                          style: Theme.of(context).textTheme.bodySmall,
+                        Visibility(
+                          visible: haveRatings,
+                          child: Text(
+                            "$strAverageRating/5 ($numberOfRatings)",
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
                         ),
                       ],
                     ),
@@ -466,9 +474,9 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
           numberOfRatings = starRatings.length;
           averageRating = starRatings.reduce((a, b) => a + b) / numberOfRatings;
           strAverageRating = averageRating.toStringAsFixed(1);
+          haveRatings = true;
         });
       } else {
-        print(widget.shopUid);
         print('starRatings is empty.');
       }
       // Now averageRating contains the average star rating

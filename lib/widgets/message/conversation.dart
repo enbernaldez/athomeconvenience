@@ -1,6 +1,5 @@
 import 'package:athomeconvenience/functions/functions.dart';
 import 'package:athomeconvenience/model/indiv_message.dart';
-import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -101,7 +100,8 @@ class _ConversationState extends State<Conversation> {
                           print('this is the snapshot:${agreementData}');
                         }
                         return PopupMenuButton<String>(
-                          icon: Icon(Icons.more_vert), // Icon for the button
+                          icon: const Icon(
+                              Icons.more_vert), // Icon for the button
                           itemBuilder: (BuildContext context) {
                             List<PopupMenuEntry<String>> items = [];
 
@@ -109,14 +109,14 @@ class _ConversationState extends State<Conversation> {
                                 FirebaseAuth.instance.currentUser!.uid) {
                               if (!isActive) {
                                 items.add(
-                                  PopupMenuItem<String>(
+                                  const PopupMenuItem<String>(
                                     value: 'sharelocation',
                                     child: Text('Share my location'),
                                   ),
                                 );
                               } else {
                                 items.add(
-                                  PopupMenuItem<String>(
+                                  const PopupMenuItem<String>(
                                     value: 'endlocation',
                                     child: Text('Turn off Location'),
                                   ),
@@ -188,7 +188,7 @@ class _ConversationState extends State<Conversation> {
                       });
                 }
                 return PopupMenuButton<String>(
-                  icon: Icon(Icons.more_vert), // Icon for the button
+                  icon: const Icon(Icons.more_vert), // Icon for the button
                   itemBuilder: (BuildContext context) =>
                       <PopupMenuEntry<String>>[
                     const PopupMenuItem<String>(
@@ -265,14 +265,13 @@ class _ConversationState extends State<Conversation> {
                       DateTime dateReceived = DateTime(timeReceived.year,
                           timeReceived.month, timeReceived.day);
 
-                      bool isSameDate = dateToday.isAtSameMomentAs(dateReceived);
+                      bool isSameDate =
+                          dateToday.isAtSameMomentAs(dateReceived);
 
                       String formattedDateTime = (isSameDate)
                           ? DateFormat('hh:mm a').format(timeReceived)
                           : (timeReceived.isAfter(
-                              now.subtract(
-                                const Duration(days: 7),
-                              ),
+                              now.subtract(const Duration(days: 6)),
                             ))
                               ? DateFormat('EEE \'at\' hh:mm a')
                                   .format(timeReceived)
@@ -366,7 +365,7 @@ class _ConversationState extends State<Conversation> {
                                 onTap: () {
                                   openMap(lat, long);
                                 },
-                                child: Text(
+                                child: const Text(
                                   "Tap to view",
                                   style: TextStyle(color: Colors.blue),
                                 ),
@@ -379,7 +378,7 @@ class _ConversationState extends State<Conversation> {
                         }
                       }
 
-                      return SizedBox();
+                      return const SizedBox();
                     }),
                 StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
@@ -415,7 +414,7 @@ class _ConversationState extends State<Conversation> {
                             agreementStatus == "Paid"
                                 ? Column(
                                     children: [
-                                      Text("Agreement Terminated"),
+                                      const Text("Agreement Terminated"),
                                       fromUserId ==
                                               FirebaseAuth
                                                   .instance.currentUser!.uid
@@ -427,7 +426,7 @@ class _ConversationState extends State<Conversation> {
                                                   widget.shopName,
                                                 );
                                               },
-                                              child: Text(
+                                              child: const Text(
                                                 "Time to rate!",
                                                 style: TextStyle(
                                                     color: Colors.blue),

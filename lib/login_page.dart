@@ -260,7 +260,7 @@ class _LogInPageState extends State<LogInPage> {
                             const SizedBox(
                               height: 20,
                             ),
-                            OrSeparator(),
+                            const OrSeparator(),
                             const SizedBox(
                               height: 20,
                             ),
@@ -282,7 +282,7 @@ class _LogInPageState extends State<LogInPage> {
             ),
           ),
           if (isLoading)
-            Center(
+            const Center(
               child: CircularProgressIndicator(),
             ),
         ],

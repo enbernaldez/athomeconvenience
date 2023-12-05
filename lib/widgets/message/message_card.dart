@@ -65,9 +65,7 @@ class _MessageCardState extends State<MessageCard> {
     String formattedDateTime = (isSameDate)
         ? DateFormat.Hm().format(lastChatDateTime)
         : (lastChatDateTime.isAfter(
-            now.subtract(
-              Duration(days: 7),
-            ),
+            now.subtract(const Duration(days: 6)),
           ))
             ? DateFormat('EEE').format(lastChatDateTime)
             : (lastChatDateTime.isAfter(
