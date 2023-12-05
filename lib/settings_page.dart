@@ -1,15 +1,19 @@
+import 'dart:io';
+
 import 'package:athomeconvenience/contact_us_page.dart';
 import 'package:athomeconvenience/functions/fetch_data.dart';
 import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/reviews_page.dart';
 import 'package:athomeconvenience/shop_profile_page.dart';
 import 'package:athomeconvenience/terms/terms_and_conditions_page.dart';
-import 'package:athomeconvenience/widgets/profile_pic.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class CustomerSettingsPage extends StatefulWidget {
   const CustomerSettingsPage({super.key});
@@ -20,10 +24,88 @@ class CustomerSettingsPage extends StatefulWidget {
 
 class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
   final String uid = FirebaseAuth.instance.currentUser!.uid;
+  XFile? image; //*
+  final ImagePicker picker = ImagePicker();
+
+  Future getImage(ImageSource media) async {
+    var img = await picker.pickImage(source: media);
+
+    setState(() {
+      image = img;
+    });
+  }
+
+  void uploadImage() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          title: const Text('Upload'),
+          content: SizedBox(
+            height: MediaQuery.of(context).size.height / 6,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.all(8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    side: const BorderSide(color: Colors.blueAccent),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    getImage(ImageSource.gallery);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.image,
+                        color: Colors.blue[700],
+                      ),
+                      const SizedBox(width: 8),
+                      const Text('From Gallery'),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.all(8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    side: const BorderSide(color: Colors.blueAccent),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    getImage(ImageSource.camera);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.camera,
+                        color: Colors.blue[700],
+                      ),
+                      const SizedBox(width: 8),
+                      const Text('From Camera'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   bool _readonly = true;
   String action = 'Edit';
 
+  String profilePic = '';
   final nameController = TextEditingController();
   final addressController = TextEditingController();
   final phoneNumController = TextEditingController();
@@ -56,6 +138,8 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
           // print('Username: $username');
           // print('Email: $email');
           setState(() {
+            profilePic = cData['profile_pic'] ?? 'null';
+            print('profilePic: $profilePic');
             nameController.text = cData['name'] ?? 'Loading';
             addressController.text = cData['address'] ?? 'Loading';
             phoneNumController.text = cData['phone_num'] ?? 'Loading';
@@ -119,6 +203,8 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
             onTap: () async {
               if (action == "Done") {
                 try {
+                  final String? imagePath = image?.path;
+
                   final String newName = nameController.text;
                   final String newAddress = addressController.text;
                   final String newPhoneNum = phoneNumController.text;
@@ -129,10 +215,42 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                   final String newLocation = locationController.text;
                   final String newGCashNum = gCashNumController.text;
 
+                  // ?======== Upload Image First in Firebase Storage ==============
+                  File file = File(imagePath!);
+
+                  // Generate a unique image name using UUID
+                  final imageName =
+                      const Uuid().v4(); // Generates a random UUID
+
+                  final storageRef = FirebaseStorage.instance
+                      .ref()
+                      .child('profile_pic')
+                      .child('$imageName.jpg'); // Use the unique image name
+
+                  final uploadImage = storageRef.putFile(file);
+
+                  final TaskSnapshot snapshot1 = await uploadImage;
+                  final imageUrl = await snapshot1.ref.getDownloadURL();
+                  // ?==============================================================
+
+                  final userDoc =
+                      FirebaseFirestore.instance.collection('users').doc(uid);
+                  final userDocSnapshot = await userDoc.get();
+
+                  if (!userDocSnapshot.exists ||
+                      !userDocSnapshot.data()!.containsKey('profile_pic')) {
+                    await userDoc.set({
+                      'profile_pic': imageUrl,
+                    }, SetOptions(merge: true));
+                  } else {
+                    await userDoc.update({'profile_pic': imageUrl});
+                  }
+
                   await FirebaseFirestore.instance
                       .collection('users')
                       .doc(uid)
                       .update({
+                    'profile_pic': imageUrl,
                     'name': newName,
                     'address': newAddress,
                     'phone_num': newPhoneNum,
@@ -181,9 +299,51 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                   child: Form(
                     child: Column(
                       children: [
-                        ProfilePic(
-                          edit: !_readonly,
-                          iconSize: 20,
+                        Stack(
+                          alignment: AlignmentDirectional.bottomEnd,
+                          children: [
+                            (image != null)
+                                ? CircleAvatar(
+                                    backgroundImage:
+                                        FileImage(File(image!.path)),
+                                    maxRadius: 60,
+                                  )
+                                : (profilePic != "null")
+                                    ? CircleAvatar(
+                                        backgroundImage:
+                                            NetworkImage(profilePic),
+                                        maxRadius: 60,
+                                      )
+                                    : const CircleAvatar(
+                                        backgroundImage: AssetImage(
+                                            'images/default_profile_pic.png'),
+                                        maxRadius: 60,
+                                      ),
+                            Visibility(
+                              visible: !_readonly,
+                              child: FractionallySizedBox(
+                                widthFactor: 0.12,
+                                child: Container(
+                                  width: double.infinity,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.blueGrey,
+                                  ),
+                                  child: IconButton(
+                                    padding: const EdgeInsets.all(0.0),
+                                    onPressed: () {
+                                      uploadImage();
+                                    },
+                                    icon: const Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 15),
                         TextFormField(
