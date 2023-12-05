@@ -40,6 +40,7 @@ class _InboxPageState extends State<InboxPage> {
                 .collection('chats')
                 .where('users_id',
                     arrayContains: FirebaseAuth.instance.currentUser!.uid)
+                .orderBy('latest_timestamp', descending: true)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
