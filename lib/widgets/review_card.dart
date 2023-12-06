@@ -1,12 +1,13 @@
-import 'package:athomeconvenience/functions/fetch_data.dart';
+// import 'package:athomeconvenience/functions/fetch_data.dart';
 import 'package:athomeconvenience/shop_profile_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ReviewCard extends StatefulWidget {
-  final String customerName;
+  final String customerId;
   final String shopId;
   final String timeStamp;
   final double customerRating;
@@ -15,7 +16,7 @@ class ReviewCard extends StatefulWidget {
 
   const ReviewCard({
     super.key,
-    required this.customerName,
+    required this.customerId,
     required this.shopId,
     required this.timeStamp,
     required this.customerRating,
@@ -29,6 +30,18 @@ class ReviewCard extends StatefulWidget {
 
 class _ReviewCardState extends State<ReviewCard> {
   String uid = FirebaseAuth.instance.currentUser!.uid;
+  String customerName = '';
+  String shopName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.shopReviews == true) {
+      fetchUserDetails(widget.customerId, "users");
+    } else {
+      fetchUserDetails(widget.shopId, "service_provider");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +59,7 @@ class _ReviewCardState extends State<ReviewCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.customerName,
+                          customerName,
                           style:
                               GoogleFonts.poppins(fontWeight: FontWeight.bold),
                           maxLines: 1,
@@ -181,5 +194,49 @@ class _ReviewCardState extends State<ReviewCard> {
         ),
       ],
     );
+  }
+
+  Future<void> fetchUserDetails(String userId, String collection) async {
+    try {
+      // Get a reference to the Firestore database
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Get the document snapshot using the document ID
+      DocumentSnapshot documentSnapshot =
+          await firestore.collection(collection).doc(userId).get();
+      String fieldName;
+
+      if (collection == 'service_provider') {
+        fieldName = 'service_provider_name';
+        // Check if the document exists
+        if (documentSnapshot.exists) {
+          // Access specific fields from the document data
+          dynamic userName = documentSnapshot.get(fieldName);
+
+          // Use the retrieved data as needed
+          setState(() {
+            shopName = userName;
+          });
+        } else {
+          print('Shop does not exist');
+        }
+      } else {
+        fieldName = 'name';
+        // Check if the document exists
+        if (documentSnapshot.exists) {
+          // Access specific fields from the document data
+          dynamic userName = documentSnapshot.get(fieldName);
+
+          // Use the retrieved data as needed
+          setState(() {
+            customerName = userName;
+          });
+        } else {
+          print('User does not exist');
+        }
+      }
+    } catch (error) {
+      print('Error getting user details: $error');
+    }
   }
 }

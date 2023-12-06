@@ -92,49 +92,49 @@ handleRateReview(String shopUid, String rating, String review) async {
   return review;
 }
 
-// =========================== Retrieve User Details ===========================
-String customerName = '';
-String shopName = '';
+// // =========================== Retrieve User Details ===========================
+// String customerName = '';
+// String shopName = '';
 
-Future<void> fetchUserDetails(String userId, String collection) async {
-  try {
-    // Get a reference to the Firestore database
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
+// Future<void> fetchUserDetails(String userId, String collection) async {
+//   try {
+//     // Get a reference to the Firestore database
+//     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-    // Get the document snapshot using the document ID
-    DocumentSnapshot documentSnapshot =
-        await firestore.collection(collection).doc(userId).get();
-    String fieldName;
+//     // Get the document snapshot using the document ID
+//     DocumentSnapshot documentSnapshot =
+//         await firestore.collection(collection).doc(userId).get();
+//     String fieldName;
 
-    if (collection == 'service_provider') {
-      fieldName = 'service_provider_name';
-      // Check if the document exists
-      if (documentSnapshot.exists) {
-        // Access specific fields from the document data
-        dynamic userName = documentSnapshot.get(fieldName);
+//     if (collection == 'service_provider') {
+//       fieldName = 'service_provider_name';
+//       // Check if the document exists
+//       if (documentSnapshot.exists) {
+//         // Access specific fields from the document data
+//         dynamic userName = documentSnapshot.get(fieldName);
 
-        // Use the retrieved data as needed
-        shopName = userName;
-      } else {
-        print('Shop does not exist');
-      }
-    } else {
-      fieldName = 'name';
-      // Check if the document exists
-      if (documentSnapshot.exists) {
-        // Access specific fields from the document data
-        dynamic userName = documentSnapshot.get(fieldName);
+//         // Use the retrieved data as needed
+//         shopName = userName;
+//       } else {
+//         print('Shop does not exist');
+//       }
+//     } else {
+//       fieldName = 'name';
+//       // Check if the document exists
+//       if (documentSnapshot.exists) {
+//         // Access specific fields from the document data
+//         dynamic userName = documentSnapshot.get(fieldName);
 
-        // Use the retrieved data as needed
-        customerName = userName;
-      } else {
-        print('User does not exist');
-      }
-    }
-  } catch (error) {
-    print('Error getting user details: $error');
-  }
-}
+//         // Use the retrieved data as needed
+//         customerName = userName;
+//       } else {
+//         print('User does not exist');
+//       }
+//     }
+//   } catch (error) {
+//     print('Error getting user details: $error');
+//   }
+// }
 
 // ======================== Data for Display of Ratings ========================
 double averageRating = 0.0;

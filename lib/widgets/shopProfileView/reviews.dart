@@ -1,4 +1,3 @@
-import 'package:athomeconvenience/functions/fetch_data.dart';
 import 'package:athomeconvenience/widgets/list_else.dart';
 import 'package:athomeconvenience/widgets/review_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -63,13 +62,6 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                         Map<String, dynamic> shopReviewData =
                             doc.data() as Map<String, dynamic>;
 
-                        if (widget.shopReviews == true) {
-                          fetchUserDetails(shopReviewData['user_id'], 'users');
-                        } else {
-                          fetchUserDetails(
-                              shopReviewData['shop_id'], 'service_provider');
-                        }
-
                         DateTime strTimeStamp =
                             shopReviewData['timestamp'].toDate();
                         String timeStamp = DateFormat('MMMM dd, yyyy h:mm a')
@@ -80,7 +72,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
 
                         reviewWidgets.add(
                           ReviewCard(
-                            customerName: customerName,
+                            customerId: shopReviewData['user_id'],
                             shopId: shopReviewData['shop_id'],
                             timeStamp: timeStamp,
                             customerRating: customerRating,

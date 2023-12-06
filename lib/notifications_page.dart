@@ -114,7 +114,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
             ),
           ),
           if (isLoading)
-            Center(
+            const Center(
               child: CircularProgressIndicator(),
             )
         ],

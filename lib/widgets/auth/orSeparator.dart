@@ -16,8 +16,8 @@ class OrSeparator extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(
               "OR",
               style:
