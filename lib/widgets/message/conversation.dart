@@ -70,6 +70,7 @@ class _ConversationState extends State<Conversation> {
                       firstDoc.data() as Map<String, dynamic>;
                   String docId = firstDoc.id; // Retrieve the document ID
                   String agreementDocId = '';
+                  String agreementStatus = '';
 
                   bool isActive = data['active'] ?? false;
 
@@ -85,7 +86,7 @@ class _ConversationState extends State<Conversation> {
                           .snapshots(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot2) {
-                        String agreementStatus = '';
+                        // String agreementStatus = '';
                         // Map<String, dynamic> agreementData = {};
                         if (snapshot2.hasData &&
                             snapshot2.data!.docs.isNotEmpty) {
@@ -148,20 +149,23 @@ class _ConversationState extends State<Conversation> {
                             return items;
                           },
                           onSelected: (String value) {
-                            // Handle what happens when an option is selected
-                            // You can use a switch statement or if-else to perform different actions based on the value
                             switch (value) {
                               case 'sharelocation':
                                 getCurrentLocation().then((value) async {
-                                  lat = '${value.latitude}';
-                                  long = '${value.longitude}';
-                                  print('$lat, $long');
-                                  await setUserLocationInFirestore(
-                                    FirebaseAuth.instance.currentUser!.uid,
-                                    widget.shopId,
-                                    double.parse(lat!),
-                                    double.parse(long!),
-                                  );
+                                  if (value != null) {
+                                    lat = '${value.latitude}';
+                                    long = '${value.longitude}';
+                                    print('$lat, $long');
+                                    await setUserLocationInFirestore(
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                      widget.shopId,
+                                      double.parse(lat!),
+                                      double.parse(long!),
+                                    );
+                                  } else {
+                                    showToast(
+                                        "You need to enable location to share");
+                                  }
                                 });
                                 liveLocation();
                                 startAgreement(
@@ -170,17 +174,21 @@ class _ConversationState extends State<Conversation> {
                                         .shopId); //! START AN AGREEMENT WHEN USER SHARES LOCATION
                                 break;
                               case 'endlocation':
-                                stopSharingLocation(docId);
+                                if (agreementStatus.isNotEmpty &&
+                                    agreementStatus == 'Paid') {
+                                  stopSharingLocation(docId);
+                                } else {
+                                  showToast(
+                                      "Please settle your agreement before turning off location");
+                                }
                                 break;
                               // Handle additional cases if needed
                               case 'endagreement':
-                                endAgreement(
-                                    agreementDocId,
-                                    fromUserId ==
-                                            FirebaseAuth
-                                                .instance.currentUser!.uid
-                                        ? fromUserId
-                                        : null);
+                                confirmEndAgreement(
+                                    context, agreementDocId, fromUserId);
+                                setState(() {
+                                  agreementDocId = '';
+                                });
                                 break;
                             }
                           },
@@ -197,22 +205,28 @@ class _ConversationState extends State<Conversation> {
                     ),
                   ],
                   onSelected: (String value) {
-                    // Handle what happens when an option is selected
-                    // You can use a switch statement or if-else to perform different actions based on the value
                     switch (value) {
                       case 'sharelocation':
                         getCurrentLocation().then((value) async {
-                          lat = '${value.latitude}';
-                          long = '${value.longitude}';
-                          print('$lat, $long');
-                          await setUserLocationInFirestore(
-                            FirebaseAuth.instance.currentUser!.uid,
-                            widget.shopId,
-                            double.parse(lat!),
-                            double.parse(long!),
-                          );
+                          if (value != null) {
+                            lat = '${value.latitude}';
+                            long = '${value.longitude}';
+                            print('$lat, $long');
+
+                            final String shopUID = widget.shopId;
+                            await setUserLocationInFirestore(
+                              FirebaseAuth.instance.currentUser!.uid,
+                              shopUID,
+                              double.parse(lat!),
+                              double.parse(long!),
+                            );
+                          } else {
+                            showToast("You need to enable location to share");
+                          }
                         });
                         liveLocation();
+                        startAgreement(FirebaseAuth.instance.currentUser!.uid,
+                            widget.shopId);
                         break;
                     }
                   },
@@ -265,7 +279,8 @@ class _ConversationState extends State<Conversation> {
                       DateTime dateReceived = DateTime(timeReceived.year,
                           timeReceived.month, timeReceived.day);
 
-                      bool isSameDate = dateToday.isAtSameMomentAs(dateReceived);
+                      bool isSameDate =
+                          dateToday.isAtSameMomentAs(dateReceived);
 
                       String formattedDateTime = (isSameDate)
                           ? DateFormat('hh:mm a').format(timeReceived)
@@ -398,7 +413,9 @@ class _ConversationState extends State<Conversation> {
                             firstDoc.data() as Map<String, dynamic>;
 
                         String agreementStatus = data['status'];
+                        String agreementDocId = firstDoc.id;
                         String fromUserId = data['user_id'];
+                        String shopUID = data['shop_id'];
 
                         return Column(
                           children: [
@@ -407,9 +424,28 @@ class _ConversationState extends State<Conversation> {
                                     "${fromUserId == FirebaseAuth.instance.currentUser!.uid ? "You've" : widget.shopName} initiated an agreement")
                                 : const SizedBox(),
                             agreementStatus == "Pending"
-                                ? Text(
-                                    "${fromUserId == FirebaseAuth.instance.currentUser!.uid ? "You've" : widget.shopName} terminated the agreement, waiting for Service Provider to confirm payment",
-                                    textAlign: TextAlign.center,
+                                ? Column(
+                                    children: [
+                                      Text(
+                                        "${fromUserId == FirebaseAuth.instance.currentUser!.uid ? "You've" : widget.shopName} terminated the agreement, waiting for Service Provider to confirm payment",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      shopUID ==
+                                              FirebaseAuth
+                                                  .instance.currentUser!.uid
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                confirmEndAgreement(context,
+                                                    agreementDocId, fromUserId);
+                                              },
+                                              child: Text(
+                                                "Tap to Confirm",
+                                                style: TextStyle(
+                                                    color: Colors.blue),
+                                              ),
+                                            )
+                                          : const SizedBox(),
+                                    ],
                                   )
                                 : const SizedBox(),
                             agreementStatus == "Paid"
@@ -670,16 +706,32 @@ class _ConversationState extends State<Conversation> {
     }
   }
 
-  Future<Position> getCurrentLocation() async {
+  Future<Position?> getCurrentLocation() async {
     servicePermission = await Geolocator.isLocationServiceEnabled();
     if (!servicePermission) {
       print('service disabled');
     }
+
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Handle the case where permission is denied
+        return null; // or throw an error
+      }
     }
-    return await Geolocator.getCurrentPosition();
+
+    if (permission == LocationPermission.deniedForever) {
+      // Handle the case where permission is permanently denied
+      return null; // or throw an error
+    }
+
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      return await Geolocator.getCurrentPosition();
+    }
+
+    return null; // Handle any other cases
   }
 
   void liveLocation() {
@@ -770,5 +822,44 @@ class _ConversationState extends State<Conversation> {
         'status': 'Paid',
       });
     }
+  }
+
+  void confirmEndAgreement(
+      BuildContext context, String agreementDocId, String fromUserId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('End the Agreement?'),
+          content: Text(
+            fromUserId != FirebaseAuth.instance.currentUser!.uid
+                ? 'Customer has initiated the end of the agreement. Make sure to settle the payment before clicking "confirm"'
+                : 'Please complete your payment before confirming the end of the agreement.',
+            textAlign: TextAlign.center,
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: ButtonStyle(
+                  foregroundColor: MaterialStatePropertyAll(Colors.black)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                endAgreement(
+                    agreementDocId,
+                    fromUserId == FirebaseAuth.instance.currentUser!.uid
+                        ? fromUserId
+                        : null);
+                Navigator.of(context).pop();
+              },
+              child: Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
