@@ -357,6 +357,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                                   "Loading...",
                           contactNum: shopData['contact_num'] ?? "Loading...",
                           workingHours: workingHours,
+                          gcash: shopData['gcash_num'] ?? "Loading...",
                         )
                       : (isWorks == true
                           ? WorksSection(
