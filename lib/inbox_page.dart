@@ -19,18 +19,18 @@ class _InboxPageState extends State<InboxPage> {
         automaticallyImplyLeading: false,
         title: const Text('Messages'),
         centerTitle: true,
-        actions: [
-          GestureDetector(
-            onTap: () {},
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'Edit',
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
-            ),
-          ),
-        ],
+        // actions: [
+        //   GestureDetector(
+        //     onTap: () {},
+        //     child: Padding(
+        //       padding: const EdgeInsets.all(16.0),
+        //       child: Text(
+        //         'Edit',
+        //         style: Theme.of(context).textTheme.labelLarge,
+        //       ),
+        //     ),
+        //   ),
+        // ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(

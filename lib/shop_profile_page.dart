@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:athomeconvenience/widgets/message/conversation.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/about.dart';
@@ -58,7 +57,6 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   bool isWorks = false;
   bool isReviews = false;
 
-//! alert for when SP acc is disabled, not used yet
   void disableAlert() {
     showDialog(
       context: context,
@@ -68,7 +66,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
           title: const Text("Unavailable"),
           contentPadding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
           content: const Text(
-              "SP is unavailable at this moment. They will not be notified of your messages, but they will still receive them."),
+              "This service provider is unavailable at this moment. They will not be notified of your messages, but they will still receive them."),
           actionsPadding: const EdgeInsets.all(8.0),
           actions: [
             DialogButton(
@@ -182,17 +180,17 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       letterSpacing: -0.5,
                     ),
                   ),
-                  // Visibility(
-                  //   visible: true, //! visible only when SP acc is disabled
-                  //   child: Text(
-                  //     "Unavailable",
-                  //     style: GoogleFonts.poppins(
-                  //       fontSize: 12,
-                  //       fontWeight: FontWeight.normal,
-                  //       color: Colors.grey,
-                  //     ),
-                  //   ),
-                  // ),
+                  Visibility(
+                    visible: shopData['disabled'] ?? false,
+                    child: Text(
+                      "Unavailable",
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
 
                   const SizedBox(
                     height: 10,
@@ -452,6 +450,10 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
         setState(() {
           shopData = querySnapshot.docs.first.data();
         });
+      }
+
+      if (shopData['disabled']) {
+        disableAlert();
       }
     } catch (e) {
       print(e);

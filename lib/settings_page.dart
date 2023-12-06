@@ -115,6 +115,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
   final contactNumController = TextEditingController();
   final locationController = TextEditingController();
   final gCashNumController = TextEditingController();
+  bool isDisabled = false;
 
   @override
   void initState() {
@@ -165,6 +166,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
             contactNumController.text = spData['contact_num'] ?? 'Loading';
             locationController.text = spData['service_address'] ?? 'Loading';
             gCashNumController.text = spData['gcash_num'] ?? 'Loading';
+            isDisabled = spData['disabled'] ?? 'false';
           });
         }
       } else {
@@ -188,8 +190,6 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
       });
     }
   }
-
-  bool isDisabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -366,7 +366,6 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                           readOnly: _readonly,
                           decoration: const InputDecoration(
                             labelText: 'ADDRESS',
-                            hintText: 'Add your email address',
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
                           ),
@@ -548,11 +547,10 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                       ),
                                       const Expanded(child: SizedBox()),
                                       Switch(
-                                        
                                         // This bool value toggles the switch.
                                         value: isDisabled,
                                         activeColor: Colors.blue,
-                                        onChanged: (bool value) {
+                                        onChanged: (bool value) async {
                                           // This is called when the user toggles the switch.
                                           setState(() {
                                             isDisabled = value;
@@ -562,6 +560,25 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                               : 'enabled';
                                           showToast(
                                               "You have $status your account!");
+
+                                          final userDoc = FirebaseFirestore
+                                              .instance
+                                              .collection('service_provider')
+                                              .doc(uid);
+                                          final userDocSnapshot =
+                                              await userDoc.get();
+
+                                          if (!userDocSnapshot.exists ||
+                                              !userDocSnapshot
+                                                  .data()!
+                                                  .containsKey('disabled')) {
+                                            await userDoc.set({
+                                              'disabled': isDisabled,
+                                            }, SetOptions(merge: true));
+                                          } else {
+                                            await userDoc.update(
+                                                {'disabled': isDisabled});
+                                          }
                                         },
                                       ),
                                     ],

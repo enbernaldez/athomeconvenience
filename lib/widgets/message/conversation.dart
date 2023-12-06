@@ -35,9 +35,12 @@ class _ConversationState extends State<Conversation> {
   String? locDataDocId;
   bool activeLocation = false;
 
+  Map<String, dynamic> shopData = {};
+
   @override
   void initState() {
     super.initState();
+    fetchShopData();
     if (widget.docId != null) {
       setState(() {
         chatDocId = widget.docId;
@@ -518,6 +521,27 @@ class _ConversationState extends State<Conversation> {
         ),
       ),
     );
+  }
+
+  Future<void> fetchShopData() async {
+    try {
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection("service_provider")
+          .where("uid", isEqualTo: widget.shopId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        setState(() {
+          shopData = querySnapshot.docs.first.data();
+        });
+      }
+
+      if (shopData['disabled']) {
+        disableAlert();
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> _sendMessage() async {
