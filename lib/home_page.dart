@@ -1,4 +1,4 @@
-import 'package:athomeconvenience/constants.dart';
+import 'package:athomeconvenience/functions/constants.dart';
 import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/model/search_items.dart';
 import 'package:athomeconvenience/shop_list_page.dart';

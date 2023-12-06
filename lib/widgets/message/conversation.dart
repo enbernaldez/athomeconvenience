@@ -108,7 +108,6 @@ class _ConversationState extends State<Conversation> {
             // ),
           ],
         ),
-        centerTitle: true,
         actions: [
           StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance

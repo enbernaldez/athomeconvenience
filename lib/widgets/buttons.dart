@@ -1,5 +1,7 @@
+import 'package:athomeconvenience/functions/functions.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Button extends StatelessWidget {
   final dynamic padding; //button vertical content padding
@@ -143,11 +145,8 @@ class EditButton extends StatelessWidget {
   final Function() onPress;
   final String buttonText;
 
-  const EditButton({
-    super.key,
-    required this.onPress,
-    required this.buttonText
-  });
+  const EditButton(
+      {super.key, required this.onPress, required this.buttonText});
 
   @override
   Widget build(BuildContext context) {
@@ -164,3 +163,44 @@ class EditButton extends StatelessWidget {
   }
 }
 
+class ContactButton extends StatelessWidget {
+  final String text;
+  final Icon icon;
+
+  const ContactButton({
+    super.key,
+    required this.text,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+        padding: const MaterialStatePropertyAll(
+          EdgeInsets.symmetric(horizontal: 12.0),
+        ),
+        iconColor: MaterialStatePropertyAll(Colors.grey[700]),
+      ),
+      onPressed: () async {
+        await Clipboard.setData(ClipboardData(text: text));
+        showToast("Copied to clipboard!");
+      },
+      child: Row(
+        children: [
+          icon,
+          const SizedBox(width: 8.0),
+          Text(
+            text,
+            style: const TextStyle(color: Colors.black),
+          ),
+        ],
+      ),
+    );
+  }
+}

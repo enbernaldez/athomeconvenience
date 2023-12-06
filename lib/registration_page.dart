@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:athomeconvenience/constants.dart';
+import 'package:athomeconvenience/functions/constants.dart';
 import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/navigation.dart';
 import 'package:athomeconvenience/terms/terms_of_use_and_privacy_policy_page.dart';
