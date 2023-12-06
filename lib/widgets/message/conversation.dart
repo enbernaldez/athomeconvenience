@@ -13,9 +13,14 @@ class Conversation extends StatefulWidget {
   final String? docId;
   final String shopName;
   final String shopId;
+  final String? shopHours;
 
   const Conversation(
-      {Key? key, this.docId, required this.shopName, required this.shopId})
+      {Key? key,
+      this.docId,
+      required this.shopName,
+      required this.shopId,
+      this.shopHours})
       : super(key: key);
 
   @override
@@ -34,6 +39,12 @@ class _ConversationState extends State<Conversation> {
 
   String? locDataDocId;
   bool activeLocation = false;
+
+  bool open = true; //for business hours
+
+  final String pre1 = "How much does the service fee cost?";
+  final String pre2 = "How long will the service take?";
+  final String pre3 = "When are you available to perform the service?";
 
   Map<String, dynamic> shopData = {};
 
@@ -114,6 +125,7 @@ class _ConversationState extends State<Conversation> {
                       firstDoc.data() as Map<String, dynamic>;
                   String docId = firstDoc.id; // Retrieve the document ID
                   String agreementDocId = '';
+                  String agreementStatus = '';
 
                   bool isActive = data['active'] ?? false;
 
@@ -129,7 +141,7 @@ class _ConversationState extends State<Conversation> {
                           .snapshots(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot2) {
-                        String agreementStatus = '';
+                        // String agreementStatus = '';
                         // Map<String, dynamic> agreementData = {};
                         if (snapshot2.hasData &&
                             snapshot2.data!.docs.isNotEmpty) {
@@ -193,20 +205,23 @@ class _ConversationState extends State<Conversation> {
                             return items;
                           },
                           onSelected: (String value) {
-                            // Handle what happens when an option is selected
-                            // You can use a switch statement or if-else to perform different actions based on the value
                             switch (value) {
                               case 'sharelocation':
                                 getCurrentLocation().then((value) async {
-                                  lat = '${value.latitude}';
-                                  long = '${value.longitude}';
-                                  print('$lat, $long');
-                                  await setUserLocationInFirestore(
-                                    FirebaseAuth.instance.currentUser!.uid,
-                                    widget.shopId,
-                                    double.parse(lat!),
-                                    double.parse(long!),
-                                  );
+                                  if (value != null) {
+                                    lat = '${value.latitude}';
+                                    long = '${value.longitude}';
+                                    print('line 214: $lat, $long');
+                                    await setUserLocationInFirestore(
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                      widget.shopId,
+                                      double.parse(lat!),
+                                      double.parse(long!),
+                                    );
+                                  } else {
+                                    showToast(
+                                        "You need to enable location to share");
+                                  }
                                 });
                                 liveLocation();
                                 startAgreement(
@@ -215,17 +230,21 @@ class _ConversationState extends State<Conversation> {
                                         .shopId); //! START AN AGREEMENT WHEN USER SHARES LOCATION
                                 break;
                               case 'endlocation':
-                                stopSharingLocation(docId);
+                                if (agreementStatus.isNotEmpty &&
+                                    agreementStatus == 'Paid') {
+                                  stopSharingLocation(docId);
+                                } else {
+                                  showToast(
+                                      "Please settle your agreement before turning off location");
+                                }
                                 break;
                               // Handle additional cases if needed
                               case 'endagreement':
-                                endAgreement(
-                                    agreementDocId,
-                                    fromUserId ==
-                                            FirebaseAuth
-                                                .instance.currentUser!.uid
-                                        ? fromUserId
-                                        : null);
+                                confirmEndAgreement(
+                                    context, agreementDocId, fromUserId);
+                                setState(() {
+                                  agreementDocId = '';
+                                });
                                 break;
                             }
                           },
@@ -242,22 +261,28 @@ class _ConversationState extends State<Conversation> {
                     ),
                   ],
                   onSelected: (String value) {
-                    // Handle what happens when an option is selected
-                    // You can use a switch statement or if-else to perform different actions based on the value
                     switch (value) {
                       case 'sharelocation':
                         getCurrentLocation().then((value) async {
-                          lat = '${value.latitude}';
-                          long = '${value.longitude}';
-                          print('$lat, $long');
-                          await setUserLocationInFirestore(
-                            FirebaseAuth.instance.currentUser!.uid,
-                            widget.shopId,
-                            double.parse(lat!),
-                            double.parse(long!),
-                          );
+                          if (value != null) {
+                            lat = '${value.latitude}';
+                            long = '${value.longitude}';
+                            print('line 270: $lat, $long');
+
+                            final String shopUID = widget.shopId;
+                            await setUserLocationInFirestore(
+                              FirebaseAuth.instance.currentUser!.uid,
+                              shopUID,
+                              double.parse(lat!),
+                              double.parse(long!),
+                            );
+                          } else {
+                            showToast("You need to enable location to share");
+                          }
                         });
                         liveLocation();
+                        startAgreement(FirebaseAuth.instance.currentUser!.uid,
+                            widget.shopId);
                         break;
                     }
                   },
@@ -292,6 +317,45 @@ class _ConversationState extends State<Conversation> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                widget.shopHours != null
+                    ? Visibility(
+                        visible: open,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.blue.shade200),
+                                  borderRadius: BorderRadius.circular(4)),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Business Hours: ${widget.shopHours!}",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    padding: EdgeInsets.zero,
+                                    constraints: BoxConstraints(),
+                                    onPressed: () {
+                                      setState(() {
+                                        open = false;
+                                      });
+                                    },
+                                    icon: Icon(
+                                      Icons.close,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        ),
+                      )
+                    : const SizedBox(),
                 Expanded(
                   child: ListView.builder(
                     reverse: true,
@@ -374,6 +438,64 @@ class _ConversationState extends State<Conversation> {
                     },
                   ),
                 ),
+                // ? PRE ASKED QUESTION
+                chatDocId == null
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  _sendMessage(true, pre1);
+                                },
+                                child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.blue.shade200),
+                                        borderRadius: BorderRadius.circular(4)),
+                                    child: Text(pre1)),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  _sendMessage(true, pre2);
+                                },
+                                child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.blue.shade200),
+                                        borderRadius: BorderRadius.circular(4)),
+                                    child: Text(pre2)),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  _sendMessage(true, pre3);
+                                },
+                                child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.blue.shade200),
+                                        borderRadius: BorderRadius.circular(4)),
+                                    child: Text(pre3)),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
                 StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('chats')
@@ -394,7 +516,7 @@ class _ConversationState extends State<Conversation> {
                         String lat = data['latitude'].toString();
                         String long = data['longitude'].toString();
 
-                        print('$lat & $long');
+                        print('line 519: $lat & $long');
 
                         String fromUserId = data['user_id'];
 
@@ -442,7 +564,9 @@ class _ConversationState extends State<Conversation> {
                             firstDoc.data() as Map<String, dynamic>;
 
                         String agreementStatus = data['status'];
+                        String agreementDocId = firstDoc.id;
                         String fromUserId = data['user_id'];
+                        String shopUID = data['shop_id'];
 
                         return Column(
                           children: [
@@ -451,9 +575,28 @@ class _ConversationState extends State<Conversation> {
                                     "${fromUserId == FirebaseAuth.instance.currentUser!.uid ? "You've" : widget.shopName} initiated an agreement")
                                 : const SizedBox(),
                             agreementStatus == "Pending"
-                                ? Text(
-                                    "${fromUserId == FirebaseAuth.instance.currentUser!.uid ? "You've" : widget.shopName} terminated the agreement, waiting for Service Provider to confirm payment",
-                                    textAlign: TextAlign.center,
+                                ? Column(
+                                    children: [
+                                      Text(
+                                        "${fromUserId == FirebaseAuth.instance.currentUser!.uid ? "You've" : widget.shopName} terminated the agreement, waiting for Service Provider to confirm payment",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      shopUID ==
+                                              FirebaseAuth
+                                                  .instance.currentUser!.uid
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                confirmEndAgreement(context,
+                                                    agreementDocId, fromUserId);
+                                              },
+                                              child: Text(
+                                                "Tap to Confirm",
+                                                style: TextStyle(
+                                                    color: Colors.blue),
+                                              ),
+                                            )
+                                          : const SizedBox(),
+                                    ],
                                   )
                                 : const SizedBox(),
                             agreementStatus == "Paid"
@@ -509,7 +652,9 @@ class _ConversationState extends State<Conversation> {
                         focusedBorder: const OutlineInputBorder(),
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.send),
-                          onPressed: _sendMessage,
+                          onPressed: () {
+                            _sendMessage(false, null);
+                          },
                         ),
                       ),
                     ),
@@ -540,13 +685,14 @@ class _ConversationState extends State<Conversation> {
         disableAlert();
       }
     } catch (e) {
-      print(e);
+      print('line 688: $e');
     }
   }
 
-  Future<void> _sendMessage() async {
+  Future<void> _sendMessage(bool preQuestion, String? selectedPreQ) async {
     String message = chatTextFieldController.text.trim();
-    if (message.isNotEmpty) {
+
+    if (message.isNotEmpty || preQuestion == true) {
       final uid = FirebaseAuth.instance.currentUser!.uid;
 
       try {
@@ -588,7 +734,8 @@ class _ConversationState extends State<Conversation> {
             DocumentReference newChatDocRef = await chatsCollection.add({
               'users_id': [uid, widget.shopId],
               'composite_id': '${uid}_${widget.shopId}',
-              'latest_chat_message': message,
+              'latest_chat_message':
+                  preQuestion == true ? selectedPreQ : message,
               'latest_chat_user': uid,
               'latest_timestamp': timeSent,
             });
@@ -603,7 +750,7 @@ class _ConversationState extends State<Conversation> {
             // Add the initial message to the messages subcollection
             await messagesCollection.add({
               'is_read': false,
-              'message_text': message,
+              'message_text': preQuestion == true ? selectedPreQ : message,
               'receiver_id': widget.shopId,
               'sender_id': uid,
               'timestamp': timeSent,
@@ -615,11 +762,11 @@ class _ConversationState extends State<Conversation> {
 
             sendNotification('message');
           } catch (e) {
-            print("error sending message: $e");
+            print("error sending message, line 765: $e");
           }
         }
       } catch (e) {
-        print("error sending msg: $e");
+        print("error sending msg, line 769 $e");
       }
 
       chatTextFieldController.clear();
@@ -660,7 +807,7 @@ class _ConversationState extends State<Conversation> {
             'user_doc_id': widget.shopId,
           });
         } catch (e) {
-          print("error sending message: $e");
+          print("error sending message, line 810: $e");
         }
       } else {
         print("Notification already sent for a message today");
@@ -694,7 +841,7 @@ class _ConversationState extends State<Conversation> {
             'user_doc_id': widget.shopId,
           });
         } catch (e) {
-          print("error sending message: $e");
+          print("error sending message, line 844: $e");
         }
       } else {
         print("Notification already sent for a message today");
@@ -727,7 +874,7 @@ class _ConversationState extends State<Conversation> {
             'user_doc_id': widget.shopId,
           });
         } catch (e) {
-          print("error sending message: $e");
+          print("error sending message, line 877: $e");
         }
       } else {
         print("Notification already sent for a message today");
@@ -735,16 +882,32 @@ class _ConversationState extends State<Conversation> {
     }
   }
 
-  Future<Position> getCurrentLocation() async {
+  Future<Position?> getCurrentLocation() async {
     servicePermission = await Geolocator.isLocationServiceEnabled();
     if (!servicePermission) {
       print('service disabled');
     }
+
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Handle the case where permission is denied
+        return null; // or throw an error
+      }
     }
-    return await Geolocator.getCurrentPosition();
+
+    if (permission == LocationPermission.deniedForever) {
+      // Handle the case where permission is permanently denied
+      return null; // or throw an error
+    }
+
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      return await Geolocator.getCurrentPosition();
+    }
+
+    return null; // Handle any other cases
   }
 
   void liveLocation() {
@@ -780,7 +943,7 @@ class _ConversationState extends State<Conversation> {
         'timestamp': Timestamp.now(),
       });
     } catch (e) {
-      print(e);
+      print('line 946: $e');
     }
   }
 
@@ -794,7 +957,7 @@ class _ConversationState extends State<Conversation> {
         'active': false,
       });
     } catch (e) {
-      print(e);
+      print('line 960: $e');
     }
   }
 
@@ -813,7 +976,7 @@ class _ConversationState extends State<Conversation> {
 
       sendNotification('agreement');
     } catch (e) {
-      print(e);
+      print('line 979: $e');
     }
   }
 
@@ -835,5 +998,44 @@ class _ConversationState extends State<Conversation> {
         'status': 'Paid',
       });
     }
+  }
+
+  void confirmEndAgreement(
+      BuildContext context, String agreementDocId, String fromUserId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('End the Agreement?'),
+          content: Text(
+            fromUserId != FirebaseAuth.instance.currentUser!.uid
+                ? 'Customer has initiated the end of the agreement. Make sure to settle the payment before clicking "confirm"'
+                : 'Please complete your payment before confirming the end of the agreement.',
+            textAlign: TextAlign.center,
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: ButtonStyle(
+                  foregroundColor: MaterialStatePropertyAll(Colors.black)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                endAgreement(
+                    agreementDocId,
+                    fromUserId == FirebaseAuth.instance.currentUser!.uid
+                        ? fromUserId
+                        : null);
+                Navigator.of(context).pop();
+              },
+              child: Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

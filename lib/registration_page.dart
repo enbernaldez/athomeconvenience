@@ -211,7 +211,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
               'address': u_address,
               'phone_num': u_phoneNum,
               'email_add': emailAdd,
-              'likes': []
+              'likes': [],
+              'timestamp': Timestamp.now(),
             })
             .then((value) => const SnackBar(
                   content: Text("User signed up Successfully!"),
@@ -282,6 +283,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 'uploaded_doc': imageUrl,
                 'is_disabled': false,
                 'status': 'Pending',
+                'timestamp': Timestamp.now()
               })
               .then((value) => const SnackBar(
                     content: Text("Service Provider signed up Successfully!"),

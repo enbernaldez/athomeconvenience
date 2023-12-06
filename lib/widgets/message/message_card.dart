@@ -74,6 +74,8 @@ class _MessageCardState extends State<MessageCard> {
                 ? DateFormat('MMM d').format(lastChatDateTime)
                 : DateFormat('MM/dd/yy').format(lastChatDateTime);
     // ?=================================================================
+
+    print(widget.shopHours);
     return Column(
       children: [
         const Divider(),
@@ -87,6 +89,8 @@ class _MessageCardState extends State<MessageCard> {
                     shopId: widget.shopId,
                     shopName: widget.shopName,
                     docId: widget.docId,
+                    shopHours:
+                        widget.shopHours != null ? widget.shopHours : null,
                   ),
                 ),
               );
