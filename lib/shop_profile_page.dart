@@ -58,6 +58,29 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   bool isWorks = false;
   bool isReviews = false;
 
+//! alert for when SP acc is disabled, not used yet
+  void disableAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          title: const Text("Unavailable"),
+          contentPadding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+          content: const Text(
+              "SP is unavailable at this moment. They will not be notified of your messages, but they will still receive them."),
+          actionsPadding: const EdgeInsets.all(8.0),
+          actions: [
+            DialogButton(
+              onPress: () => Navigator.pop(context),
+              buttonText: "OK",
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     void handleLike() async {
@@ -159,6 +182,17 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       letterSpacing: -0.5,
                     ),
                   ),
+                  // Visibility(
+                  //   visible: true, //! visible only when SP acc is disabled
+                  //   child: Text(
+                  //     "Unavailable",
+                  //     style: GoogleFonts.poppins(
+                  //       fontSize: 12,
+                  //       fontWeight: FontWeight.normal,
+                  //       color: Colors.grey,
+                  //     ),
+                  //   ),
+                  // ),
 
                   const SizedBox(
                     height: 10,

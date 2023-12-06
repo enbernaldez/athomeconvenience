@@ -1,5 +1,6 @@
 import 'package:athomeconvenience/functions/functions.dart';
 import 'package:athomeconvenience/model/indiv_message.dart';
+import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -44,13 +45,54 @@ class _ConversationState extends State<Conversation> {
     }
   }
 
+//! alert for when SP acc is disabled, not used yet
+  void disableAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          title: const Text("Unavailable"),
+          contentPadding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+          content: const Text(
+              "SP is unavailable at this moment. They will not be notified of your messages, but they will still receive them."),
+          actionsPadding: const EdgeInsets.all(8.0),
+          actions: [
+            DialogButton(
+              onPress: () => Navigator.pop(context),
+              buttonText: "OK",
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.shopName,
-          style: Theme.of(context).textTheme.headline6,
+        title: Column(
+          children: [
+            Text(
+              widget.shopName,
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            // Visibility(
+            //   visible: true, //! visible only when SP acc is disabled
+            //   child: Text(
+            //     "Unavailable",
+            //     style: GoogleFonts.poppins(
+            //       fontSize: 11,
+            //       fontWeight: FontWeight.normal,
+            //       color: Colors.grey,
+            //     ),
+            //   ),
+            // ),
+          ],
         ),
         centerTitle: true,
         actions: [

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:athomeconvenience/contact_us_page.dart';
 import 'package:athomeconvenience/functions/fetch_data.dart';
+import 'package:athomeconvenience/functions/functions.dart';
 import 'package:athomeconvenience/landing_page.dart';
 import 'package:athomeconvenience/reviews_page.dart';
 import 'package:athomeconvenience/shop_profile_page.dart';
@@ -187,6 +188,8 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
       });
     }
   }
+
+  bool isDisabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -509,26 +512,59 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
+                                    // vertical: 12,
                                     horizontal: 8,
                                   ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) {
-                                          return const ReviewsPage(
-                                            whatReview: 'Service Reviews',
-                                            shopReviews: true,
-                                          );
-                                        }),
-                                      );
-                                    },
-                                    child: Text(
-                                      'SERVICE REVIEWS',
-                                      style:
-                                          Theme.of(context).textTheme.bodyLarge,
-                                    ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        'DISABLE ACCOUNT',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                      ),
+                                      const SizedBox(width: 8.0),
+                                      Tooltip(
+                                        triggerMode: TooltipTriggerMode.tap,
+                                        richMessage: WidgetSpan(
+                                          child: Container(
+                                            padding: const EdgeInsets.all(10),
+                                            constraints: const BoxConstraints(
+                                                maxWidth: 250),
+                                            child: const Text(
+                                              "By disabling your account, you won't receive notifications from customer messages.",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                        showDuration:
+                                            const Duration(seconds: 5),
+                                        child: const Icon(
+                                          Icons.info_outline_rounded,
+                                          size: 16.0,
+                                        ),
+                                      ),
+                                      const Expanded(child: SizedBox()),
+                                      Switch(
+                                        
+                                        // This bool value toggles the switch.
+                                        value: isDisabled,
+                                        activeColor: Colors.blue,
+                                        onChanged: (bool value) {
+                                          // This is called when the user toggles the switch.
+                                          setState(() {
+                                            isDisabled = value;
+                                          });
+                                          String status = isDisabled
+                                              ? 'disabled'
+                                              : 'enabled';
+                                          showToast(
+                                              "You have $status your account!");
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 const Divider(height: 1),
@@ -548,6 +584,31 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                     },
                                     child: Text(
                                       'PREVIEW PROFILE',
+                                      style:
+                                          Theme.of(context).textTheme.bodyLarge,
+                                    ),
+                                  ),
+                                ),
+                                const Divider(height: 1),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                    horizontal: 8,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) {
+                                          return const ReviewsPage(
+                                            whatReview: 'Service Reviews',
+                                            shopReviews: true,
+                                          );
+                                        }),
+                                      );
+                                    },
+                                    child: Text(
+                                      'SERVICE REVIEWS',
                                       style:
                                           Theme.of(context).textTheme.bodyLarge,
                                     ),
