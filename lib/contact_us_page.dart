@@ -1,7 +1,5 @@
-import 'package:athomeconvenience/functions/functions.dart';
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class ContactUsPage extends StatefulWidget {
   const ContactUsPage({super.key});
@@ -15,7 +13,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Contact Us"),
+        title: const Text("Contact Us"),
       ),
       body: SafeArea(
         child: Center(

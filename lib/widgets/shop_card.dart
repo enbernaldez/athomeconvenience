@@ -61,74 +61,82 @@ class ShopCard extends StatelessWidget {
       children: [
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.8,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Column(
             children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          ShopProfilePage(shopUid: shopUid),
-                    ),
-                  );
-                },
-                child: Row(
-                  children: [
-                    // Image/Icon
-                    const CircleAvatar(
-                      backgroundImage:
-                          AssetImage('images/default_profile_pic.png'),
-                      maxRadius: 30,
-                    ),
+              const Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              ShopProfilePage(shopUid: shopUid),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        // Image/Icon
+                        const CircleAvatar(
+                          backgroundImage:
+                              AssetImage('images/default_profile_pic.png'),
+                          maxRadius: 30,
+                        ),
 
-                    const SizedBox(
-                      width: 10, // Adjusted width for better spacing
-                    ),
+                        const SizedBox(
+                          width: 10, // Adjusted width for better spacing
+                        ),
 
-                    // Flexible Column
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * widthFactor,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // SHOP NAME
-                          Text(
-                            shopName,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(
-                                  color: Colors.black,
-                                ),
+                        // Flexible Column
+                        SizedBox(
+                          width:
+                              MediaQuery.of(context).size.width * widthFactor,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // SHOP NAME
+                              Text(
+                                shopName,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(
+                                      color: Colors.black,
+                                    ),
+                              ),
+
+                              // Address
+                              Text(
+                                shopAddress.isEmpty
+                                    ? "Home Service"
+                                    : shopAddress,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
                           ),
-
-                          // Address
-                          Text(
-                            shopAddress.isEmpty ? "Home Service" : shopAddress,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              Visibility(
-                visible: deleteMode ?? false,
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () {
-                        handleUnlike();
-                      },
+                  ),
+                  Visibility(
+                    visible: deleteMode ?? false,
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            handleUnlike();
+                          },
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),

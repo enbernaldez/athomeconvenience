@@ -60,15 +60,6 @@ class _ShopListPageState extends State<ShopListPage> {
                                   shopName: doc['service_provider_name'],
                                   shopUid: doc['uid'],
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                const Divider(
-                                  height: 0,
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
                               ],
                             )
                         ],
