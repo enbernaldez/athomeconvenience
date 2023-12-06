@@ -6,13 +6,16 @@ class AboutSection extends StatelessWidget {
   final String shopAddress;
   final String contactNum;
   final String workingHours;
+  final String gcash;
 
-  const AboutSection(
-      {super.key,
-      required this.category,
-      required this.shopAddress,
-      required this.contactNum,
-      required this.workingHours});
+  const AboutSection({
+    super.key,
+    required this.category,
+    required this.shopAddress,
+    required this.contactNum,
+    required this.workingHours,
+    required this.gcash,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -118,14 +121,14 @@ class AboutSection extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  "Payment Options:",
+                  "GCash Number:",
                   style: GoogleFonts.dmSans(
                       fontSize: 16, color: Colors.grey.shade600),
                 ),
               ),
               Expanded(
                 child: Text(
-                  "Gcash, Cash",
+                  gcash,
                   style: GoogleFonts.dmSans(
                     fontSize: 16,
                   ),

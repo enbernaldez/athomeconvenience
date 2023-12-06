@@ -56,9 +56,10 @@ class _ShopListPageState extends State<ShopListPage> {
                             Column(
                               children: [
                                 ShopCard(
-                                    shopAddress: doc['service_address'],
-                                    shopName: doc['service_provider_name'],
-                                    shopUid: doc['uid']),
+                                  shopAddress: doc['service_address'],
+                                  shopName: doc['service_provider_name'],
+                                  shopUid: doc['uid'],
+                                ),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -67,7 +68,7 @@ class _ShopListPageState extends State<ShopListPage> {
                                 ),
                                 const SizedBox(
                                   height: 10,
-                                )
+                                ),
                               ],
                             )
                         ],

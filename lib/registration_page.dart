@@ -71,7 +71,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setEmailOrPhoneNum();
   }
@@ -393,12 +392,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             const SizedBox(height: 20),
                             TextFormField(
                               controller: addressController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Required';
-                                }
-                                return null;
-                              },
+                              // validator: (value) {
+                              //   if (value == null || value.isEmpty) {
+                              //     return 'Required';
+                              //   }
+                              //   return null;
+                              // },
                               keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
@@ -410,8 +409,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             TextFormField(
                               controller: emailAddressController,
                               validator: (value) {
-                                if (!EmailValidator.validate(value!)) {
-                                  return 'Please enter a valid email address.';
+                                if (value != null && value.isNotEmpty) {
+                                  if (!EmailValidator.validate(value)) {
+                                    return 'Please enter a valid email address.';
+                                  }
                                 }
                                 return null;
                               },
@@ -638,8 +639,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   ),
                                   const SizedBox(height: 20),
                                   // TODO: form should not submit if image for verification is not uploaded
-                                  // haven't checked yet if toast works to prevent submission
-                                  // TODO: toast should not show when registering for customer acc
                                   image != null
                                       ? Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -761,7 +760,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ),
           ),
           if (isLoading)
-            Center(
+            const Center(
               child: CircularProgressIndicator(),
             )
         ],

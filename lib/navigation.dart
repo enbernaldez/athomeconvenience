@@ -79,7 +79,7 @@ class _NavigationState extends State<Navigation> {
               backgroundColor: Colors.black,
               activeColor: Colors.orangeAccent,
               initialActiveIndex: 2,
-              items: [
+              items: const [
                 TabItem(icon: Icons.notifications),
                 TabItem(icon: Icons.chat_bubble),
                 TabItem(icon: Icons.home),

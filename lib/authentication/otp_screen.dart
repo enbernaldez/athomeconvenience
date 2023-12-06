@@ -146,7 +146,7 @@ class _OtpScreenState extends State<OtpScreen> {
             ),
           ),
           if (isLoading)
-            Center(
+            const Center(
               child: CircularProgressIndicator(),
             )
         ],

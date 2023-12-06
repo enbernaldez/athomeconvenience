@@ -10,44 +10,45 @@ class WorksSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('works')
-            .where('uid', isEqualTo: shopId)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-            List<String> worksImageUrl = snapshot.data!.docs.map((work) {
-              return work['image_url'] as String;
-            }).toList();
+      stream: FirebaseFirestore.instance
+          .collection('works')
+          .where('uid', isEqualTo: shopId)
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+          List<String> worksImageUrl = snapshot.data!.docs.map((work) {
+            return work['image_url'] as String;
+          }).toList();
 
-            return Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: worksImageUrl.map((link) {
-                return FractionallySizedBox(
-                  widthFactor: 0.48,
-                  child: FullScreenWidget(
-                    child: Center(
-                      child: Hero(
-                        tag: link,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: CachedNetworkImage(
-                            imageUrl: link,
-                            fit: BoxFit.cover,
-                            width: MediaQuery.of(context).size.width,
-                          ),
+          return Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: worksImageUrl.map((link) {
+              return FractionallySizedBox(
+                widthFactor: 0.48,
+                child: FullScreenWidget(
+                  disposeLevel: DisposeLevel.Low,
+                  child: Center(
+                    child: Hero(
+                      tag: link,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: CachedNetworkImage(
+                          imageUrl: link,
+                          fit: BoxFit.cover,
+                          width: MediaQuery.of(context).size.width,
                         ),
                       ),
                     ),
-                    disposeLevel: DisposeLevel.Low,
                   ),
-                );
-              }).toList(),
-            );
-          }
+                ),
+              );
+            }).toList(),
+          );
+        }
 
-          return Text('No works yet');
-        });
+        return const Text('No works posted yet.');
+      },
+    );
   }
 }

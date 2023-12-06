@@ -35,9 +35,12 @@ class _ConversationState extends State<Conversation> {
   String? locDataDocId;
   bool activeLocation = false;
 
+  Map<String, dynamic> shopData = {};
+
   @override
   void initState() {
     super.initState();
+    fetchShopData();
     if (widget.docId != null) {
       setState(() {
         chatDocId = widget.docId;
@@ -45,13 +48,54 @@ class _ConversationState extends State<Conversation> {
     }
   }
 
+//! alert for when SP acc is disabled, not used yet
+  void disableAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          title: const Text("Unavailable"),
+          contentPadding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+          content: const Text(
+              "SP is unavailable at this moment. They will not be notified of your messages, but they will still receive them."),
+          actionsPadding: const EdgeInsets.all(8.0),
+          actions: [
+            DialogButton(
+              onPress: () => Navigator.pop(context),
+              buttonText: "OK",
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.shopName,
-          style: Theme.of(context).textTheme.headline6,
+        title: Column(
+          children: [
+            Text(
+              widget.shopName,
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            // Visibility(
+            //   visible: true, //! visible only when SP acc is disabled
+            //   child: Text(
+            //     "Unavailable",
+            //     style: GoogleFonts.poppins(
+            //       fontSize: 11,
+            //       fontWeight: FontWeight.normal,
+            //       color: Colors.grey,
+            //     ),
+            //   ),
+            // ),
+          ],
         ),
         centerTitle: true,
         actions: [
@@ -102,7 +146,8 @@ class _ConversationState extends State<Conversation> {
                           print('this is the snapshot:${agreementData}');
                         }
                         return PopupMenuButton<String>(
-                          icon: Icon(Icons.more_vert), // Icon for the button
+                          icon: const Icon(
+                              Icons.more_vert), // Icon for the button
                           itemBuilder: (BuildContext context) {
                             List<PopupMenuEntry<String>> items = [];
 
@@ -110,14 +155,14 @@ class _ConversationState extends State<Conversation> {
                                 FirebaseAuth.instance.currentUser!.uid) {
                               if (!isActive) {
                                 items.add(
-                                  PopupMenuItem<String>(
+                                  const PopupMenuItem<String>(
                                     value: 'sharelocation',
                                     child: Text('Share my location'),
                                   ),
                                 );
                               } else {
                                 items.add(
-                                  PopupMenuItem<String>(
+                                  const PopupMenuItem<String>(
                                     value: 'endlocation',
                                     child: Text('Turn off Location'),
                                   ),
@@ -196,7 +241,7 @@ class _ConversationState extends State<Conversation> {
                       });
                 }
                 return PopupMenuButton<String>(
-                  icon: Icon(Icons.more_vert), // Icon for the button
+                  icon: const Icon(Icons.more_vert), // Icon for the button
                   itemBuilder: (BuildContext context) =>
                       <PopupMenuEntry<String>>[
                     const PopupMenuItem<String>(
@@ -285,9 +330,7 @@ class _ConversationState extends State<Conversation> {
                       String formattedDateTime = (isSameDate)
                           ? DateFormat('hh:mm a').format(timeReceived)
                           : (timeReceived.isAfter(
-                              now.subtract(
-                                const Duration(days: 7),
-                              ),
+                              now.subtract(const Duration(days: 6)),
                             ))
                               ? DateFormat('EEE \'at\' hh:mm a')
                                   .format(timeReceived)
@@ -381,7 +424,7 @@ class _ConversationState extends State<Conversation> {
                                 onTap: () {
                                   openMap(lat, long);
                                 },
-                                child: Text(
+                                child: const Text(
                                   "Tap to view",
                                   style: TextStyle(color: Colors.blue),
                                 ),
@@ -394,7 +437,7 @@ class _ConversationState extends State<Conversation> {
                         }
                       }
 
-                      return SizedBox();
+                      return const SizedBox();
                     }),
                 StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
@@ -451,7 +494,7 @@ class _ConversationState extends State<Conversation> {
                             agreementStatus == "Paid"
                                 ? Column(
                                     children: [
-                                      Text("Agreement Terminated"),
+                                      const Text("Agreement Terminated"),
                                       fromUserId ==
                                               FirebaseAuth
                                                   .instance.currentUser!.uid
@@ -463,7 +506,7 @@ class _ConversationState extends State<Conversation> {
                                                   widget.shopName,
                                                 );
                                               },
-                                              child: Text(
+                                              child: const Text(
                                                 "Time to rate!",
                                                 style: TextStyle(
                                                     color: Colors.blue),
@@ -513,6 +556,27 @@ class _ConversationState extends State<Conversation> {
         ),
       ),
     );
+  }
+
+  Future<void> fetchShopData() async {
+    try {
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection("service_provider")
+          .where("uid", isEqualTo: widget.shopId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        setState(() {
+          shopData = querySnapshot.docs.first.data();
+        });
+      }
+
+      if (shopData['disabled']) {
+        disableAlert();
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> _sendMessage() async {

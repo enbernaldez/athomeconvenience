@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:athomeconvenience/widgets/buttons.dart';
 import 'package:athomeconvenience/widgets/message/conversation.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/about.dart';
@@ -38,6 +37,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   double averageRating = 0.0;
   num numberOfRatings = 0;
   String strAverageRating = '';
+  bool haveRatings = false;
 
   final ImagePicker picker = ImagePicker();
   XFile? image;
@@ -56,6 +56,28 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   bool isAbout = true;
   bool isWorks = false;
   bool isReviews = false;
+
+  void disableAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          title: const Text("Unavailable"),
+          contentPadding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+          content: const Text(
+              "This service provider is unavailable at this moment. They will not be notified of your messages, but they will still receive them."),
+          actionsPadding: const EdgeInsets.all(8.0),
+          actions: [
+            DialogButton(
+              onPress: () => Navigator.pop(context),
+              buttonText: "OK",
+            )
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +104,8 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
             setState(() {
               isLiked = false;
             });
+            String serviceProvider = shopData['service_provider_name'];
+            showToast("You unliked $serviceProvider");
           } else {
             // If the shop is not liked, add the UID to 'likes' array
             userDocRef.update({
@@ -90,6 +114,8 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
             setState(() {
               isLiked = true;
             });
+            String serviceProvider = shopData['service_provider_name'];
+            showToast("You liked $serviceProvider");
           }
         } else {
           // Handle scenario when user document isn't found
@@ -154,6 +180,17 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                       letterSpacing: -0.5,
                     ),
                   ),
+                  Visibility(
+                    visible: shopData['disabled'] ?? false,
+                    child: Text(
+                      "Unavailable",
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
 
                   const SizedBox(
                     height: 10,
@@ -180,9 +217,12 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                           allowHalfRating: true,
                           ignoreGestures: true,
                         ),
-                        Text(
-                          "$strAverageRating/5 ($numberOfRatings)",
-                          style: Theme.of(context).textTheme.bodySmall,
+                        Visibility(
+                          visible: haveRatings,
+                          child: Text(
+                            "$strAverageRating/5 ($numberOfRatings)",
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
                         ),
                       ],
                     ),
@@ -349,6 +389,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                                   "Loading...",
                           contactNum: shopData['contact_num'] ?? "Loading...",
                           workingHours: workingHours,
+                          gcash: shopData['gcash_num'] ?? "Loading...",
                         )
                       : (isWorks == true
                           ? WorksSection(
@@ -410,6 +451,10 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
           shopData = querySnapshot.docs.first.data();
         });
       }
+
+      if (shopData['disabled']) {
+        disableAlert();
+      }
     } catch (e) {
       print(e);
     }
@@ -466,9 +511,9 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
           numberOfRatings = starRatings.length;
           averageRating = starRatings.reduce((a, b) => a + b) / numberOfRatings;
           strAverageRating = averageRating.toStringAsFixed(1);
+          haveRatings = true;
         });
       } else {
-        print(widget.shopUid);
         print('starRatings is empty.');
       }
       // Now averageRating contains the average star rating
