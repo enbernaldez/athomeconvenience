@@ -13,9 +13,14 @@ class Conversation extends StatefulWidget {
   final String? docId;
   final String shopName;
   final String shopId;
+  final String? shopHours;
 
   const Conversation(
-      {Key? key, this.docId, required this.shopName, required this.shopId})
+      {Key? key,
+      this.docId,
+      required this.shopName,
+      required this.shopId,
+      this.shopHours})
       : super(key: key);
 
   @override
@@ -34,6 +39,12 @@ class _ConversationState extends State<Conversation> {
 
   String? locDataDocId;
   bool activeLocation = false;
+
+  bool open = true; //for business hours
+
+  final String pre1 = "How much does the service fee cost?";
+  final String pre2 = "How long will the service take?";
+  final String pre3 = "When are you available to perform the service?";
 
   Map<String, dynamic> shopData = {};
 
@@ -200,7 +211,7 @@ class _ConversationState extends State<Conversation> {
                                   if (value != null) {
                                     lat = '${value.latitude}';
                                     long = '${value.longitude}';
-                                    print('$lat, $long');
+                                    print('line 214: $lat, $long');
                                     await setUserLocationInFirestore(
                                       FirebaseAuth.instance.currentUser!.uid,
                                       widget.shopId,
@@ -256,7 +267,7 @@ class _ConversationState extends State<Conversation> {
                           if (value != null) {
                             lat = '${value.latitude}';
                             long = '${value.longitude}';
-                            print('$lat, $long');
+                            print('line 270: $lat, $long');
 
                             final String shopUID = widget.shopId;
                             await setUserLocationInFirestore(
@@ -306,6 +317,45 @@ class _ConversationState extends State<Conversation> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                widget.shopHours != null
+                    ? Visibility(
+                        visible: open,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.blue.shade200),
+                                  borderRadius: BorderRadius.circular(4)),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Business Hours: ${widget.shopHours!}",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    padding: EdgeInsets.zero,
+                                    constraints: BoxConstraints(),
+                                    onPressed: () {
+                                      setState(() {
+                                        open = false;
+                                      });
+                                    },
+                                    icon: Icon(
+                                      Icons.close,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        ),
+                      )
+                    : const SizedBox(),
                 Expanded(
                   child: ListView.builder(
                     reverse: true,
@@ -388,6 +438,64 @@ class _ConversationState extends State<Conversation> {
                     },
                   ),
                 ),
+                // ? PRE ASKED QUESTION
+                chatDocId == null
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  _sendMessage(true, pre1);
+                                },
+                                child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.blue.shade200),
+                                        borderRadius: BorderRadius.circular(4)),
+                                    child: Text(pre1)),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  _sendMessage(true, pre2);
+                                },
+                                child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.blue.shade200),
+                                        borderRadius: BorderRadius.circular(4)),
+                                    child: Text(pre2)),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  _sendMessage(true, pre3);
+                                },
+                                child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.blue.shade200),
+                                        borderRadius: BorderRadius.circular(4)),
+                                    child: Text(pre3)),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
                 StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('chats')
@@ -408,7 +516,7 @@ class _ConversationState extends State<Conversation> {
                         String lat = data['latitude'].toString();
                         String long = data['longitude'].toString();
 
-                        print('$lat & $long');
+                        print('line 519: $lat & $long');
 
                         String fromUserId = data['user_id'];
 
@@ -544,7 +652,9 @@ class _ConversationState extends State<Conversation> {
                         focusedBorder: const OutlineInputBorder(),
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.send),
-                          onPressed: _sendMessage,
+                          onPressed: () {
+                            _sendMessage(false, null);
+                          },
                         ),
                       ),
                     ),
@@ -575,13 +685,14 @@ class _ConversationState extends State<Conversation> {
         disableAlert();
       }
     } catch (e) {
-      print(e);
+      print('line 688: $e');
     }
   }
 
-  Future<void> _sendMessage() async {
+  Future<void> _sendMessage(bool preQuestion, String? selectedPreQ) async {
     String message = chatTextFieldController.text.trim();
-    if (message.isNotEmpty) {
+
+    if (message.isNotEmpty || preQuestion == true) {
       final uid = FirebaseAuth.instance.currentUser!.uid;
 
       try {
@@ -623,7 +734,8 @@ class _ConversationState extends State<Conversation> {
             DocumentReference newChatDocRef = await chatsCollection.add({
               'users_id': [uid, widget.shopId],
               'composite_id': '${uid}_${widget.shopId}',
-              'latest_chat_message': message,
+              'latest_chat_message':
+                  preQuestion == true ? selectedPreQ : message,
               'latest_chat_user': uid,
               'latest_timestamp': timeSent,
             });
@@ -638,7 +750,7 @@ class _ConversationState extends State<Conversation> {
             // Add the initial message to the messages subcollection
             await messagesCollection.add({
               'is_read': false,
-              'message_text': message,
+              'message_text': preQuestion == true ? selectedPreQ : message,
               'receiver_id': widget.shopId,
               'sender_id': uid,
               'timestamp': timeSent,
@@ -650,11 +762,11 @@ class _ConversationState extends State<Conversation> {
 
             sendNotification('message');
           } catch (e) {
-            print("error sending message: $e");
+            print("error sending message, line 765: $e");
           }
         }
       } catch (e) {
-        print("error sending msg: $e");
+        print("error sending msg, line 769 $e");
       }
 
       chatTextFieldController.clear();
@@ -695,7 +807,7 @@ class _ConversationState extends State<Conversation> {
             'user_doc_id': widget.shopId,
           });
         } catch (e) {
-          print("error sending message: $e");
+          print("error sending message, line 810: $e");
         }
       } else {
         print("Notification already sent for a message today");
@@ -729,7 +841,7 @@ class _ConversationState extends State<Conversation> {
             'user_doc_id': widget.shopId,
           });
         } catch (e) {
-          print("error sending message: $e");
+          print("error sending message, line 844: $e");
         }
       } else {
         print("Notification already sent for a message today");
@@ -762,7 +874,7 @@ class _ConversationState extends State<Conversation> {
             'user_doc_id': widget.shopId,
           });
         } catch (e) {
-          print("error sending message: $e");
+          print("error sending message, line 877: $e");
         }
       } else {
         print("Notification already sent for a message today");
@@ -831,7 +943,7 @@ class _ConversationState extends State<Conversation> {
         'timestamp': Timestamp.now(),
       });
     } catch (e) {
-      print(e);
+      print('line 946: $e');
     }
   }
 
@@ -845,7 +957,7 @@ class _ConversationState extends State<Conversation> {
         'active': false,
       });
     } catch (e) {
-      print(e);
+      print('line 960: $e');
     }
   }
 
@@ -864,7 +976,7 @@ class _ConversationState extends State<Conversation> {
 
       sendNotification('agreement');
     } catch (e) {
-      print(e);
+      print('line 979: $e');
     }
   }
 

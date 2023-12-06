@@ -29,7 +29,7 @@ class ShopProfilePage extends StatefulWidget {
 class _ShopProfilePageState extends State<ShopProfilePage> {
   String uid = FirebaseAuth.instance.currentUser!.uid;
 
-  String? chatDocId;
+  // String? chatDocId;
   bool? isLiked;
 
   Map<String, dynamic> shopData = {};
@@ -48,7 +48,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
     fetchShopData();
     fetchUserLikes();
     fetchAverageRating();
-    fetchChatDocId();
+    // fetchChatDocId();
   }
 
   bool disableButton = false;
@@ -121,7 +121,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
           // Handle scenario when user document isn't found
         }
       } catch (e) {
-        print(e);
+        print('line 124: $e');
       }
     }
 
@@ -235,32 +235,53 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                   Row(
                     children: [
                       // *message btn
-                      Expanded(
-                        child: Button(
-                          onPress: shopData['uid'] !=
-                                  FirebaseAuth.instance.currentUser!.uid
-                              ? () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          Conversation(
-                                        docId: chatDocId,
-                                        shopId: shopData['uid'],
-                                        shopName:
-                                            shopData['service_provider_name'],
-                                      ),
-                                    ),
-                                  );
-                                }
-                              : null,
-                          buttonText: 'Message',
-                          buttonColor: shopData['uid'] ==
-                                  FirebaseAuth.instance.currentUser!.uid
-                              ? Colors.grey
-                              : null,
-                          textType: Theme.of(context).textTheme.displaySmall,
-                        ),
-                      ),
+                      StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('chats')
+                              .where("composite_id",
+                                  isEqualTo:
+                                      '${FirebaseAuth.instance.currentUser!.uid}_${widget.shopUid}')
+                              .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            String? chatDocumentId;
+
+                            if (snapshot.hasData &&
+                                snapshot.data!.docs.isNotEmpty) {
+                              chatDocumentId = snapshot.data!.docs.first.id;
+                            }
+
+                            print('chat doc id: $chatDocumentId');
+                            return Expanded(
+                              child: Button(
+                                onPress: shopData['uid'] !=
+                                        FirebaseAuth.instance.currentUser!.uid
+                                    ? () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                Conversation(
+                                              docId: chatDocumentId,
+                                              shopId: shopData['uid'],
+                                              shopName: shopData[
+                                                  'service_provider_name'],
+                                              shopHours:
+                                                  '${shopData['service_start'] != null && shopData['service_end'] != null ? "${shopData['service_start']} - ${shopData['service_end']}" : ''}',
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    : null,
+                                buttonText: 'Message',
+                                buttonColor: shopData['uid'] ==
+                                        FirebaseAuth.instance.currentUser!.uid
+                                    ? Colors.grey
+                                    : null,
+                                textType:
+                                    Theme.of(context).textTheme.displaySmall,
+                              ),
+                            );
+                          }),
                       const SizedBox(
                         width: 10,
                       ),
@@ -424,7 +445,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
           onPressed: () {
             myAlert();
             if (image != null) {
-              print(image!.path);
+              print('line 448: ${image!.path}');
               insertWork();
             }
           },
@@ -456,7 +477,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
         disableAlert();
       }
     } catch (e) {
-      print(e);
+      print('line 480: $e');
     }
   }
 
@@ -485,7 +506,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
         }
       }
     } catch (e) {
-      print(e);
+      print('line 509: $e');
     }
   }
 
@@ -518,34 +539,34 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
       }
       // Now averageRating contains the average star rating
     } catch (e) {
-      print("Error fetching data: $e");
+      print("Error fetching data, line 542: $e");
     }
   }
 
-  Future<void> fetchChatDocId() async {
-    try {
-      final uid = FirebaseAuth.instance.currentUser!.uid;
+  // Future<void> fetchChatDocId() async {
+  //   try {
+  //     final uid = FirebaseAuth.instance.currentUser!.uid;
 
-      final compositeId = '${uid}_${widget.shopUid}';
+  //     final compositeId = '${uid}_${widget.shopUid}';
 
-      QuerySnapshot chatQuery = await FirebaseFirestore.instance
-          .collection('chats')
-          .where("composite_id", isEqualTo: compositeId)
-          .get();
+  //     QuerySnapshot chatQuery = await FirebaseFirestore.instance
+  //         .collection('chats')
+  //         .where("composite_id", isEqualTo: compositeId)
+  //         .get();
 
-      if (chatQuery.docs.isNotEmpty) {
-        // Assuming there's only one document matching the condition
-        String docId = chatQuery.docs.first.id;
-        setState(() {
-          chatDocId = docId;
-        });
-      } else {
-        print('No matching chat document found.');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+  //     if (chatQuery.docs.isNotEmpty) {
+  //       // Assuming there's only one document matching the condition
+  //       String docId = chatQuery.docs.first.id;
+  //       setState(() {
+  //         chatDocId = docId;
+  //       });
+  //     } else {
+  //       print('No matching chat document found.');
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   Future getImage(ImageSource media) async {
     var img = await picker.pickImage(source: media);
@@ -653,12 +674,12 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
         }).then((value) {
           showToast("Image Uploaded Successfully");
         }).catchError((error) {
-          print(error);
+          print('line 677: $error');
           showToast("Error occured while uploading image");
         });
         // ?=========================================================
       } catch (e) {
-        print("error uploading work: $e");
+        print("error uploading work, line 682: $e");
       }
     }
   }
