@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:athomeconvenience/contact_us_page.dart';
+import 'package:athomeconvenience/functions/constants.dart';
 import 'package:athomeconvenience/functions/fetch_data.dart';
 import 'package:athomeconvenience/functions/functions.dart';
 import 'package:athomeconvenience/landing_page.dart';
@@ -12,9 +13,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+
+Iterable<String> categoryKeys = serviceCategoryMap.keys;
+List<String> categoryKeyList = categoryKeys.toList();
 
 class CustomerSettingsPage extends StatefulWidget {
   const CustomerSettingsPage({super.key});
@@ -106,13 +111,19 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
   bool _readonly = true;
   String action = 'Edit';
 
+  TimeOfDay? selectedTimeST; //*
+  TimeOfDay? selectedTimeET; //*
+
   String profilePic = '';
   final nameController = TextEditingController();
-  final addressController = TextEditingController();
   final phoneNumController = TextEditingController();
+  final addressController = TextEditingController();
   final emailAddController = TextEditingController();
   final profileNameController = TextEditingController();
+  String serviceCategory = categoryKeyList.first; //*
   final contactNumController = TextEditingController();
+  String startTime = 'Start Time';
+  String endTime = 'End Time';
   final locationController = TextEditingController();
   final gCashNumController = TextEditingController();
   bool isDisabled = false;
@@ -141,7 +152,6 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
           // print('Email: $email');
           setState(() {
             profilePic = cData['profile_pic'] ?? 'null';
-            print('profilePic: $profilePic');
             nameController.text = cData['name'] ?? 'Loading';
             addressController.text = cData['address'] ?? 'Loading';
             phoneNumController.text = cData['phone_num'] ?? 'Loading';
@@ -163,7 +173,10 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
           setState(() {
             profileNameController.text =
                 spData['service_provider_name'] ?? 'Loading';
+            serviceCategory = spData['category'] ?? "Loading";
             contactNumController.text = spData['contact_num'] ?? 'Loading';
+            startTime = spData['service_start'] ?? "Loading";
+            endTime = spData['service_end'] ?? "Loading";
             locationController.text = spData['service_address'] ?? 'Loading';
             gCashNumController.text = spData['gcash_num'] ?? 'Loading';
             isDisabled = spData['disabled'] ?? 'false';
@@ -214,7 +227,10 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                   final String newEmailAdd = emailAddController.text;
 
                   final String newProfileName = profileNameController.text;
+                  final String newServiceCat = serviceCategory;
                   final String newContactNum = contactNumController.text;
+                  final String newStartTime = startTime;
+                  final String newEndTime = endTime;
                   final String newLocation = locationController.text;
                   final String newGCashNum = gCashNumController.text;
 
@@ -264,7 +280,10 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                       .doc(uid)
                       .update({
                     'service_provider_name': newProfileName,
+                    'category': newServiceCat,
                     'contact_num': newContactNum,
+                    'service_start': newStartTime,
+                    'service_end': newEndTime,
                     'service_address': newLocation,
                     'gcash_num': newGCashNum,
                   });
@@ -433,6 +452,38 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                               ),
                               const PaddedDivider(),
                               // TODO: service category
+                              LayoutBuilder(
+                                builder: (context, constraints) {
+                                  return IgnorePointer(
+                                    ignoring: _readonly,
+                                    child: DropdownMenu<String>(
+                                      width: constraints.maxWidth,
+                                      label: const Text('SERVICE CATEGORY'),
+                                      initialSelection: serviceCategory,
+                                      inputDecorationTheme:
+                                          const InputDecorationTheme(
+                                        contentPadding: EdgeInsets.fromLTRB(
+                                            8.0, 8.0, 8.0, 4.0),
+                                        border: InputBorder.none,
+                                      ),
+                                      onSelected: (String? value) {
+                                        setState(() {
+                                          serviceCategory = value!;
+                                        });
+                                      },
+                                      dropdownMenuEntries: categoryKeyList
+                                          .map<DropdownMenuEntry<String>>(
+                                              (String value) {
+                                        return DropdownMenuEntry<String>(
+                                          value: value,
+                                          label: value,
+                                        );
+                                      }).toList(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              const PaddedDivider(),
                               TextFormField(
                                 controller: contactNumController,
                                 inputFormatters: [
@@ -450,6 +501,129 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                               ),
                               const PaddedDivider(),
                               // TODO: working hours
+                              Stack(
+                                children: [
+                                  Row(
+                                    children: [
+                                      const SizedBox(
+                                        width: 8.0,
+                                      ),
+                                      Text(
+                                        "WORKING HOURS",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(color: Colors.grey[800]),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: OutlinedButton(
+                                          style: OutlinedButton.styleFrom(
+                                            padding: const EdgeInsets.all(0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4.0),
+                                            ),
+                                            side: BorderSide.none,
+                                          ),
+                                          onPressed: _readonly
+                                              ? null
+                                              : () async {
+                                                  TimeOfDay? time =
+                                                      await showTimePickerFunction(
+                                                          context,
+                                                          selectedTimeST);
+                                                  setState(() {
+                                                    selectedTimeST = time;
+                                                    if (selectedTimeST !=
+                                                        null) {
+                                                      startTime =
+                                                          selectedTimeST!
+                                                              .format(context);
+                                                    }
+                                                  });
+                                                },
+                                          child: Container(
+                                            width: MediaQuery.sizeOf(context)
+                                                .width,
+                                            height: 50,
+                                            alignment: Alignment.bottomCenter,
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8),
+                                            child: Text(
+                                              startTime,
+                                              style: GoogleFonts.poppins(
+                                                textStyle: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Text(
+                                          'to',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: OutlinedButton(
+                                          style: OutlinedButton.styleFrom(
+                                            padding: const EdgeInsets.all(0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4.0),
+                                            ),
+                                            side: BorderSide.none,
+                                          ),
+                                          onPressed: _readonly
+                                              ? null
+                                              : () async {
+                                                  TimeOfDay? time =
+                                                      await showTimePickerFunction(
+                                                          context,
+                                                          selectedTimeST);
+                                                  setState(() {
+                                                    selectedTimeET = time;
+                                                    if (selectedTimeET !=
+                                                        null) {
+                                                      endTime = selectedTimeET!
+                                                          .format(context);
+                                                    }
+                                                  });
+                                                },
+                                          child: Container(
+                                            width: MediaQuery.sizeOf(context)
+                                                .width,
+                                            height: 50,
+                                            alignment: Alignment.bottomCenter,
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8),
+                                            child: Text(
+                                              endTime,
+                                              textAlign: TextAlign.left,
+                                              style: GoogleFonts.poppins(
+                                                textStyle: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const PaddedDivider(),
                               TextFormField(
                                 controller: locationController,
                                 keyboardType: TextInputType.text,

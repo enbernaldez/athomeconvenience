@@ -23,7 +23,6 @@ TextDirection textDirection = TextDirection.ltr;
 MaterialTapTargetSize tapTargetSize = MaterialTapTargetSize.padded;
 Orientation orientation = Orientation.portrait;
 bool use24HourTime = false;
-String startTime = '';
 String buttonTextST = 'Start Time';
 String buttonTextET = 'End Time';
 

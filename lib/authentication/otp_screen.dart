@@ -101,47 +101,46 @@ class _OtpScreenState extends State<OtpScreen> {
           Center(
             child: Padding(
               padding: const EdgeInsets.all(32),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 100,
-                  ),
-                  AutoSizeText(
-                    'Verification',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                    maxLines: 1,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text("Enter the OTP sent to your phone number"),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  // VERIFICATION CODE INPUT
-                  Pinput(
-                    length: 6,
-                    controller: otpController,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  // VERIFY BUTTON
-                  Button(
-                    buttonText: 'VERIFY',
-                    textType: Theme.of(context).textTheme.displaySmall,
-                    onPress: handleClick,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text("Didn't receive any code?"),
-                  const Text(
-                    "Resend new code",
-                    style: TextStyle(color: Colors.blue),
-                  )
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    AutoSizeText(
+                      'Verification',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      maxLines: 1,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text("Enter the OTP sent to your phone number."),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    // VERIFICATION CODE INPUT
+                    Pinput(
+                      length: 6,
+                      controller: otpController,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    // VERIFY BUTTON
+                    Button(
+                      buttonText: 'VERIFY',
+                      textType: Theme.of(context).textTheme.displaySmall,
+                      onPress: handleClick,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text("Didn't receive any code?"),
+                    const Text(
+                      "Resend new code",
+                      style: TextStyle(color: Colors.blue),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

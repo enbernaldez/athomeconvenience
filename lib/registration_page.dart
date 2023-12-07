@@ -531,81 +531,132 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                     ),
                                   ),
                                   const SizedBox(height: 20),
-                                  Row(
+                                  Stack(
                                     children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: OutlinedButton(
-                                          style: OutlinedButton.styleFrom(
-                                            padding: const EdgeInsets.all(16),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(4.0),
-                                            ),
+                                      Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 8.0,
                                           ),
-                                          onPressed: () async {
-                                            TimeOfDay? time =
-                                                await showTimePickerFunction(
-                                                    context, selectedTimeST);
-                                            setState(() {
-                                              selectedTimeST = time;
-                                              if (selectedTimeST != null) {
-                                                buttonTextST = selectedTimeST!
-                                                    .format(context);
-                                              }
-                                            });
-                                          },
-                                          child: Text(
-                                            buttonTextST,
-                                            style: GoogleFonts.poppins(
-                                              textStyle: TextStyle(
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.grey[850],
+                                          Text(
+                                            "WORKING HOURS",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall!
+                                                .copyWith(
+                                                    color: Colors.grey[800]),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: OutlinedButton(
+                                              style: OutlinedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.all(16),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.0),
+                                                ),
+                                              ),
+                                              onPressed: () async {
+                                                TimeOfDay? time =
+                                                    await showTimePickerFunction(
+                                                        context,
+                                                        selectedTimeST);
+                                                setState(() {
+                                                  selectedTimeST = time;
+                                                  if (selectedTimeST != null) {
+                                                    buttonTextST =
+                                                        selectedTimeST!
+                                                            .format(context);
+                                                  }
+                                                });
+                                              },
+                                              child: Container(
+                                                width:
+                                                    MediaQuery.sizeOf(context)
+                                                        .width,
+                                                height: 50,
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 8),
+                                                child: Text(
+                                                  buttonTextST,
+                                                  style: GoogleFonts.poppins(
+                                                    textStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: Colors.grey[850],
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                      const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Text(
-                                          'to',
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: OutlinedButton(
-                                          style: OutlinedButton.styleFrom(
-                                            padding: const EdgeInsets.all(16),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(4.0),
+                                          const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Text(
+                                              'to',
+                                              textAlign: TextAlign.center,
                                             ),
                                           ),
-                                          onPressed: () async {
-                                            TimeOfDay? time =
-                                                await showTimePickerFunction(
-                                                    context, selectedTimeST);
-                                            setState(() {
-                                              selectedTimeET = time;
-                                              if (selectedTimeET != null) {
-                                                buttonTextET = selectedTimeET!
-                                                    .format(context);
-                                              }
-                                            });
-                                          },
-                                          child: Text(
-                                            buttonTextET,
-                                            textAlign: TextAlign.left,
-                                            style: GoogleFonts.poppins(
-                                              textStyle: TextStyle(
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.grey[850],
+                                          Expanded(
+                                            flex: 1,
+                                            child: OutlinedButton(
+                                              style: OutlinedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.all(16),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.0),
+                                                ),
+                                              ),
+                                              onPressed: () async {
+                                                TimeOfDay? time =
+                                                    await showTimePickerFunction(
+                                                        context,
+                                                        selectedTimeST);
+                                                setState(() {
+                                                  selectedTimeET = time;
+                                                  if (selectedTimeET != null) {
+                                                    buttonTextET =
+                                                        selectedTimeET!
+                                                            .format(context);
+                                                  }
+                                                });
+                                              },
+                                              child: Container(
+                                                width:
+                                                    MediaQuery.sizeOf(context)
+                                                        .width,
+                                                height: 50,
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 8),
+                                                child: Text(
+                                                  buttonTextET,
+                                                  textAlign: TextAlign.left,
+                                                  style: GoogleFonts.poppins(
+                                                    textStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: Colors.grey[850],
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
                                     ],
                                   ),

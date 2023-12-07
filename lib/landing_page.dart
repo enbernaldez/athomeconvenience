@@ -27,12 +27,11 @@ class LandingPage extends StatelessWidget {
                   child: Column(
                     children: [
                       Image.asset('images/icon_landingPage.png'),
-                      AutoSizeText(
-                        'At-Home Convenience',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headlineSmall,
-                        maxLines: 1,
-                      ),
+                      AutoSizeText('At-Home Convenience',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                          maxLines: 1,
+                          minFontSize: 20),
                     ],
                   ),
                 ),
