@@ -238,6 +238,29 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                   final String newLocation = locationController.text;
                   final String newGCashNum = gCashNumController.text;
 
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(uid)
+                      .update({
+                    'name': newName,
+                    'address': newAddress,
+                    'phone_num': newPhoneNum,
+                    'email_add': newEmailAdd,
+                  });
+                  await FirebaseFirestore.instance
+                      .collection('service_provider')
+                      .doc(uid)
+                      .update({
+                    'service_provider_name': newProfileName,
+                    'category': newServiceCat,
+                    'services_offered': newServicesOffered,
+                    'contact_num': newContactNum,
+                    'service_start': newStartTime,
+                    'service_end': newEndTime,
+                    'service_address': newLocation,
+                    'gcash_num': newGCashNum,
+                  });
+
                   // ?======== Upload Image First in Firebase Storage ==============
                   File file = File(imagePath!);
 
@@ -269,29 +292,17 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                     await userDoc.update({'profile_pic': imageUrl});
                   }
 
-                  await FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(uid)
-                      .update({
-                    'profile_pic': imageUrl,
-                    'name': newName,
-                    'address': newAddress,
-                    'phone_num': newPhoneNum,
-                    'email_add': newEmailAdd,
-                  });
-                  await FirebaseFirestore.instance
-                      .collection('service_provider')
-                      .doc(uid)
-                      .update({
-                    'service_provider_name': newProfileName,
-                    'category': newServiceCat,
-                    'services_offered': newServicesOffered,
-                    'contact_num': newContactNum,
-                    'service_start': newStartTime,
-                    'service_end': newEndTime,
-                    'service_address': newLocation,
-                    'gcash_num': newGCashNum,
-                  });
+                  if (!userDocSnapshot.exists ||
+                      !userDocSnapshot
+                          .data()!
+                          .containsKey('services_offered')) {
+                    await userDoc.set({
+                      'services_offered': newServicesOffered,
+                    }, SetOptions(merge: true));
+                  } else {
+                    await userDoc
+                        .update({'services_offered': newServicesOffered});
+                  }
                 } catch (e) {
                   print(e);
                 }
