@@ -171,11 +171,16 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
         var spData = spDocumentSnapshot.data();
         if (spData != null) {
           setState(() {
+            String? placeHolder;
+            if (!spDocumentSnapshot.data()!.containsKey('services_offered')) {
+              placeHolder = "";
+            }
+
             profileNameController.text =
                 spData['service_provider_name'] ?? 'Loading';
             serviceCategory = spData['category'] ?? "Loading";
             servicesOfferedController.text =
-                spData['services_offered'] ?? 'Loading';
+                spData['services_offered'] ?? placeHolder ?? 'Loading';
             contactNumController.text = spData['contact_num'] ?? 'Loading';
             startTime = spData['service_start'] ?? "Loading";
             endTime = spData['service_end'] ?? "Loading";
@@ -292,15 +297,27 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                     await userDoc.update({'profile_pic': imageUrl});
                   }
 
-                  if (!userDocSnapshot.exists ||
-                      !userDocSnapshot
-                          .data()!
-                          .containsKey('services_offered')) {
-                    await userDoc.set({
+                  final spDoc = FirebaseFirestore.instance
+                      .collection('service_provider')
+                      .doc(uid);
+                  final spDocSnapshot = await spDoc.get();
+
+                  if (!spDocSnapshot.exists ||
+                      !spDocSnapshot.data()!.containsKey('profile_pic')) {
+                    await spDoc.set({
+                      'profile_pic': imageUrl,
+                    }, SetOptions(merge: true));
+                  } else {
+                    await spDoc.update({'profile_pic': imageUrl});
+                  }
+
+                  if (!spDocSnapshot.exists ||
+                      !spDocSnapshot.data()!.containsKey('services_offered')) {
+                    await spDoc.set({
                       'services_offered': newServicesOffered,
                     }, SetOptions(merge: true));
                   } else {
-                    await userDoc
+                    await spDoc
                         .update({'services_offered': newServicesOffered});
                   }
                 } catch (e) {
@@ -473,6 +490,10 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                     ignoring: _readonly,
                                     child: DropdownMenu<String>(
                                       width: constraints.maxWidth,
+                                      textStyle: const TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                      ),
                                       label: const Text('SERVICE CATEGORY'),
                                       initialSelection: serviceCategory,
                                       inputDecorationTheme:
