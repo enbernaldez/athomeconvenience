@@ -403,6 +403,8 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                   isAbout == true
                       ? AboutSection(
                           category: shopData['category'] ?? "Loading...",
+                          servicesOffered:
+                              shopData['services_offered'] ?? "Loading...",
                           shopAddress:
                               (shopData['service_address'].toString().isNotEmpty
                                       ? shopData['service_address']

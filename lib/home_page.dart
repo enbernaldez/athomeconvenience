@@ -91,6 +91,7 @@ class _HomePageState extends State<HomePage> {
                                           horizontal: 16, vertical: 8),
                                       child: Text(
                                         item.shopName,
+                                        overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(fontSize: 20),
                                       ),
                                     ),
@@ -235,23 +236,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                 ],
               ),
-              Button(
-                  onPress: () async {
-                    // ?========set SharedPreference========
-                    final SharedPreferences s =
-                        await SharedPreferences.getInstance();
-                    s.setBool("is_signedin", false);
-                    // ?==================================
-
-                    await FirebaseAuth.instance.signOut();
-
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                const LandingPage()),
-                        (route) => false);
-                  },
-                  buttonText: "LOG OUT")
             ],
           ),
         ),

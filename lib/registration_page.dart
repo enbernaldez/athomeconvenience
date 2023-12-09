@@ -38,6 +38,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   // * SERVICE PROVIDER
   final serviceNameController = TextEditingController();
+  final servicesOfferedController = TextEditingController();
   final contactNumController = TextEditingController();
   final serviceAddressController = TextEditingController();
   final gcashNumController = TextEditingController();
@@ -229,6 +230,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       if (_isServiceProvider == true) {
         final String serviceName = serviceNameController.text;
         final String serviceCat = serviceCategory;
+        final String servicesOffered = servicesOfferedController.text;
         final String serviceNum = contactNumController.text;
         final TimeOfDay? startTime = selectedTimeST;
         final TimeOfDay? endTime = selectedTimeET;
@@ -275,6 +277,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 'uid': uid,
                 'service_provider_name': serviceName,
                 'category': serviceCat,
+                'services_offered': servicesOffered,
                 'contact_num': serviceNum,
                 'service_start': serviceStart,
                 'service_end': serviceEnd,
@@ -512,12 +515,28 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   ),
                                   const SizedBox(height: 20),
                                   TextFormField(
+                                    controller: servicesOfferedController,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Required';
+                                      }
+                                      return null;
+                                    },
+                                    keyboardType: TextInputType.text,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Services Offered',
+                                      contentPadding: EdgeInsets.all(15),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  TextFormField(
                                     controller: contactNumController,
                                     inputFormatters: [
                                       LengthLimitingTextInputFormatter(11),
                                     ],
                                     validator: (value) {
-                                      if (value?.length != 11 &&
+                                      if (value?.length != 11 ||
                                           value == null) {
                                         return 'Contact number must be 11 digits';
                                       }
@@ -530,130 +549,144 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                       contentPadding: EdgeInsets.all(15),
                                     ),
                                   ),
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: 12),
                                   Stack(
                                     children: [
-                                      Row(
+                                      Column(
                                         children: [
-                                          const SizedBox(
-                                            width: 8.0,
-                                          ),
-                                          Text(
-                                            "WORKING HOURS",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall!
-                                                .copyWith(
-                                                    color: Colors.grey[800]),
+                                          const SizedBox(height: 8),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Expanded(
+                                                flex: 1,
+                                                child: OutlinedButton(
+                                                  style:
+                                                      OutlinedButton.styleFrom(
+                                                    padding:
+                                                        const EdgeInsets.all(0),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4.0),
+                                                    ),
+                                                  ),
+                                                  onPressed: () async {
+                                                    TimeOfDay? time =
+                                                        await showTimePickerFunction(
+                                                            context,
+                                                            selectedTimeST);
+                                                    setState(() {
+                                                      selectedTimeST = time;
+                                                      if (selectedTimeST !=
+                                                          null) {
+                                                        buttonTextST =
+                                                            selectedTimeST!
+                                                                .format(
+                                                                    context);
+                                                      }
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                    width: MediaQuery.sizeOf(
+                                                            context)
+                                                        .width,
+                                                    height: 50,
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      buttonTextST,
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                        textStyle: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          color:
+                                                              Colors.grey[850],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  'to',
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: OutlinedButton(
+                                                  style:
+                                                      OutlinedButton.styleFrom(
+                                                    padding:
+                                                        const EdgeInsets.all(0),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4.0),
+                                                    ),
+                                                  ),
+                                                  onPressed: () async {
+                                                    TimeOfDay? time =
+                                                        await showTimePickerFunction(
+                                                            context,
+                                                            selectedTimeST);
+                                                    setState(() {
+                                                      selectedTimeET = time;
+                                                      if (selectedTimeET !=
+                                                          null) {
+                                                        buttonTextET =
+                                                            selectedTimeET!
+                                                                .format(
+                                                                    context);
+                                                      }
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                    width: MediaQuery.sizeOf(
+                                                            context)
+                                                        .width,
+                                                    height: 50,
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      buttonTextET,
+                                                      textAlign: TextAlign.left,
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                        textStyle: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          color:
+                                                              Colors.grey[850],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
                                       Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
                                         children: [
-                                          Expanded(
-                                            flex: 1,
-                                            child: OutlinedButton(
-                                              style: OutlinedButton.styleFrom(
-                                                padding:
-                                                    const EdgeInsets.all(16),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.0),
-                                                ),
-                                              ),
-                                              onPressed: () async {
-                                                TimeOfDay? time =
-                                                    await showTimePickerFunction(
-                                                        context,
-                                                        selectedTimeST);
-                                                setState(() {
-                                                  selectedTimeST = time;
-                                                  if (selectedTimeST != null) {
-                                                    buttonTextST =
-                                                        selectedTimeST!
-                                                            .format(context);
-                                                  }
-                                                });
-                                              },
-                                              child: Container(
-                                                width:
-                                                    MediaQuery.sizeOf(context)
-                                                        .width,
-                                                height: 50,
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 8),
-                                                child: Text(
-                                                  buttonTextST,
-                                                  style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      color: Colors.grey[850],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
+                                          const SizedBox(
+                                            width: 12.0,
                                           ),
-                                          const Padding(
-                                            padding: EdgeInsets.all(8.0),
+                                          Container(
+                                            color: Colors.grey[50],
                                             child: Text(
-                                              'to',
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 1,
-                                            child: OutlinedButton(
-                                              style: OutlinedButton.styleFrom(
-                                                padding:
-                                                    const EdgeInsets.all(16),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.0),
-                                                ),
-                                              ),
-                                              onPressed: () async {
-                                                TimeOfDay? time =
-                                                    await showTimePickerFunction(
-                                                        context,
-                                                        selectedTimeST);
-                                                setState(() {
-                                                  selectedTimeET = time;
-                                                  if (selectedTimeET != null) {
-                                                    buttonTextET =
-                                                        selectedTimeET!
-                                                            .format(context);
-                                                  }
-                                                });
-                                              },
-                                              child: Container(
-                                                width:
-                                                    MediaQuery.sizeOf(context)
-                                                        .width,
-                                                height: 50,
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 8),
-                                                child: Text(
-                                                  buttonTextET,
-                                                  textAlign: TextAlign.left,
-                                                  style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      color: Colors.grey[850],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
+                                              " Working Hours ",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall!
+                                                  .copyWith(
+                                                      color: Colors.grey[800]),
                                             ),
                                           ),
                                         ],

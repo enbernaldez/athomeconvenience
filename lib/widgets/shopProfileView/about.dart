@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AboutSection extends StatelessWidget {
   final String category;
+  final String servicesOffered;
   final String shopAddress;
   final String contactNum;
   final String workingHours;
@@ -11,6 +12,7 @@ class AboutSection extends StatelessWidget {
   const AboutSection({
     super.key,
     required this.category,
+    required this.servicesOffered,
     required this.shopAddress,
     required this.contactNum,
     required this.workingHours,
@@ -37,6 +39,29 @@ class AboutSection extends StatelessWidget {
               Expanded(
                 child: Text(
                   category,
+                  style: GoogleFonts.dmSans(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 15),
+        SizedBox(
+          width: double.infinity,
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Services Offered:",
+                  style: GoogleFonts.dmSans(
+                      fontSize: 16, color: Colors.grey.shade600),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  servicesOffered,
                   style: GoogleFonts.dmSans(
                     fontSize: 16,
                   ),

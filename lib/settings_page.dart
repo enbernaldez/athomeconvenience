@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:athomeconvenience/contact_us_page.dart';
 import 'package:athomeconvenience/functions/constants.dart';
 import 'package:athomeconvenience/functions/fetch_data.dart';
@@ -121,6 +120,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
   final emailAddController = TextEditingController();
   final profileNameController = TextEditingController();
   String serviceCategory = categoryKeyList.first; //*
+  final servicesOfferedController = TextEditingController();
   final contactNumController = TextEditingController();
   String startTime = 'Start Time';
   String endTime = 'End Time';
@@ -174,6 +174,8 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
             profileNameController.text =
                 spData['service_provider_name'] ?? 'Loading';
             serviceCategory = spData['category'] ?? "Loading";
+            servicesOfferedController.text =
+                spData['services_offered'] ?? 'Loading';
             contactNumController.text = spData['contact_num'] ?? 'Loading';
             startTime = spData['service_start'] ?? "Loading";
             endTime = spData['service_end'] ?? "Loading";
@@ -228,6 +230,8 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
 
                   final String newProfileName = profileNameController.text;
                   final String newServiceCat = serviceCategory;
+                  final String newServicesOffered =
+                      servicesOfferedController.text;
                   final String newContactNum = contactNumController.text;
                   final String newStartTime = startTime;
                   final String newEndTime = endTime;
@@ -281,6 +285,7 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                       .update({
                     'service_provider_name': newProfileName,
                     'category': newServiceCat,
+                    'services_offered': newServicesOffered,
                     'contact_num': newContactNum,
                     'service_start': newStartTime,
                     'service_end': newEndTime,
@@ -451,7 +456,6 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                 ),
                               ),
                               const PaddedDivider(),
-                              // TODO: service category
                               LayoutBuilder(
                                 builder: (context, constraints) {
                                   return IgnorePointer(
@@ -485,6 +489,18 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                               ),
                               const PaddedDivider(),
                               TextFormField(
+                                controller: servicesOfferedController,
+                                keyboardType: TextInputType.text,
+                                readOnly: _readonly,
+                                decoration: const InputDecoration(
+                                  labelText: 'SERVICES OFFERED',
+                                  border: InputBorder.none,
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 8),
+                                ),
+                              ),
+                              const PaddedDivider(),
+                              TextFormField(
                                 controller: contactNumController,
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(11),
@@ -500,7 +516,6 @@ class _CustomerSettingsPageState extends State<CustomerSettingsPage> {
                                 ),
                               ),
                               const PaddedDivider(),
-                              // TODO: working hours
                               Stack(
                                 children: [
                                   Row(

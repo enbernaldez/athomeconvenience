@@ -27,7 +27,6 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
-  // bool _passwordVisible = false;
   final _loginFormKey = GlobalKey<FormState>();
 
   final phoneController = TextEditingController();
@@ -73,6 +72,7 @@ class _LogInPageState extends State<LogInPage> {
           // throw Exception(e);
           print("error here line 57");
           print(e);
+          showToast("The format of the phone number provided is incorrect.");
         },
         codeSent: (String verificationId, int? resendToken) {
           setState(() {
