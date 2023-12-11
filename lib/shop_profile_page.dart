@@ -6,6 +6,7 @@ import 'package:athomeconvenience/widgets/shopProfileView/reviews.dart';
 import 'package:athomeconvenience/widgets/shopProfileView/works.dart';
 import 'package:athomeconvenience/functions/functions.dart';
 import 'package:athomeconvenience/widgets/star_rating.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -33,6 +34,7 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
   bool? isLiked;
 
   Map<String, dynamic> shopData = {};
+  String? placeHolder;
   List<String> userLikes = [];
   double averageRating = 0.0;
   num numberOfRatings = 0;
@@ -172,8 +174,10 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                   ),
 
                   // SHOP NAME
-                  Text(
+                  AutoSizeText(
                     shopData['service_provider_name'] ?? "Loading",
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
                     style: GoogleFonts.dmSans(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -403,8 +407,9 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
                   isAbout == true
                       ? AboutSection(
                           category: shopData['category'] ?? "Loading...",
-                          servicesOffered:
-                              shopData['services_offered'] ?? "Loading...",
+                          servicesOffered: shopData['services_offered'] ??
+                              placeHolder ??
+                              "Loading...",
                           shopAddress:
                               (shopData['service_address'].toString().isNotEmpty
                                       ? shopData['service_address']
@@ -473,6 +478,12 @@ class _ShopProfilePageState extends State<ShopProfilePage> {
         setState(() {
           shopData = querySnapshot.docs.first.data();
         });
+
+        if (shopData['services_offered'] == null) {
+          setState(() {
+            shopData['services_offered'] = '';
+          });
+        }
       }
 
       if (shopData['disabled']) {
